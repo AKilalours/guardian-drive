@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+.venv/
+.venv*/
+.env
+
+# Tooling
+.pytest_cache/
+.ruff_cache/
+
+# Data & artifacts
+data/raw/
+data/processed/
+reports/
+*.npz
+*.pt
+*.onnx
+
+# OS
+.DS_Store
+
+WESAD.zip
