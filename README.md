@@ -16,4 +16,6 @@ Phase 1 implements:
 ```bash
 python -m venv .venv && source .venv/bin/activate
 make dev
+```
+now im working on this project, in this i have used the LLM,RAF,Agentic AIand Gen AI
 
