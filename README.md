@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="Cover_image.png" alt="Guardian Drive Cover" width="900">
+</p>
+
 # GuardianDrive — Physio Baseline (WESAD) with SQI Gating + LOSO Eval
 
 Phase 1 implements:
