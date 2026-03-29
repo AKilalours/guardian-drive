@@ -1,0 +1,17 @@
+seat_ecg:
+  enabled: true
+  fs_hz: 250
+  window_sec: 10
+  source: "seat_ecg_stub"
+  contact_threshold: 0.40
+  motion_threshold: 0.70
+
+pipeline:
+  use_webcam: true
+  use_phone_gps: true
+  use_rest_routing: true
+
+claims:
+  mode_label: "research prototype"
+  allow_medical_grade_claims: false
+  allow_vehicle_control_claims: false

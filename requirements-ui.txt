@@ -1,0 +1,3 @@
+# Optional UI dependencies
+streamlit
+pandas

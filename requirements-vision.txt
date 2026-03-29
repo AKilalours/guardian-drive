@@ -1,0 +1,13 @@
+# Vision-only dependencies (webcam drowsiness)
+# IMPORTANT:
+#  - This repo uses the *MediaPipe Solutions* API (mp.solutions.*).
+#  - MediaPipe 0.10.30+ removed `mp.solutions`, so you must use mediapipe < 0.10.30.
+#  - OpenCV 4.12+ pulls NumPy 2.x, which breaks many ML stacks; pin NumPy < 2.
+
+numpy>=1.26,<2.0
+opencv-python>=4.9,<4.12
+mediapipe>=0.10,<0.10.30
+
+# Only needed if you run the optional CNN training/inference scripts:
+torch
+torchvision

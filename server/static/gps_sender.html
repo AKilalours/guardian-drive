@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Guardian Drive — GPS Sender</title>
+  <style>
+    :root{
+      --bg:#06111f;
+      --panel:#0b1a2f;
+      --panel-2:#0f2340;
+      --border:#193a63;
+      --text:#e8f2ff;
+      --muted:#8fb2d9;
+      --ok:#18e28c;
+      --warn:#ffd166;
+      --bad:#ff5d73;
+      --accent:#33b8ff;
+      --btn:#132947;
+      --btn-disabled:#3e4a5b;
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:linear-gradient(180deg,#06111f 0%,#08182b 100%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+    body{padding:18px 14px 32px;min-height:100vh}
+
+    .wrap{max-width:760px;margin:0 auto}
+    .hero{
+      background:rgba(10,24,45,.92);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:18px 16px;
+      box-shadow:0 10px 30px rgba(0,0,0,.22);
+    }
+    h1{
+      margin:0 0 8px;
+      font-size:clamp(28px,5vw,42px);
+      line-height:1.05;
+      letter-spacing:.2px;
+    }
+    .sub{
+      margin:0;
+      color:var(--muted);
+      line-height:1.45;
+      font-size:16px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:14px;
+      margin-top:14px;
+    }
+
+    .card{
+      background:rgba(11,26,47,.94);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:14px;
+      box-shadow:0 8px 24px rgba(0,0,0,.16);
+    }
+
+    .label{
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:#67a4e2;
+      margin-bottom:8px;
+      font-weight:700;
+    }
+
+    .mono, pre, code{
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+    }
+
+    .endpoint{
+      background:var(--panel-2);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:12px;
+      color:#d9eaff;
+      overflow:auto;
+      word-break:break-all;
+    }
+
+    .status{
+      font-size:18px;
+      font-weight:700;
+      line-height:1.35;
+    }
+    .ok{color:var(--ok)}
+    .bad{color:var(--bad)}
+    .warn{color:var(--warn)}
+    .muted{color:var(--muted)}
+
+    .row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+    }
+
+    button{
+      appearance:none;
+      border:none;
+      border-radius:14px;
+      padding:14px 18px;
+      font-size:17px;
+      font-weight:700;
+      cursor:pointer;
+      min-width:170px;
+      transition:transform .05s ease, opacity .2s ease, background .2s ease;
+      color:white;
+      background:linear-gradient(180deg,#1d7dff 0%,#1461cc 100%);
+      box-shadow:0 8px 22px rgba(20,97,204,.28);
+    }
+
+    button:active{transform:translateY(1px)}
+    button.secondary{
+      background:linear-gradient(180deg,#263852 0%,#1a2940 100%);
+      box-shadow:none;
+      border:1px solid #365273;
+    }
+    button:disabled{
+      background:var(--btn-disabled);
+      color:#d3d7de;
+      cursor:not-allowed;
+      box-shadow:none;
+      opacity:.72;
+    }
+
+    pre{
+      margin:0;
+      white-space:pre-wrap;
+      word-break:break-word;
+      background:var(--panel-2);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:12px;
+      color:#dcecff;
+      min-height:88px;
+      overflow:auto;
+    }
+
+    .tiny{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.45;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border:1px solid var(--border);
+      background:rgba(15,35,64,.95);
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:13px;
+      color:#cfe4ff;
+      margin:4px 6px 0 0;
+    }
+
+    .dot{
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:var(--accent);
+      display:inline-block;
+    }
+
+    .dangerbox{
+      border:1px solid rgba(255,93,115,.45);
+      background:rgba(110,17,33,.20);
+      color:#ffd9df;
+      border-radius:14px;
+      padding:12px;
+      line-height:1.45;
+    }
+
+    .okbox{
+      border:1px solid rgba(24,226,140,.35);
+      background:rgba(11,92,55,.16);
+      color:#d6ffea;
+      border-radius:14px;
+      padding:12px;
+      line-height:1.45;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Guardian Drive — GPS Sender</h1>
+      <p class="sub">
+        This page streams your phone’s GPS to the Guardian Drive server.
+        It is only for phone location ingestion. The main dashboard stays on the laptop.
+      </p>
+    </section>
+
+    <div class="grid">
+      <section class="card">
+        <div class="label">Connection</div>
+        <div class="row" style="margin-bottom:10px;">
+          <span class="pill"><span class="dot"></span> Origin: <span id="origin" class="mono"></span></span>
+          <span class="pill"><span class="dot"></span> Secure context: <span id="secureCtx"></span></span>
+        </div>
+        <div class="tiny" style="margin-bottom:8px;">GPS POST endpoint</div>
+        <div id="endpoint" class="endpoint mono"></div>
+      </section>
+
+      <section class="card">
+        <div class="label">Status</div>
+        <div id="status" class="status bad">Idle</div>
+        <div id="secureHint" style="margin-top:12px;"></div>
+      </section>
+
+      <section class="card">
+        <div class="label">Controls</div>
+        <div class="row">
+          <button id="start">Start GPS streaming</button>
+          <button id="stop" class="secondary" disabled>Stop</button>
+          <button id="ping" class="secondary" type="button">Test server</button>
+        </div>
+        <div class="tiny" style="margin-top:12px;">
+          For iPhone Safari, this page must be loaded from a secure origin. Plain
+          <span class="mono">http://192.168.x.x:8000</span> will load the page, but geolocation will still be blocked.
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="label">Permission state</div>
+        <pre id="permOut">unknown</pre>
+      </section>
+
+      <section class="card">
+        <div class="label">Last fix</div>
+        <pre id="out">{}</pre>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const originEl = document.getElementById("origin");
+    const secureCtxEl = document.getElementById("secureCtx");
+    const endpointEl = document.getElementById("endpoint");
+    const statusEl = document.getElementById("status");
+    const secureHintEl = document.getElementById("secureHint");
+    const outEl = document.getElementById("out");
+    const permOutEl = document.getElementById("permOut");
+    const startBtn = document.getElementById("start");
+    const stopBtn = document.getElementById("stop");
+    const pingBtn = document.getElementById("ping");
+
+    let watchId = null;
+
+    const apiGps = `${window.location.origin}/api/gps`;
+    const apiHealth = `${window.location.origin}/healthz`;
+
+    originEl.textContent = window.location.origin;
+    endpointEl.textContent = apiGps;
+    secureCtxEl.textContent = window.isSecureContext ? "yes" : "no";
+
+    function setStatus(type, msg) {
+      statusEl.className = `status ${type}`;
+      statusEl.textContent = msg;
+    }
+
+    function setSecureHint() {
+      if (window.isSecureContext) {
+        secureHintEl.innerHTML = `
+          <div class="okbox">
+            Secure context detected. The browser is allowed to request geolocation permission.
+          </div>
+        `;
+      } else {
+        secureHintEl.innerHTML = `
+          <div class="dangerbox">
+            This page is not running in a secure context. Phone geolocation will be blocked here.
+            Use an <span class="mono">https://</span> tunnel URL for this page.
+          </div>
+        `;
+        startBtn.disabled = true;
+      }
+    }
+
+    async function refreshPermissionState() {
+      if (!("permissions" in navigator) || !navigator.permissions.query) {
+        permOutEl.textContent = "Permissions API not available in this browser.";
+        return;
+      }
+      try {
+        const res = await navigator.permissions.query({ name: "geolocation" });
+        permOutEl.textContent = JSON.stringify({ state: res.state }, null, 2);
+        res.onchange = () => {
+          permOutEl.textContent = JSON.stringify({ state: res.state }, null, 2);
+        };
+      } catch (e) {
+        permOutEl.textContent = `Could not query permission state: ${String(e)}`;
+      }
+    }
+
+    async function pingServer() {
+      try {
+        const r = await fetch(apiHealth, { cache: "no-store" });
+        const data = await r.json();
+        if (r.ok) {
+          setStatus("ok", `Server reachable (ts=${Math.round(data.ts)})`);
+        } else {
+          setStatus("bad", `Server health check failed (${r.status})`);
+        }
+      } catch (e) {
+        setStatus("bad", `Server not reachable: ${String(e)}`);
+      }
+    }
+
+    async function postFix(pos) {
+      const payload = {
+        lat: pos.coords.latitude,
+        lon: pos.coords.longitude,
+        accuracy_m: pos.coords.accuracy ?? null,
+        timestamp_unix: Date.now() / 1000.0
+      };
+
+      outEl.textContent = JSON.stringify(payload, null, 2);
+
+      try {
+        const r = await fetch(apiGps, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+          keepalive: true
+        });
+
+        if (!r.ok) {
+          setStatus("bad", `POST /api/gps failed (${r.status})`);
+          return;
+        }
+
+        setStatus("ok", `Streaming GPS (accuracy ≈ ${Math.round(payload.accuracy_m || 0)} m)`);
+      } catch (e) {
+        setStatus("bad", `Network error: ${String(e)}`);
+      }
+    }
+
+    function onError(err) {
+      const msg = err && err.message ? err.message : String(err);
+      setStatus("bad", `Geolocation error: ${msg}`);
+      startBtn.disabled = false;
+      stopBtn.disabled = true;
+      watchId = null;
+    }
+
+    startBtn.onclick = async () => {
+      if (!navigator.geolocation) {
+        setStatus("bad", "Geolocation is not supported on this device/browser.");
+        return;
+      }
+
+      if (!window.isSecureContext) {
+        setStatus("bad", "Blocked: this page is not HTTPS/secure.");
+        return;
+      }
+
+      if (watchId !== null) return;
+
+      await refreshPermissionState();
+      setStatus("warn", "Requesting geolocation permission…");
+
+      watchId = navigator.geolocation.watchPosition(
+        postFix,
+        onError,
+        {
+          enableHighAccuracy: true,
+          maximumAge: 1000,
+          timeout: 15000
+        }
+      );
+
+      startBtn.disabled = true;
+      stopBtn.disabled = false;
+    };
+
+    stopBtn.onclick = () => {
+      if (watchId !== null) {
+        navigator.geolocation.clearWatch(watchId);
+        watchId = null;
+      }
+      setStatus("warn", "Stopped");
+      startBtn.disabled = !window.isSecureContext;
+      stopBtn.disabled = true;
+    };
+
+    pingBtn.onclick = pingServer;
+
+    setSecureHint();
+    refreshPermissionState();
+    pingServer();
+  </script>
+</body>
+</html>

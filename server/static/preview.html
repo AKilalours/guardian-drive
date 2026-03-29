@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>GuardianDrive GPS Sender</title></head>
+<body style="font-family: system-ui; padding: 20px;">
+  <h2>GuardianDrive GPS Sender</h2>
+  <p id="s">Waiting…</p>
+
+  <label>Server URL (same Wi-Fi):</label><br/>
+  <input id="url" style="width: 420px;" value="http://YOUR_LAPTOP_IP:8000/api/gps" />
+  <br/><br/>
+  <button onclick="start()">Start sending</button>
+
+<script>
+let timer=null;
+
+function postFix(pos) {
+  const u = document.getElementById("url").value.trim();
+  const body = {
+    lat: pos.coords.latitude,
+    lon: pos.coords.longitude,
+    accuracy_m: pos.coords.accuracy,
+    timestamp_unix: Date.now()/1000.0
+  };
+  fetch(u, {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(body)})
+    .then(r => r.text())
+    .then(t => document.getElementById("s").textContent =
+      `Sent: ${body.lat.toFixed(6)}, ${body.lon.toFixed(6)} ±${body.accuracy_m.toFixed(1)}m`)
+    .catch(e => document.getElementById("s").textContent = "POST failed: " + e);
+}
+
+function start() {
+  if (!navigator.geolocation) {
+    document.getElementById("s").textContent = "Geolocation not supported.";
+    return;
+  }
+  timer = setInterval(() => {
+    navigator.geolocation.getCurrentPosition(postFix, err => {
+      document.getElementById("s").textContent = "GPS error: " + err.message;
+    }, {enableHighAccuracy:true, timeout:8000, maximumAge:0});
+  }, 3000);
+}
+</script>
+</body>
+</html>

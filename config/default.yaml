@@ -1,0 +1,19 @@
+# Guardian Drive configuration (v5)
+
+mode: simulation  # simulation | replay | live
+
+policy:
+  caution_hold_sec: 15
+  pullover_hold_sec: 20
+  crash_severe_hold_sec: 0
+  cooldown_sec: 90
+
+integrations:
+  gps: mock
+  navigation: local_haversine
+  telephony: console  # console | twilio
+  vehicle_control: noop
+
+privacy:
+  log_raw_waveforms: false
+  log_path: runs/latest.jsonl

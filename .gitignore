@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+
+# Envs
+.venv/
+venv/
+env/
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/
+
+# Data / outputs
+data/
+datasets/
+artifacts/
+reports/
+replay/
+
+# ML/model artifacts
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.h5
+*.pkl
+*.joblib
+*.npy
+*.npz
+
+# Logs
+*.log

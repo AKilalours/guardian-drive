@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Guardian Drive — Real Runtime Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07111d;
+  --panel:#0d1a2a;
+  --panel2:#122338;
+  --line:#1e3652;
+  --text:#c9def1;
+  --muted:#7fa0bf;
+  --cyan:#2de2ff;
+  --blue:#5ba3ff;
+  --green:#1ee58a;
+  --yellow:#ffd34d;
+  --orange:#ff8c42;
+  --red:#ff476f;
+  --mono:'JetBrains Mono', monospace;
+  --sans:'Inter', sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:var(--sans);
+  color:var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(16,52,91,.85) 0%, transparent 24%),
+    radial-gradient(circle at bottom right, rgba(13,35,63,.75) 0%, transparent 22%),
+    var(--bg);
+  overflow:hidden;
+}
+button,a,input{font:inherit}
+button{cursor:pointer}
+.shell{
+  display:grid;
+  grid-template-rows:auto auto 1fr 30px;
+  height:100vh;
+  gap:10px;
+  padding:10px;
+}
+.header,.banner,.footer,.card,.modal-card{
+  background:rgba(13,26,42,.94);
+  border:1px solid var(--line);
+  border-radius:16px;
+}
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:12px 16px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:240px;
+}
+.logo{
+  width:38px;height:38px;border-radius:12px;
+  background:linear-gradient(135deg,var(--blue),var(--cyan));
+  display:grid;place-items:center;font-size:18px;
+  box-shadow:0 0 24px rgba(45,226,255,.18);
+}
+.brand h1{font-size:17px;font-weight:800;letter-spacing:.3px}
+.brand p{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px}
+.actions{
+  display:flex;gap:8px;flex-wrap:wrap;justify-content:center;flex:1;
+}
+.sc-btn,.btn,.mini-btn{
+  border:1px solid var(--line);
+  background:var(--panel2);
+  color:var(--text);
+  padding:8px 12px;
+  border-radius:10px;
+  text-decoration:none;
+  transition:.18s ease;
+}
+.sc-btn:hover,.btn:hover,.mini-btn:hover{
+  border-color:var(--cyan);
+  color:#fff;
+}
+.sc-btn.active{
+  background:rgba(91,163,255,.18);
+  border-color:var(--blue);
+  color:#fff;
+}
+.right{
+  display:flex;align-items:center;gap:10px;
+  min-width:300px;justify-content:flex-end;flex-wrap:wrap;
+}
+.toggle{
+  display:flex;align-items:center;gap:6px;
+  font-size:12px;color:var(--muted)
+}
+.toggle input{accent-color:var(--cyan)}
+.pill{
+  padding:6px 10px;border-radius:999px;font-size:11px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;border:1px solid var(--line)
+}
+.pill.ok{color:var(--green);border-color:rgba(30,229,138,.5);background:rgba(30,229,138,.08)}
+.pill.warn{color:var(--yellow);border-color:rgba(255,211,77,.5);background:rgba(255,211,77,.08)}
+.pill.crit{color:var(--red);border-color:rgba(255,71,111,.5);background:rgba(255,71,111,.12)}
+.clock{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.banner{
+  display:none;
+  padding:12px 16px;
+  align-items:center;justify-content:space-between;gap:16px;
+  border-color:rgba(255,71,111,.55);
+  background:rgba(90,10,26,.75);
+}
+.banner.show{display:flex}
+.banner strong{font-size:18px;color:#fff}
+.banner p{font-size:13px;color:#ffdbe4;margin-top:4px}
+.banner .pkt{
+  font-family:var(--mono);
+  font-size:11px;color:#ffdbe4;
+  white-space:pre-wrap;
+  max-height:88px;overflow:auto;margin-top:8px;
+}
+.main{
+  display:grid;
+  grid-template-columns:320px 1fr 430px;
+  grid-template-rows:190px 1fr;
+  gap:10px;
+  min-height:0;
+}
+.card{
+  overflow:hidden;display:flex;flex-direction:column;min-height:0;
+}
+.title{
+  padding:10px 14px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+}
+.title h2{
+  font-size:12px;text-transform:uppercase;
+  letter-spacing:1.4px;color:var(--muted)
+}
+.badge{
+  font-family:var(--mono);font-size:10px;color:var(--cyan);
+  background:rgba(45,226,255,.08);
+  border:1px solid rgba(45,226,255,.18);
+  padding:3px 8px;border-radius:999px;
+}
+.badge.warn{
+  color:var(--yellow);
+  background:rgba(255,211,77,.08);
+  border-color:rgba(255,211,77,.22);
+}
+.badge.crit{
+  color:var(--red);
+  background:rgba(255,71,111,.08);
+  border-color:rgba(255,71,111,.22);
+}
+.badge.ok{
+  color:var(--green);
+  background:rgba(30,229,138,.08);
+  border-color:rgba(30,229,138,.22);
+}
+.ecg{grid-column:1 / -1;position:relative}
+#ecgCanvas{width:100%;height:100%}
+.ecg-pane{position:relative;flex:1;min-height:0;padding:8px 12px 10px}
+.ecg-overlay{
+  position:absolute;top:46px;right:18px;display:flex;gap:20px;
+  pointer-events:none;
+}
+.readout .v{font-family:var(--mono);font-size:28px;font-weight:600}
+.readout .k{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.metrics{
+  padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;overflow:auto
+}
+.metric{
+  background:rgba(255,255,255,.02);
+  border:1px solid var(--line);
+  border-radius:14px;padding:12px
+}
+.metric .k{
+  font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px
+}
+.metric .v{
+  font-family:var(--mono);font-size:24px;font-weight:600;margin-top:6px
+}
+.metric .s{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.4}
+.gauges{padding:12px;display:grid;gap:12px}
+.gauge .row{display:flex;justify-content:space-between;margin-bottom:5px;gap:10px}
+.gauge .row span:first-child{font-size:12px;font-weight:600}
+.gauge .row span:last-child{font-family:var(--mono);font-size:12px}
+.track{
+  height:8px;border-radius:999px;background:rgba(255,255,255,.06);
+  overflow:hidden
+}
+.fill{
+  height:100%;width:0%;
+  transition:width .35s ease, background .25s ease
+}
+.wavecard{padding:10px 12px}
+#hrvCanvas{width:100%;height:90px}
+.event-list,.log,.chain{
+  padding:12px;display:grid;gap:8px;overflow:auto
+}
+.event,.chain-item,.rest-box,.honest-box{
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--line);
+  border-radius:12px;padding:10px
+}
+.event{border-left:3px solid var(--cyan)}
+.event.high{border-left-color:var(--orange)}
+.event.crit{border-left-color:var(--red)}
+.event.ok{border-left-color:var(--green)}
+.event .t{font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase}
+.event .d{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.35}
+.mapbox,.side-scroll{
+  padding:12px;display:grid;gap:10px;overflow:auto
+}
+.mapmeta,.webcam-grid,.runtime-grid{
+  display:grid;grid-template-columns:110px 1fr;gap:6px 10px;font-size:12px
+}
+.mapmeta .k,.webcam-grid .k,.runtime-grid .k{color:var(--muted)}
+.camera-wrap{
+  width:100%;
+  aspect-ratio:4/3;
+  background:#02070d;
+  border:1px solid var(--line);
+  border-radius:12px;
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+#cameraFrame{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:contain;
+  object-position:center center;
+  background:#02070d;
+}
+.camera-actions{display:flex;gap:8px;flex-wrap:wrap}
+.controls{padding:12px;display:grid;gap:8px;overflow:auto}
+.controls .btn,.controls .mini-btn{display:block;text-align:center}
+#dispatchBox{
+  min-height:120px;max-height:210px;overflow:auto;
+  background:rgba(0,0,0,.25);
+  border:1px solid var(--line);
+  border-radius:12px;padding:10px;
+  white-space:pre-wrap;
+  font-family:var(--mono);font-size:11px;color:var(--text)
+}
+#dispatchMeta{
+  min-height:70px;max-height:110px;overflow:auto;
+  background:rgba(0,0,0,.18);
+  border:1px solid var(--line);
+  border-radius:12px;padding:10px;
+  white-space:pre-wrap;
+  font-family:var(--mono);font-size:10px;color:var(--muted)
+}
+.chain-item{
+  display:grid;
+  grid-template-columns:120px 1fr;
+  gap:8px 10px;
+  align-items:center;
+}
+.chain-state{
+  font-family:var(--mono);
+  font-size:11px;
+  padding:5px 8px;
+  border-radius:999px;
+  display:inline-flex;
+  width:max-content;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.03);
+}
+.chain-state.ok{color:var(--green);border-color:rgba(30,229,138,.35);background:rgba(30,229,138,.08)}
+.chain-state.warn{color:var(--yellow);border-color:rgba(255,211,77,.35);background:rgba(255,211,77,.08)}
+.chain-state.crit{color:var(--red);border-color:rgba(255,71,111,.35);background:rgba(255,71,111,.08)}
+.chain-state.off{color:var(--muted)}
+.rest-box{
+  border-left:3px solid var(--yellow);
+}
+.rest-box strong{
+  display:block;font-size:12px;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px;color:#fff
+}
+.rest-box p{font-size:12px;color:var(--muted);line-height:1.4}
+.honest-box{
+  border-left:3px solid var(--blue);
+}
+.honest-box strong{
+  display:block;font-size:12px;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px;color:#fff
+}
+.honest-box p{
+  font-size:11px;color:var(--muted);line-height:1.45
+}
+.footer{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 14px;font-size:11px;color:var(--muted)
+}
+.small{font-size:11px;color:var(--muted)}
+.mini{font-size:10px;color:var(--muted)}
+hr.sep{
+  border:none;height:1px;background:var(--line);margin:2px 0
+}
+.modal{
+  position:fixed;inset:0;display:none;
+  align-items:center;justify-content:center;
+  background:rgba(1,6,12,.82);
+  z-index:1000;padding:20px;
+}
+.modal.show{display:flex}
+.modal-card{
+  width:min(96vw,1400px);
+  height:min(92vh,900px);
+  display:flex;flex-direction:column;
+  overflow:hidden;
+}
+.modal-head{
+  padding:12px 14px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;gap:10px
+}
+.modal-body{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  background:#02070d;
+}
+#cameraFrameLarge{
+  width:100%;height:100%;
+  object-fit:contain;
+  object-position:center center;
+  background:#02070d;
+}
+@media (max-width: 1420px){
+  body{overflow:auto}
+  .shell{height:auto;min-height:100vh}
+  .main{
+    grid-template-columns:1fr;
+    grid-template-rows:190px auto auto auto;
+  }
+  .ecg{grid-column:1}
+  .right{min-width:unset}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="header">
+    <div class="brand">
+      <div class="logo">🛡️</div>
+      <div>
+        <h1>Guardian Drive</h1>
+        <p>Closed-loop runtime dashboard</p>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="sc-btn active" data-s="normal">Normal</button>
+      <button class="sc-btn" data-s="afib">AFib</button>
+      <button class="sc-btn" data-s="tachycardia">Tachy</button>
+      <button class="sc-btn" data-s="bradycardia">Brady</button>
+      <button class="sc-btn" data-s="drowsy">Drowsy</button>
+      <button class="sc-btn" data-s="fatigued">Fatigued</button>
+      <button class="sc-btn" data-s="crash_mild">Crash Mild</button>
+      <button class="sc-btn" data-s="crash_severe">Crash Severe</button>
+      <button class="sc-btn" data-s="artifact">Artifact</button>
+    </div>
+
+    <div class="right">
+      <label class="toggle"><input id="toggleVoice" type="checkbox"> Voice</label>
+      <label class="toggle"><input id="toggleGPS" type="checkbox"> GPS</label>
+      <div id="sysPill" class="pill ok">System active</div>
+      <div id="clock" class="clock">--:--:--</div>
+    </div>
+  </div>
+
+  <div id="banner" class="banner">
+    <div>
+      <strong id="bannerTitle">Emergency escalation</strong>
+      <p id="bannerText">High-risk event detected.</p>
+      <div id="bannerPkt" class="pkt"></div>
+    </div>
+    <div style="display:grid;gap:8px;min-width:210px">
+      <button class="btn" id="btnNotifyTop">Notify contact</button>
+      <button class="btn" id="btnDiscordTop">Notify Discord</button>
+      <button class="btn" id="btnRouteTop">Open route</button>
+      <button class="btn" id="btnDismissTop">Dismiss</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <section class="card ecg">
+      <div class="title">
+        <h2>ECG waveform</h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span id="srcBadge" class="badge">source --</span>
+          <span id="sqiBadge" class="badge">SQI --</span>
+          <span id="rhythmBadge" class="badge">rhythm --</span>
+          <span id="modeBadge" class="badge">modes --</span>
+          <span id="tBadge" class="badge">T+0s</span>
+        </div>
+      </div>
+      <div class="ecg-pane">
+        <canvas id="ecgCanvas"></canvas>
+        <div class="ecg-overlay">
+          <div class="readout">
+            <div id="hrBig" class="v">--</div>
+            <div class="k">BPM</div>
+          </div>
+          <div class="readout">
+            <div id="rrBig" class="v" style="font-size:20px">--</div>
+            <div class="k">RR irregularity</div>
+          </div>
+          <div class="readout">
+            <div id="qrsBig" class="v" style="font-size:20px">--</div>
+            <div class="k">QRS ms</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="title">
+        <h2>Real features</h2>
+        <span class="badge ok">live</span>
+      </div>
+      <div class="metrics">
+        <div class="metric"><div class="k">Heart rate</div><div class="v" id="mHr">--</div><div class="s" id="mHrS">--</div></div>
+        <div class="metric"><div class="k">HRV RMSSD</div><div class="v" id="mRmssd">--</div><div class="s">ms</div></div>
+        <div class="metric"><div class="k">Resp rate</div><div class="v" id="mResp">--</div><div class="s">breaths/min</div></div>
+        <div class="metric"><div class="k">EDA SCL</div><div class="v" id="mEda">--</div><div class="s">µS</div></div>
+        <div class="metric"><div class="k">Posture score</div><div class="v" id="mPosture">--</div><div class="s">0..1</div></div>
+        <div class="metric"><div class="k">Crash G peak</div><div class="v" id="mCrashG">--</div><div class="s">g</div></div>
+        <div class="metric"><div class="k">Temperature</div><div class="v" id="mTemp">--</div><div class="s">°C</div></div>
+        <div class="metric"><div class="k">Belt tension</div><div class="v" id="mBelt">--</div><div class="s">raw</div></div>
+      </div>
+
+      <div class="title">
+        <h2>Runtime truth</h2>
+        <span class="badge">guardrail</span>
+      </div>
+      <div class="side-scroll">
+        <div class="runtime-grid">
+          <div class="k">Task A</div><div id="rtTaskA">--</div>
+          <div class="k">Task B</div><div id="rtTaskB">--</div>
+          <div class="k">Task C</div><div id="rtTaskC">--</div>
+          <div class="k">Webcam</div><div id="rtWebcam">--</div>
+          <div class="k">Medical grade</div><div id="rtMed">NO</div>
+          <div class="k">Full end-to-end</div><div id="rtEnd2End">NO</div>
+        </div>
+        <div class="honest-box">
+          <strong>Honest claim boundary</strong>
+          <p id="honestText">
+            Runtime values are real when sensors and integrations are live. This UI will not pretend to diagnose heart attack, stroke, or autonomous emergency driving.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="title">
+        <h2>Risk assessment</h2>
+        <span id="riskBadge" class="badge">monitoring</span>
+      </div>
+      <div class="gauges">
+        <div class="gauge">
+          <div class="row"><span>Task A cardiac</span><span id="gAVal">0%</span></div>
+          <div class="track"><div id="gAFill" class="fill"></div></div>
+          <div class="small" id="gAText">No cardiac signal yet</div>
+        </div>
+        <div class="gauge">
+          <div class="row"><span>Task B drowsiness</span><span id="gBVal">0%</span></div>
+          <div class="track"><div id="gBFill" class="fill"></div></div>
+          <div class="small" id="gBText">No drowsiness signal yet</div>
+        </div>
+        <div class="gauge">
+          <div class="row"><span>Task C crash</span><span id="gCVal">0%</span></div>
+          <div class="track"><div id="gCFill" class="fill"></div></div>
+          <div class="small" id="gCText">No crash signal yet</div>
+        </div>
+        <div class="gauge">
+          <div class="row"><span>Overall policy</span><span id="gOVal">0%</span></div>
+          <div class="track"><div id="gOFill" class="fill"></div></div>
+          <div class="small" id="gOText">Nominal</div>
+        </div>
+      </div>
+
+      <div class="title">
+        <h2>HRV / respiration trend</h2>
+        <span class="badge">rolling</span>
+      </div>
+      <div class="wavecard">
+        <canvas id="hrvCanvas"></canvas>
+      </div>
+
+      <div class="title">
+        <h2>Event monitor</h2>
+        <span id="evtCount" class="badge">0</span>
+      </div>
+      <div id="evtList" class="event-list">
+        <div class="event ok">
+          <div class="t">System ready</div>
+          <div class="d">No current actionable event.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="title">
+        <h2>Navigation / hospital</h2>
+        <span id="gpsBadge" class="badge">GPS off</span>
+      </div>
+      <div class="mapbox">
+        <div class="mapmeta">
+          <div class="k">GPS</div><div id="gpsText">--</div>
+          <div class="k">Hospital</div><div id="hospName">--</div>
+          <div class="k">Route</div><div id="hospEta">--</div>
+          <div class="k">Policy</div><div id="policyText">--</div>
+          <div class="k">Source</div><div id="sourceText">--</div>
+          <div class="k">Window</div><div id="windowText">--</div>
+        </div>
+
+        <div id="restBox" class="rest-box" style="display:none">
+          <strong>Rest guidance</strong>
+          <p id="restText">--</p>
+          <p class="mini" id="restMeta">--</p>
+        </div>
+      </div>
+
+      <div class="title">
+        <h2>Webcam / drowsiness</h2>
+        <span id="camBadge" class="badge">unavailable</span>
+      </div>
+      <div class="mapbox">
+        <div class="camera-wrap">
+          <img id="cameraFrame" src="/camera.mjpg" alt="Webcam stream" />
+        </div>
+
+        <div class="camera-actions">
+          <button class="mini-btn" id="btnExpandCam">Expand camera</button>
+          <a class="mini-btn" href="/camera" target="_blank">Standalone camera page</a>
+        </div>
+
+        <div class="webcam-grid">
+          <div class="k">Status</div><div id="camStatus">No webcam runtime</div>
+          <div class="k">Face</div><div id="camFace">--</div>
+          <div class="k">Eyes</div><div id="camEyes">--</div>
+          <div class="k">EAR</div><div id="camEar">--</div>
+          <div class="k">PERCLOS</div><div id="camPerclos">--</div>
+          <div class="k">Blink rate</div><div id="camBlink">--</div>
+          <div class="k">Mouth</div><div id="camMouth">--</div>
+          <div class="k">Yawns</div><div id="camYawns">--</div>
+          <div class="k">Drowsy</div><div id="camDrowsy">--</div>
+        </div>
+      </div>
+
+      <div class="title">
+        <h2>Brain / action chain</h2>
+        <span class="badge">closed loop</span>
+      </div>
+      <div class="chain">
+        <div class="chain-item">
+          <div class="small">Decision state</div>
+          <div><span id="chainPolicy" class="chain-state off">--</span></div>
+        </div>
+        <div class="chain-item">
+          <div class="small">Voice alert</div>
+          <div><span id="chainVoice" class="chain-state off">browser toggle off</span></div>
+        </div>
+        <div class="chain-item">
+          <div class="small">Seat haptic</div>
+          <div><span id="chainHaptic" class="chain-state off">not wired in backend</span></div>
+        </div>
+        <div class="chain-item">
+          <div class="small">Pull-over request</div>
+          <div><span id="chainVehicle" class="chain-state off">idle</span></div>
+        </div>
+        <div class="chain-item">
+          <div class="small">ER advisory</div>
+          <div><span id="chainER" class="chain-state off">inactive</span></div>
+        </div>
+        <div class="chain-item">
+          <div class="small">Dispatch package</div>
+          <div><span id="chainDispatch" class="chain-state off">not prepared</span></div>
+        </div>
+        <div class="chain-item">
+          <div class="small">Emergency contact</div>
+          <div><span id="chainContact" class="chain-state off">manual / API</span></div>
+        </div>
+        <div class="chain-item">
+          <div class="small">911 escalation</div>
+          <div><span id="chain911" class="chain-state off">no</span></div>
+        </div>
+      </div>
+
+      <div class="title">
+        <h2>Emergency controls</h2>
+        <span class="badge">human in loop</span>
+      </div>
+      <div class="controls">
+        <a class="btn" href="tel:911">Call 911</a>
+        <button class="btn" id="btnCopyDispatch">Copy dispatch script</button>
+        <button class="btn" id="btnRoute">Open route to ER</button>
+        <button class="btn" id="btnNotifyContact">Notify emergency contact</button>
+        <button class="btn" id="btnDiscord">Notify Discord</button>
+        <pre id="dispatchBox">No dispatch available yet.</pre>
+        <pre id="dispatchMeta">No dispatch metadata yet.</pre>
+      </div>
+
+      <div class="title">
+        <h2>System log</h2>
+        <span class="badge">runtime</span>
+      </div>
+      <div id="syslog" class="log"></div>
+    </section>
+  </div>
+
+  <div class="footer">
+    <span>Guardian Drive real runtime UI</span>
+    <span>Demo only — not a certified medical device</span>
+  </div>
+</div>
+
+<div id="camModal" class="modal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div>
+        <strong style="font-size:14px;">Expanded webcam view</strong>
+        <div class="mini">Uses object-fit: contain so the full frame is visible.</div>
+      </div>
+      <button class="btn" id="btnCloseCamModal">Close</button>
+    </div>
+    <div class="modal-body">
+      <img id="cameraFrameLarge" src="/camera.mjpg" alt="Large webcam stream" />
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+const $ = (id) => document.getElementById(id);
+
+let ws = null;
+let lastLevel = null;
+let gpsWatchId = null;
+let voiceEnabled = false;
+let dispatchCached = '';
+let dispatchMetaCached = '';
+let latestFrame = null;
+let runtimeInfo = null;
+
+const trend = { hrv: [], resp: [] };
+
+function fmt(v, d=2){
+  if(v === null || v === undefined || Number.isNaN(Number(v))) return '--';
+  return Number(v).toFixed(d);
+}
+function fmtInt(v){
+  if(v === null || v === undefined || Number.isNaN(Number(v))) return '--';
+  return String(Math.round(Number(v)));
+}
+function clamp01(v){
+  const n = Number(v);
+  if(!Number.isFinite(n)) return 0;
+  return Math.max(0, Math.min(1, n));
+}
+function levelName(policy){
+  if(!policy) return 'NOMINAL';
+  return policy.level_name || policy.level || 'NOMINAL';
+}
+function setText(id, value){
+  const el = $(id);
+  if(el) el.textContent = value;
+}
+function safeJson(obj){
+  try{ return JSON.stringify(obj || {}, null, 2); }
+  catch(e){ return '{}'; }
+}
+function addLog(msg){
+  const el = $('syslog');
+  if(!el) return;
+  const row = document.createElement('div');
+  row.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+  el.prepend(row);
+  while(el.children.length > 70) el.removeChild(el.lastChild);
+}
+function speak(text){
+  if(!voiceEnabled || !('speechSynthesis' in window) || !text) return;
+  try{
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 1.0;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+function setPill(level){
+  const el = $('sysPill');
+  if(!el) return;
+  const map = {
+    ESCALATE:['crit','Emergency'],
+    PULLOVER:['warn','Pull over'],
+    CAUTION:['warn','Caution'],
+    ADVISORY:['ok','Advisory'],
+    NOMINAL:['ok','System active'],
+    INACTIVE:['warn','Inactive']
+  };
+  const pair = map[level] || map.NOMINAL;
+  el.className = `pill ${pair[0]}`;
+  el.textContent = pair[1];
+}
+function badgeClassForLevel(level){
+  if(level === 'ESCALATE') return 'badge crit';
+  if(level === 'PULLOVER' || level === 'CAUTION') return 'badge warn';
+  if(level === 'ADVISORY') return 'badge';
+  return 'badge ok';
+}
+function chainClass(kind){
+  if(kind === 'crit') return 'chain-state crit';
+  if(kind === 'warn') return 'chain-state warn';
+  if(kind === 'ok') return 'chain-state ok';
+  return 'chain-state off';
+}
+function setChain(id, text, kind='off'){
+  const el = $(id);
+  if(!el) return;
+  el.className = chainClass(kind);
+  el.textContent = text;
+}
+function setGauge(fillId, valId, textId, score, color, text){
+  const pct = Math.round(clamp01(score) * 100);
+  const fill = $(fillId);
+  if(fill){
+    fill.style.width = `${pct}%`;
+    fill.style.background = color;
+  }
+  setText(valId, `${pct}%`);
+  setText(textId, text || '--');
+}
+function downsample(arr, n=600){
+  if(!Array.isArray(arr) || arr.length < 2) return null;
+  if(arr.length <= n) return arr;
+  const out = [];
+  for(let i = 0; i < n; i++){
+    const idx = Math.floor(i * (arr.length - 1) / (n - 1));
+    out.push(Number(arr[idx]));
+  }
+  return out;
+}
+function drawLine(canvasId, arr, color){
+  const c = $(canvasId);
+  const vals = downsample(arr, canvasId === 'ecgCanvas' ? 950 : 220);
+  if(!c || !vals || vals.length < 2) return;
+  const ctx = c.getContext('2d');
+  const w = c.width = c.clientWidth;
+  const h = c.height = c.clientHeight;
+  ctx.clearRect(0,0,w,h);
+
+  ctx.strokeStyle = 'rgba(255,255,255,.05)';
+  ctx.lineWidth = 1;
+
+  for(let i=0;i<8;i++){
+    const y = (h/8) * i;
+    ctx.beginPath();
+    ctx.moveTo(0,y);
+    ctx.lineTo(w,y);
+    ctx.stroke();
+  }
+  for(let i=0;i<18;i++){
+    const x = (w/18) * i;
+    ctx.beginPath();
+    ctx.moveTo(x,0);
+    ctx.lineTo(x,h);
+    ctx.stroke();
+  }
+
+  let min = Math.min(...vals), max = Math.max(...vals);
+  if(max - min < 1e-6){
+    max += 1;
+    min -= 1;
+  }
+
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.8;
+  ctx.beginPath();
+  vals.forEach((v,i)=>{
+    const x = (i/(vals.length-1))*w;
+    const y = h - ((v - min)/(max - min))*h;
+    if(i===0) ctx.moveTo(x,y);
+    else ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+}
+function pushTrend(name, value, max=90){
+  if(value === null || value === undefined || Number.isNaN(Number(value))) return;
+  trend[name].push(Number(value));
+  if(trend[name].length > max) trend[name].shift();
+}
+async function fetchDispatchScript(){
+  try{
+    const r = await fetch('/api/dispatch_script', {cache:'no-store'});
+    const j = await r.json();
+    dispatchCached = j.script || 'No dispatch available yet.';
+    setText('dispatchBox', dispatchCached);
+  }catch(e){}
+}
+function renderDispatchMeta(frame){
+  const meta = {
+    level: levelName(frame.policy),
+    rest_guidance: frame.rest_guidance || null,
+    route: frame.route || null,
+    dispatch_title: frame.dispatch ? frame.dispatch.title : null
+  };
+  dispatchMetaCached = safeJson(meta);
+  setText('dispatchMeta', dispatchMetaCached);
+}
+async function copyDispatch(){
+  await fetchDispatchScript();
+  try{
+    await navigator.clipboard.writeText(dispatchCached || '');
+    addLog('Dispatch copied');
+  }catch(e){
+    window.prompt('Copy dispatch script', dispatchCached || '');
+  }
+}
+async function openRoute(){
+  try{
+    const r = await fetch('/api/maps_url', {cache:'no-store'});
+    const j = await r.json();
+    if(j.ok && j.url){
+      window.open(j.url, '_blank');
+      addLog(`Opened route to ${j.name || 'ER'}`);
+    }else{
+      addLog(j.error || 'No route available');
+    }
+  }catch(e){
+    addLog('Route lookup failed');
+  }
+}
+async function notifyDiscord(){
+  try{
+    const r = await fetch('/api/notify_discord', {method:'POST'});
+    const j = await r.json();
+    addLog(j.ok ? 'Discord notification sent' : (j.error || 'Discord notification failed'));
+  }catch(e){
+    addLog('Discord notification failed');
+  }
+}
+async function notifyContact(){
+  try{
+    const r = await fetch('/api/notify_contact', {method:'POST'});
+    const j = await r.json();
+    addLog(j.ok ? 'Emergency contact notified' : (j.error || 'Notify contact failed'));
+  }catch(e){
+    addLog('Notify contact failed');
+  }
+}
+function dismissEmergency(){
+  $('banner').classList.remove('show');
+}
+function startGPS(){
+  if(!navigator.geolocation){
+    addLog('Geolocation unsupported');
+    return;
+  }
+  if(gpsWatchId !== null) return;
+
+  gpsWatchId = navigator.geolocation.watchPosition(async (pos)=>{
+    const payload = {
+      lat: pos.coords.latitude,
+      lon: pos.coords.longitude,
+      accuracy_m: pos.coords.accuracy ?? null,
+      timestamp_unix: Date.now()/1000
+    };
+    try{
+      await fetch('/api/gps', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(payload)
+      });
+    }catch(e){}
+  }, (err)=>{
+    addLog(`GPS error: ${err.message}`);
+  }, {
+    enableHighAccuracy:true,
+    maximumAge:1000,
+    timeout:10000
+  });
+
+  addLog('GPS watch started');
+}
+function stopGPS(){
+  if(gpsWatchId !== null){
+    navigator.geolocation.clearWatch(gpsWatchId);
+    gpsWatchId = null;
+    addLog('GPS watch stopped');
+  }
+}
+function renderEvents(taskA, taskB, taskC){
+  const items = [];
+
+  if(taskA && !taskA.abstained && taskA.cls && String(taskA.cls).toLowerCase() !== 'normal'){
+    items.push({
+      cls:'high',
+      title:`Task A ${String(taskA.cls).toUpperCase()}`,
+      desc:taskA.reason || '',
+      conf:taskA.confidence
+    });
+  }
+
+  if(taskB && !taskB.abstained && Number(taskB.score || 0) >= 0.35){
+    items.push({
+      cls:Number(taskB.score || 0) >= 0.75 ? 'high' : 'ok',
+      title:'Task B drowsiness',
+      desc:taskB.reason || '',
+      conf:taskB.score
+    });
+  }
+
+  if(taskC && taskC.detected){
+    items.push({
+      cls:'crit',
+      title:'Task C crash',
+      desc:taskC.reason || '',
+      conf:taskC.confidence
+    });
+  }
+
+  const root = $('evtList');
+  if(!root) return;
+
+  if(!items.length){
+    root.innerHTML = `
+      <div class="event ok">
+        <div class="t">System ready</div>
+        <div class="d">No current actionable event.</div>
+      </div>
+    `;
+    setText('evtCount', '0');
+    return;
+  }
+
+  setText('evtCount', String(items.length));
+  root.innerHTML = items.map(ev => `
+    <div class="event ${ev.cls}">
+      <div class="t">${ev.title}</div>
+      <div class="d">${ev.desc || ''}<br>conf=${fmt(ev.conf,2)}</div>
+    </div>
+  `).join('');
+}
+function updateRestGuidance(rest){
+  const box = $('restBox');
+  if(!box) return;
+  if(!rest || !rest.message){
+    box.style.display = 'none';
+    return;
+  }
+  box.style.display = 'block';
+  setText('restText', rest.message || '--');
+  const mins = rest.recommended_stop_min != null ? `${fmtInt(rest.recommended_stop_min)} min recommended stop` : '--';
+  setText('restMeta', mins);
+}
+function updateCamera(webcam, taskB){
+  const live = webcam && typeof webcam === 'object' && webcam.available !== false;
+  const badge = $('camBadge');
+  if(badge){
+    badge.className = live ? 'badge ok' : (taskB && !taskB.abstained ? 'badge warn' : 'badge');
+    badge.textContent = live ? 'live' : (taskB && !taskB.abstained ? 'task-b only' : 'unavailable');
+  }
+
+  const status = !live
+    ? (taskB && !taskB.abstained ? 'Task B active without webcam metrics' : 'No webcam metrics')
+    : (webcam.status_text || webcam.note || 'Webcam runtime active');
+  setText('camStatus', status);
+
+  let faceText = '--';
+  if(live){
+    faceText = webcam.face_detected === false ? 'NO FACE' : 'DETECTED';
+  }
+  setText('camFace', faceText);
+
+  let eyesTxt = '--';
+  if(live){
+    if(typeof webcam.eyes === 'string' && webcam.eyes) eyesTxt = String(webcam.eyes).toUpperCase();
+    else if(webcam.eyes_closed === true) eyesTxt = 'CLOSED';
+    else if(webcam.eyes_closed === false) eyesTxt = 'OPEN';
+    else if(webcam.face_detected === false) eyesTxt = 'NO FACE';
+  }
+  setText('camEyes', eyesTxt);
+
+  const perclosVal = live ? (webcam.perclos ?? webcam.perclos_30s ?? null) : null;
+  setText('camPerclos', perclosVal != null ? fmt(perclosVal, 2) : '--');
+
+  const yawnVal = live ? (
+    webcam.yawns ??
+    webcam.yawn_events_30s ??
+    webcam.yawn_count_30s ??
+    null
+  ) : null;
+  setText('camYawns', yawnVal != null ? fmtInt(yawnVal) : '--');
+
+  const blinkVal = live ? (webcam.blink_rate_30s ?? webcam.blink_rate ?? null) : null;
+  setText('camBlink', blinkVal != null ? `${fmt(blinkVal,1)}/min` : '--');
+
+  const earVal = live ? (webcam.ear ?? null) : null;
+  setText('camEar', earVal != null ? fmt(earVal,3) : '--');
+
+  const mouthVal = live ? (webcam.mouth_open_ratio ?? null) : null;
+  setText('camMouth', mouthVal != null ? fmt(mouthVal,2) : '--');
+
+  let drowsyTxt = '--';
+  if(live){
+    if(webcam.drowsy === true) drowsyTxt = 'YES';
+    else if(webcam.drowsy === false) drowsyTxt = 'NO';
+    else if(webcam.drowsy_score != null) drowsyTxt = Number(webcam.drowsy_score) >= 0.65 ? 'YES' : 'NO';
+  }else if(taskB && !taskB.abstained){
+    drowsyTxt = Number(taskB.score || 0) >= 0.5 ? 'LIKELY' : 'NO';
+  }
+  setText('camDrowsy', drowsyTxt);
+}
+function updateChain(frame){
+  const policy = frame.policy || {};
+  const level = levelName(policy);
+  const dispatch = frame.dispatch || null;
+  const route = frame.route || null;
+  const rest = frame.rest_guidance || null;
+
+  if(level === 'ESCALATE') setChain('chainPolicy', 'EMERGENCY', 'crit');
+  else if(level === 'PULLOVER') setChain('chainPolicy', 'PULL OVER', 'warn');
+  else if(level === 'CAUTION') setChain('chainPolicy', 'CAUTION', 'warn');
+  else if(level === 'ADVISORY') setChain('chainPolicy', 'ADVISORY', 'ok');
+  else setChain('chainPolicy', 'NOMINAL', 'ok');
+
+  if(voiceEnabled){
+    if(policy.voice_message) setChain('chainVoice', 'browser speech ready', 'ok');
+    else setChain('chainVoice', 'enabled', 'ok');
+  }else{
+    setChain('chainVoice', 'browser toggle off', 'off');
+  }
+
+  if(level === 'CAUTION'){
+    setChain('chainHaptic', 'backend not wired', 'warn');
+  }else if(level === 'PULLOVER' || level === 'ESCALATE'){
+    setChain('chainHaptic', 'should activate when integrated', 'warn');
+  }else{
+    setChain('chainHaptic', 'not wired in backend', 'off');
+  }
+
+  if(level === 'PULLOVER' || level === 'ESCALATE'){
+    setChain('chainVehicle', 'pull-over request active', 'warn');
+  }else{
+    setChain('chainVehicle', 'idle', 'off');
+  }
+
+  if(policy.hospital_advisory && route){
+    setChain('chainER', 'ER advisory active', 'warn');
+  }else if(rest){
+    setChain('chainER', 'rest guidance path', 'ok');
+  }else{
+    setChain('chainER', 'inactive', 'off');
+  }
+
+  if(dispatch){
+    setChain('chainDispatch', 'prepared', 'ok');
+  }else if(level === 'PULLOVER' || level === 'ESCALATE'){
+    setChain('chainDispatch', 'expected but not prepared', 'warn');
+  }else{
+    setChain('chainDispatch', 'not prepared', 'off');
+  }
+
+  if(dispatch){
+    setChain('chainContact', 'ready via API', 'ok');
+  }else{
+    setChain('chainContact', 'manual / API', 'off');
+  }
+
+  if(policy.escalate_911 === true){
+    setChain('chain911', 'YES', 'crit');
+  }else{
+    setChain('chain911', 'NO', 'off');
+  }
+}
+function onFrame(frame){
+  latestFrame = frame;
+
+  const f = frame.features || {};
+  const sqi = frame.sqi || {};
+  const ta = frame.task_a || null;
+  const tb = frame.task_b || null;
+  const tc = frame.task_c || null;
+  const policy = frame.policy || {};
+  const dispatch = frame.dispatch || null;
+  const gps = frame.gps || null;
+  const route = frame.route || null;
+  const webcam = frame.webcam || null;
+  const rest = frame.rest_guidance || null;
+
+  const level = levelName(policy);
+
+  setText('tBadge', `T+${fmtInt(frame.t_sec)}s`);
+  setText('srcBadge', `${frame.source_kind || '--'} ${frame.scenario || ''}`.trim());
+  setText('sqiBadge', sqi.flags || `SQI ${fmt(sqi.overall_confidence,2)}`);
+  setText('rhythmBadge', ta ? (ta.abstained ? 'abstain' : String(ta.cls || '--')) : '--');
+  setText('modeBadge', runtimeInfo ? `${runtimeInfo.taskAShort} · ${runtimeInfo.taskBShort}` : 'modes --');
+
+  setPill(level);
+
+  const riskBadge = $('riskBadge');
+  if(riskBadge){
+    riskBadge.className = badgeClassForLevel(level);
+    riskBadge.textContent = level;
+  }
+
+  setText('hrBig', fmtInt(f.hr_bpm));
+  setText('rrBig', fmt(f.rr_irregularity,2));
+  setText('qrsBig', f.qrs_ms == null ? '--' : fmtInt(f.qrs_ms));
+
+  setText('mHr', fmtInt(f.hr_bpm));
+  setText('mHrS', ta ? (ta.reason || '--') : '--');
+  setText('mRmssd', fmt(f.hrv_rmssd,1));
+  setText('mResp', fmt(f.resp_rate_bpm,1));
+  setText('mEda', fmt(f.eda_scl_mean,2));
+  setText('mPosture', fmt(f.posture_score,2));
+  setText('mCrashG', fmt(f.crash_g_peak,2));
+  setText('mTemp', fmt(f.temperature,1));
+  setText('mBelt', fmt(f.belt_tension,2));
+
+  const scoreA = ta && !ta.abstained ? clamp01(ta.confidence) : 0;
+  const scoreB = tb && !tb.abstained ? clamp01(tb.score) : 0;
+  const scoreC = tc && tc.detected ? clamp01(tc.confidence) : 0;
+  const scoreO =
+    level === 'ESCALATE' ? 1.0 :
+    level === 'PULLOVER' ? 0.85 :
+    level === 'CAUTION' ? 0.65 :
+    level === 'ADVISORY' ? 0.35 :
+    Math.max(scoreA, scoreB, scoreC);
+
+  setGauge('gAFill','gAVal','gAText',scoreA, scoreA > .7 ? 'var(--red)' : scoreA > .4 ? 'var(--yellow)' : 'var(--green)', ta ? (ta.reason || '--') : '--');
+  setGauge('gBFill','gBVal','gBText',scoreB, scoreB > .75 ? 'var(--orange)' : scoreB > .4 ? 'var(--yellow)' : 'var(--blue)', tb ? (tb.reason || '--') : 'Task B unavailable');
+  setGauge('gCFill','gCVal','gCText',scoreC, scoreC > .7 ? 'var(--red)' : scoreC > .4 ? 'var(--yellow)' : 'var(--green)', tc ? (tc.reason || '--') : 'Task C unavailable');
+  setGauge('gOFill','gOVal','gOText',scoreO, scoreO > .8 ? 'var(--red)' : scoreO > .5 ? 'var(--orange)' : 'var(--green)', policy.display_message || 'Nominal');
+
+  if(f.hrv_rmssd != null) pushTrend('hrv', f.hrv_rmssd, 90);
+  if(f.resp_rate_bpm != null) pushTrend('resp', f.resp_rate_bpm, 90);
+
+  renderEvents(ta, tb, tc);
+  updateCamera(webcam, tb);
+  updateRestGuidance(rest);
+  updateChain(frame);
+
+  if(gps){
+    setText('gpsBadge', `GPS ${Number(gps.lat).toFixed(5)}, ${Number(gps.lon).toFixed(5)}`);
+    setText('gpsText', `${Number(gps.lat).toFixed(5)}, ${Number(gps.lon).toFixed(5)} ±${fmtInt(gps.accuracy_m)}m`);
+  }else{
+    setText('gpsBadge', 'GPS off');
+    setText('gpsText', '--');
+  }
+
+  if(route){
+    setText('hospName', route.destination_name || '--');
+    const km = route.distance_m != null ? `${(Number(route.distance_m)/1000).toFixed(1)} km` : '--';
+    const eta = route.eta_sec != null ? `${Math.round(Number(route.eta_sec)/60)} min` : '--';
+    setText('hospEta', `${km} · ${eta}`);
+  }else{
+    setText('hospName', '--');
+    setText('hospEta', '--');
+  }
+
+  setText('policyText', level);
+  setText('sourceText', `${frame.source_kind || '--'} / ${frame.scenario || '--'}`);
+  setText('windowText', `#${fmtInt(frame.window_index)} · ${fmt(frame.t_sec,1)} s`);
+
+  if(dispatch){
+    $('banner').classList.add('show');
+    setText('bannerTitle', dispatch.title || 'Emergency escalation');
+    setText('bannerText', policy.display_message || 'Urgent event detected');
+    setText('bannerPkt', `${dispatch.title || ''}\n${dispatch.body || ''}`.trim());
+  }else{
+    $('banner').classList.remove('show');
+  }
+
+  renderDispatchMeta(frame);
+  if(dispatch) fetchDispatchScript();
+
+  if(level !== lastLevel){
+    lastLevel = level;
+    if(policy.voice_message) speak(policy.voice_message);
+    addLog(`Policy state: ${level}`);
+  }
+
+  const previews = frame.previews || {};
+  drawLine('ecgCanvas', previews.ecg, 'rgba(45,226,255,.9)');
+
+  const trendSource =
+    trend.hrv.length > 2 ? trend.hrv :
+    trend.resp.length > 2 ? trend.resp :
+    null;
+  if(trendSource) drawLine('hrvCanvas', trendSource, 'rgba(30,229,138,.9)');
+}
+async function fetchRuntimeStatus(){
+  try{
+    const r = await fetch('/api/runtime_status', {cache:'no-store'});
+    const j = await r.json();
+    if(!j.ok) return;
+
+    const fusion = (((j || {}).runtime || {}).fusion) || {};
+    const guard = fusion.claim_guardrail || {};
+    const a = fusion.task_a || {};
+    const b = fusion.task_b || {};
+    const c = fusion.task_c || {};
+
+    runtimeInfo = {
+      taskAShort: a.requested_mode || 'taskA',
+      taskBShort: b.requested_mode || 'taskB'
+    };
+
+    setText('rtTaskA', `${a.enabled ? 'ON' : 'OFF'} · ${a.requested_mode || '--'}`);
+    setText('rtTaskB', `${b.enabled ? 'ON' : 'OFF'} · ${b.requested_mode || '--'}`);
+    setText('rtTaskC', `${c.enabled ? 'ON' : 'OFF'} · ${c.requested_mode || '--'}`);
+    setText('rtWebcam', j.runtime && j.runtime.webcam_enabled ? 'LIVE' : 'OFF');
+    setText('rtMed', guard.medical_grade ? 'YES' : 'NO');
+    setText('rtEnd2End', guard.full_system_real ? 'YES' : 'NO');
+
+    const honest = [];
+    honest.push(guard.task_a_real_training ? 'Task A real-training path active.' : 'Task A is not a fully real clinical path.');
+    honest.push(guard.task_b_runtime_webcam ? 'Task B webcam runtime is active.' : 'Task B webcam runtime is not confirmed.');
+    honest.push(guard.task_b_fully_real ? 'Task B fully real.' : 'Task B is still not a medically validated full real path.');
+    honest.push(guard.task_c_fully_real ? 'Task C fully real.' : 'Task C is not real-trained in this runtime.');
+    honest.push(guard.medical_grade ? 'Medical-grade claim enabled.' : 'Medical-grade claim disabled.');
+    setText('honestText', honest.join(' '));
+  }catch(e){
+    addLog('Runtime status fetch failed');
+  }
+}
+function connect(){
+  const proto = location.protocol === 'https:' ? 'wss://' : 'ws://';
+  ws = new WebSocket(proto + location.host + '/ws');
+
+  ws.onopen = () => {
+    addLog('WebSocket connected');
+    setInterval(() => { try{ ws.send('ping'); }catch(e){} }, 8000);
+  };
+
+  ws.onclose = () => {
+    addLog('WebSocket closed; reconnecting');
+    setTimeout(connect, 1500);
+  };
+
+  ws.onmessage = (ev) => {
+    try{
+      const frame = JSON.parse(ev.data);
+      onFrame(frame);
+    }catch(e){}
+  };
+}
+function openCamModal(){
+  $('camModal').classList.add('show');
+}
+function closeCamModal(){
+  $('camModal').classList.remove('show');
+}
+
+document.querySelectorAll('.sc-btn[data-s]').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    document.querySelectorAll('.sc-btn[data-s]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const scenario = btn.getAttribute('data-s');
+
+    try{
+      const r = await fetch('/api/scenario', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({scenario})
+      });
+      const j = await r.json();
+      addLog(j.ignored ? `Scenario ignored: ${j.reason}` : `Scenario request: ${scenario}`);
+    }catch(e){
+      addLog('Scenario request failed');
+    }
+  });
+});
+
+$('toggleVoice').addEventListener('change', (e) => {
+  voiceEnabled = e.target.checked;
+  addLog(`Voice ${voiceEnabled ? 'on' : 'off'}`);
+  updateChain(latestFrame || {policy:{}});
+});
+$('toggleGPS').addEventListener('change', (e) => {
+  e.target.checked ? startGPS() : stopGPS();
+});
+
+$('btnCopyDispatch').addEventListener('click', copyDispatch);
+$('btnRoute').addEventListener('click', openRoute);
+$('btnNotifyContact').addEventListener('click', notifyContact);
+$('btnDiscord').addEventListener('click', notifyDiscord);
+$('btnNotifyTop').addEventListener('click', notifyContact);
+$('btnDiscordTop').addEventListener('click', notifyDiscord);
+$('btnRouteTop').addEventListener('click', openRoute);
+$('btnDismissTop').addEventListener('click', dismissEmergency);
+
+$('btnExpandCam').addEventListener('click', openCamModal);
+$('btnCloseCamModal').addEventListener('click', closeCamModal);
+$('camModal').addEventListener('click', (e) => {
+  if(e.target === $('camModal')) closeCamModal();
+});
+
+setInterval(() => setText('clock', new Date().toLocaleTimeString()), 1000);
+setInterval(fetchRuntimeStatus, 10000);
+
+fetchRuntimeStatus();
+fetchDispatchScript();
+connect();
+</script>
+</body>
+</html>
