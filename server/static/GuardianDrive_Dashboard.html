@@ -1,91 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Guardian Drive™</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Guardian Drive™ v4.3</title>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#04080f;--bg2:#080f1a;--bg3:#0c1622;--bg4:#111d2e;--border:rgba(0,200,255,.08);--border2:rgba(0,200,255,.18);--text:#c8dff0;--muted:#4a6a8a;--dim:#1a2e42;--cyan:#00c8ff;--green:#00ff88;--yellow:#ffd600;--orange:#ff8800;--red:#ff2244;--blue:#4488ff;--font:'Rajdhani',sans-serif;--mono:'Share Tech Mono',monospace}
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden;background:var(--bg);font-family:var(--font);color:var(--text);font-size:14px}
-body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.04) 4px);pointer-events:none;z-index:9998}
-.shell{display:grid;grid-template-rows:54px 1fr 1fr 28px;grid-template-columns:300px 1fr 300px;height:100vh;gap:6px;padding:6px}
-.hdr{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:0 16px;position:relative;overflow:hidden}
-.hdr::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+:root{--bg:#03070e;--bg2:#070d18;--bg3:#0a1220;--bg4:#0f1a2b;--cyan:#00d4ff;--green:#00ff88;--yellow:#ffd600;--orange:#ff8c00;--red:#ff1e3c;--blue:#3d8eff;--purple:#9b4fff;--text:#b8d4ee;--muted:#3a5a7a;--dim:#1a2e42;--font:'Rajdhani',sans-serif;--mono:'Share Tech Mono',monospace}
+*{box-sizing:border-box;margin:0;padding:0}html,body{height:100%;overflow:hidden;background:var(--bg);font-family:var(--font);color:var(--text);font-size:14px}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 3px);pointer-events:none;z-index:9998}
+.shell{display:grid;grid-template-rows:52px 1fr 1fr 28px;grid-template-columns:280px 1fr 280px;height:100vh;gap:5px;padding:5px}
+/* HEADER */
+.hdr{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(90deg,#070d18,#0a1220,#070d18);border:1px solid rgba(0,212,255,.15);border-radius:8px;padding:0 14px;position:relative;overflow:hidden}
+.hdr::before{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
 .brand{display:flex;align-items:center;gap:10px}
-.bicon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--blue),var(--cyan));display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 0 16px rgba(0,200,255,.3)}
-.bname{font-size:18px;font-weight:700;letter-spacing:2px;color:#fff}
-.bsub{font-size:10px;color:var(--muted);letter-spacing:3px}
-.hdr-mid{display:flex;align-items:center;gap:14px}
-.pill{font-size:12px;font-weight:700;letter-spacing:2px;padding:5px 16px;border-radius:20px;border:1px solid currentColor;transition:all .3s;text-transform:uppercase}
-.sum{font-size:12px;color:var(--muted);max-width:260px}
-.hdr-r{display:flex;align-items:center;gap:10px}
-.sc-sel{background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:4px 8px;border-radius:6px;font-family:var(--font);font-size:12px;cursor:pointer}
-.conn{display:flex;align-items:center;gap:5px;font-size:10px;letter-spacing:1px;color:var(--muted)}
-.cdot{width:6px;height:6px;border-radius:50%;background:var(--muted);transition:all .3s}
-.cdot.live{background:var(--green);box-shadow:0 0 8px var(--green)}
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:11px 12px;display:flex;flex-direction:column;gap:7px;position:relative;overflow:hidden;transition:border-color .4s,box-shadow .4s}
-.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent)}
-.card.wy{border-color:var(--yellow);box-shadow:0 0 16px rgba(255,214,0,.08)}
-.card.wo{border-color:var(--orange);box-shadow:0 0 20px rgba(255,136,0,.12)}
-.card.wr{border-color:var(--red);box-shadow:0 0 30px rgba(255,34,68,.18);animation:rp 1s infinite}
-@keyframes rp{0%,100%{box-shadow:0 0 20px rgba(255,34,68,.18)}50%{box-shadow:0 0 40px rgba(255,34,68,.35)}}
-.lbl{font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:5px}
-.lbl::before{content:'';width:3px;height:3px;border-radius:50%;background:currentColor}
+.bicon{width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,#1a4fff,#00d4ff);display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 0 12px rgba(0,212,255,.4)}
+.bname{font-size:17px;font-weight:700;letter-spacing:2px;color:#fff}
+.bver{font-size:9px;color:var(--muted);letter-spacing:2px}
+.hdr-mid{display:flex;align-items:center;gap:12px}
+.pill{font-size:11px;font-weight:700;letter-spacing:2px;padding:4px 14px;border-radius:16px;border:1px solid currentColor;transition:all .3s;text-transform:uppercase;font-family:var(--mono)}
+.sumtxt{font-size:11px;color:var(--muted);max-width:240px;line-height:1.3}
+.hdr-r{display:flex;align-items:center;gap:8px}
+.sc-sel{background:var(--bg3);border:1px solid rgba(0,212,255,.2);color:var(--text);padding:4px 8px;border-radius:5px;font-family:var(--font);font-size:11px;cursor:pointer}
+.conn{display:flex;align-items:center;gap:4px;font-size:9px;letter-spacing:1px;color:var(--muted);font-family:var(--mono)}
+.cdot{width:5px;height:5px;border-radius:50%;background:var(--muted);transition:all .3s}
+.cdot.live{background:var(--green);box-shadow:0 0 6px var(--green);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.5}}
+/* CARDS */
+.card{background:var(--bg2);border:1px solid rgba(0,212,255,.07);border-radius:8px;padding:10px 11px;display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden;transition:border-color .4s,box-shadow .4s}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,.12),transparent)}
+.card.wy{border-color:rgba(255,214,0,.4);box-shadow:0 0 12px rgba(255,214,0,.06)}
+.card.wo{border-color:rgba(255,140,0,.5);box-shadow:0 0 16px rgba(255,140,0,.1)}
+.card.wr{border-color:rgba(255,30,60,.6);box-shadow:0 0 24px rgba(255,30,60,.15);animation:rp .8s infinite}
+@keyframes rp{0%,100%{box-shadow:0 0 16px rgba(255,30,60,.15)}50%{box-shadow:0 0 32px rgba(255,30,60,.35)}}
+.lbl{font-size:8px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:4px;font-family:var(--mono)}
+.lbl::before{content:'';width:2px;height:2px;border-radius:50%;background:currentColor}
 .cc{grid-column:2;grid-row:2/4}
 .r2c1{grid-column:1;grid-row:2}.r2c3{grid-column:3;grid-row:2}
 .r3c1{grid-column:1;grid-row:3}.r3c3{grid-column:3;grid-row:3}
-.ring-wrap{position:relative;width:144px;height:144px;flex-shrink:0}
-.ring-wrap svg{width:100%;height:100%;transform:rotate(-90deg)}
-.rbg{fill:none;stroke:var(--bg4);stroke-width:8}
-.rfill{fill:none;stroke-width:8;stroke-linecap:round;stroke-dasharray:408;stroke-dashoffset:408;transition:stroke-dashoffset .8s,stroke .4s}
+/* RING */
+.rw{position:relative;width:136px;height:136px;flex-shrink:0}
+.rw svg{width:100%;height:100%;transform:rotate(-90deg)}
+.rbg{fill:none;stroke:var(--bg4);stroke-width:7}
+.rf{fill:none;stroke-width:7;stroke-linecap:round;stroke-dasharray:383;stroke-dashoffset:383;transition:stroke-dashoffset .8s,stroke .4s}
 .rin{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.bscore{font-size:34px;font-weight:700;font-family:var(--mono);line-height:1;transition:color .3s}
-.ecg-w{height:50px;background:var(--bg);border-radius:6px;overflow:hidden}
+.bsc{font-size:30px;font-weight:700;font-family:var(--mono);line-height:1;transition:color .3s;text-shadow:0 0 20px currentColor}
+/* ECG */
+.ecgw{height:48px;background:var(--bg);border-radius:5px;overflow:hidden;border:1px solid rgba(0,212,255,.06)}
 canvas.ecg{width:100%;height:100%;display:block}
-.bev-w{flex:1;background:var(--bg);border-radius:8px;overflow:hidden;border:1px solid var(--border);min-height:90px;position:relative}
+/* BEV - engineering grade */
+.bevw{flex:1;background:#020509;border-radius:8px;overflow:hidden;border:1px solid rgba(0,212,255,.12);min-height:80px;position:relative}
 canvas.bev{position:absolute;inset:0;width:100%;height:100%}
-.ego{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:13px;height:26px;background:var(--cyan);border-radius:3px 3px 2px 2px;box-shadow:0 0 10px var(--cyan);z-index:2;pointer-events:none}
-.cam-b{position:relative;background:var(--bg);border-radius:8px;overflow:hidden;border:1px solid var(--border);height:126px;flex-shrink:0}
-.cam-b video{width:100%;height:100%;object-fit:cover;display:block;transform:scaleX(-1)}
-.cam-ov{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:6px;background:linear-gradient(transparent 40%,rgba(0,0,0,.75))}
-.cam-tags{display:flex;gap:4px;flex-wrap:wrap}
-.ctag{font-size:9px;font-family:var(--mono);padding:2px 5px;border-radius:3px;background:rgba(0,0,0,.6);border:1px solid currentColor}
-.frect{position:absolute;border:2px solid var(--cyan);border-radius:3px;box-shadow:0 0 10px rgba(0,200,255,.4);pointer-events:none;transition:all .15s;display:none}
-.nocam{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--muted);font-size:11px;background:var(--bg)}
-.met{display:flex;align-items:center;gap:5px}
-.ml{font-size:10px;color:var(--muted);width:66px;flex-shrink:0}
-.mb{flex:1;height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;min-width:20px}
-.mf{height:3px;border-radius:2px;transition:width .6s,background .3s}
-.mv{font-size:11px;font-family:var(--mono);width:44px;text-align:right;flex-shrink:0}
+/* CAM */
+.camb{position:relative;background:var(--bg);border-radius:7px;overflow:hidden;border:1px solid rgba(0,212,255,.08);height:120px;flex-shrink:0}
+.camb video{width:100%;height:100%;object-fit:cover;display:block;transform:scaleX(-1)}
+.camov{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:5px;background:linear-gradient(transparent 35%,rgba(0,0,0,.8))}
+.camtags{display:flex;gap:3px;flex-wrap:wrap}
+.ctag{font-size:8px;font-family:var(--mono);padding:2px 4px;border-radius:2px;background:rgba(0,0,0,.7);border:1px solid currentColor}
+.frect{position:absolute;border:1.5px solid var(--cyan);border-radius:2px;box-shadow:0 0 8px rgba(0,212,255,.5);pointer-events:none;transition:all .12s;display:none}
+.nocam{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--muted);font-size:10px;background:var(--bg)}
+/* METRICS */
+.met{display:flex;align-items:center;gap:4px}
+.ml{font-size:9px;color:var(--muted);width:62px;flex-shrink:0;letter-spacing:.5px;font-family:var(--mono)}
+.mb{flex:1;height:2px;background:var(--bg4);border-radius:1px;overflow:hidden;min-width:20px}
+.mf{height:2px;border-radius:1px;transition:width .6s,background .3s}
+.mv{font-size:10px;font-family:var(--mono);width:40px;text-align:right;flex-shrink:0}
+/* CONTRIB */
 .crib{display:flex;align-items:center;gap:4px}
-.cl{font-size:9px;color:var(--muted);width:30px;flex-shrink:0}
-.cb{flex:1;height:3px;background:var(--bg4);border-radius:2px}
-.cf{height:3px;border-radius:2px;background:var(--blue);transition:width .6s}
-.ts{font-size:25px;font-weight:700;font-family:var(--mono);line-height:1;transition:color .3s}
-.tc{font-size:9px;letter-spacing:1px;padding:2px 6px;border-radius:10px;border:1px solid currentColor;text-transform:uppercase;font-weight:600;display:inline-block;margin-top:2px}
-.strip{border-radius:7px;padding:7px 10px;display:none;flex-direction:column;gap:3px}
+.cl{font-size:8px;color:var(--muted);width:28px;flex-shrink:0;font-family:var(--mono)}
+.cb{flex:1;height:2px;background:var(--bg4);border-radius:1px}
+.cf{height:2px;border-radius:1px;background:var(--blue);transition:width .6s}
+/* TASK SCORE */
+.ts{font-size:24px;font-weight:700;font-family:var(--mono);line-height:1;transition:color .3s}
+.tc{font-size:8px;letter-spacing:1px;padding:2px 5px;border-radius:8px;border:1px solid currentColor;text-transform:uppercase;font-weight:600;display:inline-block;margin-top:2px;font-family:var(--mono)}
+/* STRIPS */
+.strip{border-radius:6px;padding:6px 8px;display:none;flex-direction:column;gap:2px}
 .strip.on{display:flex}
-.s-rest{background:rgba(0,200,255,.05);border:1px solid rgba(0,200,255,.2)}
-.s-poi{background:var(--bg3);border:1px solid var(--border2)}
-.s-emer{background:rgba(255,34,68,.06);border:1px solid var(--red);animation:ep 1s infinite}
-@keyframes ep{0%,100%{box-shadow:0 0 0}50%{box-shadow:0 0 18px rgba(255,34,68,.3)}}
-.btn{font-family:var(--font);font-size:11px;font-weight:600;padding:5px 11px;border-radius:6px;border:1px solid var(--border2);background:var(--bg4);color:var(--text);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:all .2s}
+.s-rest{background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.18)}
+.s-poi{background:var(--bg3);border:1px solid rgba(0,212,255,.15)}
+.s-emer{background:rgba(255,30,60,.05);border:1px solid var(--red);animation:ep .9s infinite}
+@keyframes ep{0%,100%{box-shadow:none}50%{box-shadow:0 0 16px rgba(255,30,60,.3)}}
+.btn{font-family:var(--font);font-size:10px;font-weight:700;padding:4px 10px;border-radius:5px;border:1px solid rgba(0,212,255,.2);background:var(--bg4);color:var(--text);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:3px;transition:all .2s;letter-spacing:.5px}
 .btn:hover{background:var(--bg3)}
-.br{border-color:var(--red);color:var(--red)}.br:hover{background:rgba(255,34,68,.1)}
-.bg{border-color:var(--green);color:var(--green)}.bg:hover{background:rgba(0,255,136,.1)}
-.bc{border-color:var(--cyan);color:var(--cyan)}.bc:hover{background:rgba(0,200,255,.1)}
-.brow{display:flex;gap:6px;flex-wrap:wrap}
-.wg{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.wlbl{font-size:9px;color:var(--muted)}
-.wval{font-size:15px;font-weight:700;font-family:var(--mono);transition:color .3s}
-.sleep-b{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 8px;font-size:11px;line-height:1.5}
-.sqi-r{display:flex;align-items:center;gap:8px}
-.sqibig{font-size:20px;font-weight:700;font-family:var(--mono);flex-shrink:0;transition:color .3s}
-.atags{display:flex;flex-wrap:wrap;gap:3px;margin-top:2px}
-.atag{font-size:9px;padding:2px 5px;border-radius:3px;background:var(--bg3);border:1px solid var(--border);color:var(--muted)}
-.ftr{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;font-size:9px;letter-spacing:1px;color:var(--dim);padding:0 4px}
+.br{border-color:var(--red);color:var(--red)}.br:hover{background:rgba(255,30,60,.1)}
+.bc{border-color:var(--cyan);color:var(--cyan)}.bc:hover{background:rgba(0,212,255,.08)}
+.brow{display:flex;gap:5px;flex-wrap:wrap}
+.wg{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.wlbl{font-size:8px;color:var(--muted);font-family:var(--mono)}
+.wval{font-size:14px;font-weight:700;font-family:var(--mono);transition:color .3s}
+.sleep-b{background:var(--bg3);border:1px solid rgba(0,212,255,.1);border-radius:5px;padding:5px 7px;font-size:10px;line-height:1.5;font-family:var(--mono)}
+.sqir{display:flex;align-items:center;gap:6px}
+.sqibig{font-size:18px;font-weight:700;font-family:var(--mono);flex-shrink:0;transition:color .3s}
+/* VEHICLE TELEMETRY */
+.veh-row{display:flex;gap:8px;align-items:center;font-family:var(--mono);font-size:10px}
+.veh-val{font-size:14px;font-weight:700;color:var(--cyan)}
+.veh-lbl{font-size:8px;color:var(--muted);letter-spacing:.5px}
+/* ARCH TAGS */
+.atags{display:flex;flex-wrap:wrap;gap:3px}
+.atag{font-size:8px;padding:1px 5px;border-radius:2px;background:var(--bg3);border:1px solid rgba(0,212,255,.1);color:var(--muted);font-family:var(--mono)}
+/* FOOTER */
+.ftr{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;font-size:8px;letter-spacing:1px;color:var(--dim);padding:0 3px;font-family:var(--mono)}
+/* autopilot badge */
+.ap-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:3px;background:rgba(0,255,136,.1);border:1px solid var(--green);color:var(--green);font-family:var(--mono);letter-spacing:1px;display:none}
+.ap-badge.on{display:inline-block;animation:apblink 1.5s infinite}
+@keyframes apblink{0%,100%{opacity:1}50%{opacity:.6}}
 </style>
 </head>
 <body>
@@ -94,11 +111,12 @@ canvas.bev{position:absolute;inset:0;width:100%;height:100%}
 <div class="hdr">
   <div class="brand">
     <div class="bicon">🛡</div>
-    <div><div class="bname">GUARDIAN DRIVE™</div><div class="bsub">Multimodal AI Safety System</div></div>
+    <div><div class="bname">GUARDIAN DRIVE™</div><div class="bver">Multimodal AI Safety System v4.3</div></div>
   </div>
   <div class="hdr-mid">
     <div class="pill" id="pill" style="color:var(--green)">NOMINAL</div>
-    <div class="sum" id="sumTxt">Initialising…</div>
+    <div class="sumtxt" id="sumtxt">Initialising pipeline…</div>
+    <div class="ap-badge" id="apBadge">AUTOPILOT ACTIVE</div>
   </div>
   <div class="hdr-r">
     <select class="sc-sel" onchange="changeScenario(this.value)">
@@ -116,28 +134,28 @@ canvas.bev{position:absolute;inset:0;width:100%;height:100%}
   <div class="lbl">Task A — Cardiac / ECG</div>
   <div style="display:flex;justify-content:space-between;align-items:flex-start">
     <div><div class="ts" id="aScore" style="color:var(--green)">0.00</div><div class="tc" id="aCls" style="color:var(--green)">NORMAL</div></div>
-    <div style="text-align:right"><div style="font-size:9px;color:var(--muted)">HR</div><div style="font-size:22px;font-weight:700;font-family:var(--mono)" id="hrBig">—</div><div style="font-size:9px;color:var(--muted)">bpm</div></div>
+    <div style="text-align:right"><div class="veh-lbl">HR</div><div class="veh-val" id="hrBig" style="font-size:20px">—</div><div class="veh-lbl">bpm</div></div>
   </div>
-  <div class="ecg-w"><canvas class="ecg" id="ecgCvs"></canvas></div>
+  <div class="ecgw"><canvas class="ecg" id="ecgCvs"></canvas></div>
   <div class="met"><span class="ml">RR Irr</span><div class="mb"><div class="mf" id="rrBar" style="width:0%;background:var(--blue)"></div></div><span class="mv" id="rrV">—</span></div>
   <div class="met"><span class="ml">P-wave</span><div class="mb"><div class="mf" id="pfBar" style="width:0%;background:var(--blue)"></div></div><span class="mv" id="pfV">—</span></div>
-  <div style="font-size:10px;color:var(--muted);margin-top:auto" id="aRsn">—</div>
+  <div style="font-size:9px;color:var(--muted);margin-top:auto;font-family:var(--mono)" id="aRsn">—</div>
 </div>
 
 <!-- COL3 ROW2: Webcam -->
 <div class="card r2c3" id="cCam">
-  <div class="lbl">Driver Monitor — Camera</div>
-  <div class="cam-b">
+  <div class="lbl">Driver Monitor — MediaPipe FaceMesh</div>
+  <div class="camb">
     <video id="camVid" autoplay muted playsinline></video>
-    <div class="frect" id="frect" style="width:70px;height:88px;top:16px;left:calc(50% - 35px)"></div>
-    <div class="cam-ov">
-      <div class="cam-tags">
+    <div class="frect" id="frect" style="width:68px;height:86px;top:14px;left:calc(50% - 34px)"></div>
+    <div class="camov">
+      <div class="camtags">
         <span class="ctag" id="eyeTag" style="color:var(--green)">EYES —</span>
         <span class="ctag" id="earTag" style="color:var(--cyan)">EAR —</span>
         <span class="ctag" id="perTag" style="color:var(--cyan)">PERCLOS —</span>
       </div>
     </div>
-    <div class="nocam" id="nocam"><div style="font-size:24px">📷</div><div>Camera unavailable</div></div>
+    <div class="nocam" id="nocam"><div style="font-size:22px">📷</div><div>Camera unavailable</div></div>
   </div>
   <div class="wg">
     <div><div class="wlbl">PERCLOS 30s</div><div class="wval" id="perVal">—</div></div>
@@ -150,42 +168,56 @@ canvas.bev{position:absolute;inset:0;width:100%;height:100%}
 <!-- CENTER -->
 <div class="card cc" id="cCtr">
   <div style="display:flex;justify-content:space-between;align-items:center">
-    <div class="lbl">System State</div>
-    <div style="font-size:10px;color:var(--muted);font-family:var(--mono)" id="tsLbl">—</div>
+    <div class="lbl">System State — Real-Time Fusion</div>
+    <div style="font-size:9px;color:var(--muted);font-family:var(--mono)" id="tsLbl">—</div>
   </div>
-  <div style="display:flex;gap:12px;align-items:center">
-    <div class="ring-wrap">
-      <svg viewBox="0 0 144 144"><circle class="rbg" cx="72" cy="72" r="65"/><circle class="rfill" cx="72" cy="72" r="65" id="rf"/></svg>
+  <div style="display:flex;gap:10px;align-items:center">
+    <div class="rw">
+      <svg viewBox="0 0 136 136"><circle class="rbg" cx="68" cy="68" r="61"/><circle class="rf" cx="68" cy="68" r="61" id="rf"/></svg>
       <div class="rin">
-        <div style="font-size:9px;letter-spacing:2px;color:var(--muted)">RISK</div>
-        <div class="bscore" id="riskS" style="color:var(--green)">0.00</div>
-        <div style="font-size:9px;letter-spacing:2px;color:var(--muted)" id="riskL">NOMINAL</div>
+        <div style="font-size:8px;letter-spacing:2px;color:var(--muted);font-family:var(--mono)">RISK</div>
+        <div class="bsc" id="riskS" style="color:var(--green)">0.00</div>
+        <div style="font-size:8px;letter-spacing:2px;color:var(--muted);font-family:var(--mono)" id="riskL">NOMINAL</div>
       </div>
     </div>
-    <div class="bev-w" style="height:144px"><canvas class="bev" id="bevCvs"></canvas><div class="ego"></div></div>
+    <!-- Engineering BEV -->
+    <div class="bevw" style="height:136px" id="bevWrap">
+      <canvas class="bev" id="bevCvs"></canvas>
+    </div>
   </div>
-  <div class="strip s-rest" id="restS"><div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--cyan)">REST GUIDANCE</div><div style="font-size:12px" id="restMsg">—</div></div>
+
+  <!-- Vehicle telemetry row -->
+  <div style="display:flex;gap:16px;padding:4px 0;border-top:1px solid rgba(0,212,255,.06);border-bottom:1px solid rgba(0,212,255,.06)">
+    <div><div class="veh-lbl">SPEED</div><div class="veh-val" id="vSpd">—</div><div class="veh-lbl">kph</div></div>
+    <div><div class="veh-lbl">THROTTLE</div><div class="veh-val" id="vThr">—</div></div>
+    <div><div class="veh-lbl">BRAKE</div><div class="veh-val" id="vBrk">—</div></div>
+    <div><div class="veh-lbl">GEAR</div><div class="veh-val" id="vGear">D</div></div>
+    <div><div class="veh-lbl">SOURCE</div><div style="font-size:10px;color:var(--muted);font-family:var(--mono)" id="vSrc">—</div></div>
+  </div>
+
+  <div class="strip s-rest" id="restS"><div style="font-size:9px;font-weight:700;letter-spacing:1px;color:var(--cyan);font-family:var(--mono)">REST GUIDANCE</div><div style="font-size:11px" id="restMsg">—</div></div>
   <div class="strip s-poi" id="poiS">
-    <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)" id="poiLbl">Nearest stop</div>
-    <div style="font-size:14px;font-weight:700;color:#fff" id="poiName">—</div>
-    <div style="font-size:10px;color:var(--muted)" id="poiDist">—</div>
-    <div class="brow" style="margin-top:4px"><a class="btn bc" id="poiNav" href="#" target="_blank">↗ Navigate</a></div>
+    <div style="font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-family:var(--mono)" id="poiLbl">Nearest stop</div>
+    <div style="font-size:13px;font-weight:700;color:#fff" id="poiName">—</div>
+    <div style="font-size:9px;color:var(--muted);font-family:var(--mono)" id="poiDist">—</div>
+    <div class="brow" style="margin-top:3px"><a class="btn bc" id="poiNav" href="#" target="_blank">↗ Navigate</a></div>
   </div>
   <div class="strip s-emer" id="emerS">
-    <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red)">⚡ EMERGENCY PROTOCOL ACTIVE</div>
-    <div style="font-size:11px" id="emerR">—</div>
-    <div class="brow" style="margin-top:4px">
-      <a class="btn br" href="tel:911">📞 Call 911</a>
-      <a class="btn br" id="erNav" href="#" target="_blank">🏥 ER Maps</a>
-      <button class="btn" onclick="copyDispatch()">📋 Dispatch Script</button>
+    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red);font-family:var(--mono)">⚡ EMERGENCY PROTOCOL</div>
+    <div style="font-size:10px" id="emerR">—</div>
+    <div class="brow" style="margin-top:3px">
+      <a class="btn br" href="tel:911">📞 911</a>
+      <a class="btn br" id="erNav" href="#" target="_blank">🏥 ER</a>
+      <button class="btn" onclick="copyDispatch()">📋 Dispatch</button>
       <button class="btn br" onclick="fireDiscord()">🔔 Discord</button>
     </div>
   </div>
-  <div style="border-top:1px solid var(--border);padding-top:7px;margin-top:auto">
-    <div class="lbl" style="margin-bottom:5px">Signal Quality</div>
-    <div class="sqi-r">
+
+  <div style="border-top:1px solid rgba(0,212,255,.06);padding-top:6px;margin-top:auto">
+    <div class="lbl" style="margin-bottom:4px">Signal Quality</div>
+    <div class="sqir">
       <div class="sqibig" id="sqiBig">—</div>
-      <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+      <div style="flex:1;display:flex;flex-direction:column;gap:2px">
         <div class="met"><span class="ml">ECG</span><div class="mb"><div class="mf" id="sqiE" style="width:0%"></div></div><span class="mv" id="sqiEV">—</span></div>
         <div class="met"><span class="ml">EDA</span><div class="mb"><div class="mf" id="sqiA" style="width:0%"></div></div><span class="mv" id="sqiAV">—</span></div>
         <div class="met"><span class="ml">Resp</span><div class="mb"><div class="mf" id="sqiR" style="width:0%"></div></div><span class="mv" id="sqiRV">—</span></div>
@@ -198,157 +230,330 @@ canvas.bev{position:absolute;inset:0;width:100%;height:100%}
 <div class="card r3c1" id="cB">
   <div class="lbl">Task B — Drowsiness / Fatigue</div>
   <div style="display:flex;justify-content:space-between;align-items:flex-start">
-    <div><div class="ts" id="bScore" style="color:var(--green)">0.00</div><div style="font-size:9px;color:var(--muted);margin-top:1px">WESAD TCN · 15 subjects · AUC 0.90+</div></div>
-    <div style="font-size:11px;font-weight:700;letter-spacing:1px" id="bSt">ALERT</div>
+    <div><div class="ts" id="bScore" style="color:var(--green)">0.00</div><div style="font-size:8px;color:var(--muted);margin-top:1px;font-family:var(--mono)">WESAD TCN · 15 subjects · AUC 0.9514</div></div>
+    <div style="font-size:10px;font-weight:700;letter-spacing:1px;font-family:var(--mono)" id="bSt">ALERT</div>
   </div>
   <div class="crib"><span class="cl">HR</span><div class="cb"><div class="cf" id="cHR" style="width:0%"></div></div></div>
   <div class="crib"><span class="cl">HRV</span><div class="cb"><div class="cf" id="cHRV" style="width:0%"></div></div></div>
   <div class="crib"><span class="cl">Resp</span><div class="cb"><div class="cf" id="cResp" style="width:0%"></div></div></div>
   <div class="crib"><span class="cl">EDA</span><div class="cb"><div class="cf" id="cEDA" style="width:0%"></div></div></div>
-  <div style="font-size:9px;color:var(--muted)" id="bRsn">—</div>
-  <div style="border-top:1px solid var(--border);padding-top:6px;margin-top:auto">
-    <div class="lbl" style="margin-bottom:4px">Sleepiness vs Drowsiness</div>
+  <div style="font-size:8px;color:var(--muted);font-family:var(--mono)" id="bRsn">—</div>
+  <div style="border-top:1px solid rgba(0,212,255,.06);padding-top:5px;margin-top:auto">
+    <div class="lbl" style="margin-bottom:3px">Sleepiness vs Drowsiness</div>
     <div class="sleep-b" id="sleepB">Monitoring…</div>
   </div>
 </div>
 
 <!-- COL3 ROW3: Task C + GPS -->
 <div class="card r3c3" id="cC">
-  <div class="lbl">Task C — Crash Detection</div>
+  <div class="lbl">Task C — Crash Detection (IMU)</div>
   <div style="display:flex;justify-content:space-between;align-items:flex-start">
     <div><div class="ts" id="cScore" style="color:var(--green)">0.00</div><div class="tc" id="cSev" style="color:var(--green)">NONE</div></div>
-    <div style="text-align:right"><div style="font-size:9px;color:var(--muted)">G-PEAK</div><div style="font-size:22px;font-weight:700;font-family:var(--mono)" id="gBig">—</div><div style="font-size:9px;color:var(--muted)">g</div></div>
+    <div style="text-align:right"><div class="veh-lbl">G-PEAK</div><div class="veh-val" id="gBig" style="font-size:20px">—</div><div class="veh-lbl">g</div></div>
   </div>
   <div class="met"><span class="ml">G-force</span><div class="mb"><div class="mf" id="gBar" style="width:0%;background:var(--orange)"></div></div><span class="mv" id="gPct">0%</span></div>
-  <div style="font-size:9px;color:var(--muted)" id="cRsn">—</div>
-  <div style="border-top:1px solid var(--border);padding-top:6px;margin-top:4px">
-    <div class="lbl" style="margin-bottom:4px">GPS + Route</div>
-    <div style="font-size:11px;color:var(--muted)" id="gpsLn">No fix</div>
-    <div style="font-size:11px;font-family:var(--mono);margin-top:2px" id="routeLn">—</div>
-    <a class="btn bc" id="gpsBtn" href="#" target="_blank" style="margin-top:6px;display:none">↗ Maps</a>
+  <div style="font-size:8px;color:var(--muted);font-family:var(--mono)" id="cRsn">—</div>
+  <div style="border-top:1px solid rgba(0,212,255,.06);padding-top:5px;margin-top:4px">
+    <div class="lbl" style="margin-bottom:3px">GPS + Route</div>
+    <div style="font-size:10px;color:var(--muted);font-family:var(--mono)" id="gpsLn">No fix</div>
+    <div style="font-size:10px;font-family:var(--mono);margin-top:2px" id="routeLn">—</div>
+    <a class="btn bc" id="gpsBtn" href="#" target="_blank" style="margin-top:5px;display:none">↗ Maps</a>
   </div>
-  <div style="border-top:1px solid var(--border);padding-top:6px;margin-top:auto">
-    <div class="lbl" style="margin-bottom:4px">Architecture</div>
+  <div style="border-top:1px solid rgba(0,212,255,.06);padding-top:5px;margin-top:auto">
+    <div class="lbl" style="margin-bottom:3px">Architecture References</div>
     <div class="atags">
       <span class="atag">BEV Perception</span><span class="atag">openpilot ADAS</span>
       <span class="atag">Behavioral Cloning</span><span class="atag">TPVFormer</span>
-      <span class="atag">WESAD TCN</span><span class="atag">PTB-XL</span><span class="atag">CARLA Sim</span>
+      <span class="atag">WESAD TCN</span><span class="atag">PTB-XL</span>
+      <span class="atag">CARLA Sim</span><span class="atag">MediaPipe</span>
     </div>
   </div>
 </div>
 
 <div class="ftr">
-  <div>GUARDIAN DRIVE™ · ECG + EDA + IMU + CAMERA · MULTIMODAL AI SAFETY</div>
+  <div>GUARDIAN DRIVE™ v4.3 · ECG + EDA + IMU + CAMERA · MULTIMODAL AI SAFETY PIPELINE</div>
   <div id="ftrT">—</div>
-  <div>WESAD TCN AUC 0.90+ · PTB-XL · BEV · CARLA</div>
+  <div>WESAD TCN AUC 0.9514 · PTB-XL · BEV RADAR · CARLA</div>
 </div>
 </div>
 
 <script>
-// ECG
-const ec=document.getElementById('ecgCvs'),ecx=ec.getContext('2d');
-const EN=160;let eb=Array(EN).fill(0),et=0,hr=75;
+// ── ECG ───────────────────────────────────────────────────────────────────────
+const ec=document.getElementById('ecgCvs'),ex=ec.getContext('2d');
+const EN=160;let eb=Array(EN).fill(0),et=0,hr=72;
 function ew(t,h){const p=(t%(60/h))/(60/h);if(p<.08)return Math.sin(p/.08*Math.PI)*.1;if(p<.12)return-.07;if(p<.18)return Math.sin((p-.12)/.06*Math.PI)*.14;if(p<.22)return-Math.sin((p-.18)/.04*Math.PI)*.92;if(p<.27)return Math.sin((p-.22)/.05*Math.PI)*.82;if(p<.33)return Math.sin((p-.27)/.06*Math.PI)*.2;if(p<.38)return Math.sin((p-.33)/.05*Math.PI)*.1;return 0}
-function dECG(c){const w=ec.width=ec.offsetWidth||280,h=ec.height=ec.offsetHeight||50;ecx.clearRect(0,0,w,h);ecx.strokeStyle='rgba(255,255,255,.03)';ecx.lineWidth=1;for(let x=0;x<w;x+=20){ecx.beginPath();ecx.moveTo(x,0);ecx.lineTo(x,h);ecx.stroke()}for(let y=0;y<h;y+=13){ecx.beginPath();ecx.moveTo(0,y);ecx.lineTo(w,y);ecx.stroke()}ecx.strokeStyle=c;ecx.lineWidth=1.5;ecx.shadowColor=c;ecx.shadowBlur=5;ecx.beginPath();eb.forEach((v,i)=>{const x=i/EN*w,y=h/2-v*(h*.36);i===0?ecx.moveTo(x,y):ecx.lineTo(x,y)});ecx.stroke();ecx.shadowBlur=0}
+function dECG(c){const w=ec.width=ec.offsetWidth||270,h=ec.height=ec.offsetHeight||48;ex.clearRect(0,0,w,h);ex.strokeStyle='rgba(255,255,255,.025)';ex.lineWidth=1;for(let x=0;x<w;x+=20){ex.beginPath();ex.moveTo(x,0);ex.lineTo(x,h);ex.stroke()}for(let y=0;y<h;y+=12){ex.beginPath();ex.moveTo(0,y);ex.lineTo(w,y);ex.stroke()}ex.strokeStyle=c;ex.lineWidth=1.5;ex.shadowColor=c;ex.shadowBlur=4;ex.beginPath();eb.forEach((v,i)=>{const x=i/EN*w,y=h/2-v*(h*.36);i===0?ex.moveTo(x,y):ex.lineTo(x,y)});ex.stroke();ex.shadowBlur=0}
 
-// BEV
-const bc=document.getElementById('bevCvs'),bx=bc.getContext('2d');
-const BO=[{x:-50,y:-85},{x:5,y:-105},{x:48,y:-65},{x:-32,y:-150},{x:42,y:-138}];
-let bt=0;
-function dBEV(lv){const w=bc.width=bc.parentElement.offsetWidth||200,h=bc.height=bc.parentElement.offsetHeight||144;bx.clearRect(0,0,w,h);const cx=w/2,cy=h/2;bx.strokeStyle='rgba(0,200,255,.05)';bx.lineWidth=1;for(let x=0;x<w;x+=22){bx.beginPath();bx.moveTo(x,0);bx.lineTo(x,h);bx.stroke()}for(let y=0;y<h;y+=22){bx.beginPath();bx.moveTo(0,y);bx.lineTo(w,y);bx.stroke()}[32,64,96].forEach((r,i)=>{bx.beginPath();bx.arc(cx,cy,r,0,Math.PI*2);bx.strokeStyle=`rgba(0,200,255,${.04+i*.02})`;bx.lineWidth=1;bx.stroke()});bx.strokeStyle='rgba(255,255,255,.07)';bx.setLineDash([6,6]);bx.lineWidth=1;bx.beginPath();bx.moveTo(cx-30,0);bx.lineTo(cx-30,h);bx.stroke();bx.beginPath();bx.moveTo(cx+30,0);bx.lineTo(cx+30,h);bx.stroke();bx.setLineDash([]);bx.beginPath();bx.moveTo(cx,cy-14);bx.lineTo(cx-20,cy+20);bx.lineTo(cx+20,cy+20);bx.closePath();bx.fillStyle='rgba(0,200,255,.05)';bx.strokeStyle='rgba(0,200,255,.2)';bx.fill();bx.stroke();const oc=lv==='ESCALATE'?'#ff2244':lv==='CAUTION'||lv==='PULLOVER'?'#ff8800':'#4488ff';BO.forEach(o=>{const oy=((o.y+bt)%220)-110;if(Math.abs(oy)>h*.58)return;bx.fillStyle=oc+'33';bx.strokeStyle=oc;bx.lineWidth=1.5;bx.beginPath();bx.roundRect(cx+o.x-7,cy+oy-11,14,22,2);bx.fill();bx.stroke();bx.fillStyle=oc;bx.fillRect(cx+o.x-1,cy+oy-17,2,6)});for(let i=0;i<12;i++){const a=i/12*Math.PI*2+bt*.01,r=48+Math.sin(bt*.05+i)*10;bx.fillStyle='rgba(0,200,255,.13)';bx.beginPath();bx.arc(cx+Math.cos(a)*r,cy+Math.sin(a)*r,2,0,Math.PI*2);bx.fill()}}
+// ── Engineering-grade BEV ─────────────────────────────────────────────────────
+const bc=document.getElementById('bevCvs');
+const bx=bc?bc.getContext('2d'):null;
 
-// Camera
+const BEV_VEHICLES=[
+  {x:-48,y:-80,type:'car',spd:72},{x:8,y:-110,type:'truck',spd:65},
+  {x:44,y:-60,type:'car',spd:85},{x:-30,y:-155,type:'car',spd:70},
+  {x:40,y:-138,type:'suv',spd:68}
+];
+
+function drawVehicle(bx,cx,cy,oy,type,col){
+  const w=type==='truck'?20:type==='suv'?17:14;
+  const h=type==='truck'?30:type==='suv'?25:20;
+  // Vehicle body
+  bx.fillStyle=col+'28';bx.strokeStyle=col;bx.lineWidth=1.2;
+  bx.beginPath();bx.roundRect(cx-w/2,cy+oy-h/2,w,h,2);bx.fill();bx.stroke();
+  // Windshield
+  bx.fillStyle=col+'50';
+  bx.fillRect(cx-w/2+2,cy+oy-h/2+3,w-4,h/3);
+  // Wheels
+  bx.fillStyle=col+'80';
+  [[cx-w/2-1,cy+oy-h/3],[cx+w/2-1,cy+oy-h/3],[cx-w/2-1,cy+oy+h/4],[cx+w/2-1,cy+oy+h/4]].forEach(([wx,wy])=>{
+    bx.fillRect(wx,wy,2,5);
+  });
+  // Speed indicator (direction arrow)
+  bx.strokeStyle=col;bx.lineWidth=1;bx.setLineDash([3,3]);
+  bx.beginPath();bx.moveTo(cx,cy+oy-h/2);bx.lineTo(cx,cy+oy-h/2-10);bx.stroke();
+  bx.setLineDash([]);
+}
+
+function drawBEV(){if(!bx)return;
+  const wrap=document.getElementById('bevWrap');
+  const w=bc.width=wrap.offsetWidth||200,h=bc.height=wrap.offsetHeight||136;
+  bx.clearRect(0,0,w,h);
+  const cx=w/2,cy=h*0.65,SCALE=3.2;
+  const col=_lv==='ESCALATE'?'#ff1e3c':_lv==='CAUTION'||_lv==='PULLOVER'?'#ff8c00':_lv==='ADVISORY'?'#ffd600':'#00d4ff';
+
+  // Background
+  bx.fillStyle='#020509';bx.fillRect(0,0,w,h);
+
+  // Road
+  bx.fillStyle='#040810';bx.fillRect(cx-32,0,64,h);
+
+  // Lane markings
+  bx.strokeStyle='rgba(255,255,255,0.13)';bx.lineWidth=1.5;
+  bx.beginPath();bx.moveTo(cx-30,0);bx.lineTo(cx-30,h);bx.stroke();
+  bx.beginPath();bx.moveTo(cx+30,0);bx.lineTo(cx+30,h);bx.stroke();
+  bx.strokeStyle='rgba(255,255,255,0.06)';bx.setLineDash([10,10]);bx.lineWidth=1;
+  bx.beginPath();bx.moveTo(cx,0);bx.lineTo(cx,h);bx.stroke();bx.setLineDash([]);
+
+  // Range rings
+  [10,20,30,50].forEach((dist,i)=>{
+    const r=dist*SCALE;
+    bx.beginPath();bx.arc(cx,cy,r,0,Math.PI*2);
+    bx.strokeStyle=`rgba(0,212,255,${0.07-i*0.01})`;bx.lineWidth=0.5;bx.stroke();
+    bx.fillStyle='rgba(0,212,255,0.2)';bx.font='7px Share Tech Mono';
+    bx.fillText(`${dist}m`,cx+r+2,cy-2);
+  });
+
+  // Grid
+  bx.strokeStyle='rgba(0,212,255,0.025)';bx.lineWidth=0.5;
+  for(let x=0;x<w;x+=18){bx.beginPath();bx.moveTo(x,0);bx.lineTo(x,h);bx.stroke()}
+  for(let y=0;y<h;y+=18){bx.beginPath();bx.moveTo(0,y);bx.lineTo(w,y);bx.stroke()}
+
+  // Real nuScenes objects
+  if(_bevData&&_bevData.objects&&_bevData.objects.length>0){
+    const counts={};
+    _bevData.objects.forEach(obj=>{
+      // nuScenes: x=forward(north), y=left(west) in ego frame
+      const px=cx+obj.y*SCALE;  // lateral -> horizontal
+      const py=cy-obj.x*SCALE;  // forward -> up
+      if(px<-20||px>w+20||py<-20||py>h+20)return;
+      const oc=obj.color||'#00d4ff';
+      const cls=obj.cls||'unknown';
+      const objW=Math.max(5,(obj.w||0.8)*SCALE);
+      const objL=Math.max(8,(obj.l||1.8)*SCALE);
+      counts[cls]=(counts[cls]||0)+1;
+
+      bx.save();bx.translate(px,py);bx.rotate(-(obj.heading||0));
+      // Body
+      bx.fillStyle=oc+'20';bx.strokeStyle=oc;bx.lineWidth=1.2;
+      bx.beginPath();bx.roundRect(-objW/2,-objL/2,objW,objL,2);bx.fill();bx.stroke();
+      // Front marker
+      bx.fillStyle=oc+'70';bx.fillRect(-objW/2+1,-objL/2,objW-2,objL*0.25);
+      bx.restore();
+
+      // Label
+      bx.fillStyle=oc;bx.font='7px Share Tech Mono';
+      const lbl=cls==='pedestrian'?'PED':cls==='motorcycle'?'MOTO':cls.toUpperCase().slice(0,4);
+      bx.fillText(lbl,px-8,py-objL/2-3);
+    });
+
+    // Object count summary
+    const summary=Object.entries(counts).map(([k,v])=>`${v}×${k.slice(0,3).toUpperCase()}`).join(' ');
+    bx.fillStyle='rgba(0,212,255,0.45)';bx.font='7px Share Tech Mono';
+    bx.fillText(summary,3,9);
+
+    // Scene info
+    bx.fillStyle='rgba(0,212,255,0.5)';bx.font='8px Share Tech Mono';
+    bx.fillText(`nuScenes · ${_bevData.scene_location||''}`,w-88,10);
+    bx.fillStyle='rgba(0,212,255,0.3)';bx.font='7px Share Tech Mono';
+    bx.fillText(`${(_bevData.sample_idx||0)+1}/${_bevData.total_samples||0}`,w-32,20);
+  } else {
+    // Fallback animated
+    bt+=0.4;
+    [{x:-44,y:-85},{x:6,y:-108},{x:42,y:-62}].forEach(o=>{
+      const oy=((o.y+bt*0.4)%220)-110;if(Math.abs(oy)>h*0.58)return;
+      bx.fillStyle=col+'22';bx.strokeStyle=col;bx.lineWidth=1;
+      bx.beginPath();bx.roundRect(cx+o.x-7,cy+oy-11,14,22,2);bx.fill();bx.stroke();
+    });
+    bx.fillStyle='rgba(0,212,255,0.3)';bx.font='8px Share Tech Mono';
+    bx.fillText('BEV PERCEPTION',w-82,10);
+  }
+
+  // FOV cone
+  bx.beginPath();bx.moveTo(cx,cy);bx.lineTo(cx-36,cy-65);bx.lineTo(cx+36,cy-65);bx.closePath();
+  bx.fillStyle='rgba(0,212,255,0.04)';bx.strokeStyle='rgba(0,212,255,0.14)';bx.lineWidth=0.8;bx.fill();bx.stroke();
+
+  // Ego vehicle
+  const ew2=11,eh=22;
+  bx.fillStyle='rgba(0,212,255,0.92)';bx.strokeStyle='#00d4ff';bx.lineWidth=1.5;
+  bx.beginPath();bx.roundRect(cx-ew2/2,cy-eh/2,ew2,eh,3);bx.fill();bx.stroke();
+  bx.fillStyle='rgba(0,0,0,0.65)';bx.fillRect(cx-ew2/2+2,cy-eh/2+3,ew2-4,eh*0.28);
+  bx.fillStyle='rgba(255,255,255,0.9)';
+  bx.fillRect(cx-ew2/2,cy-eh/2,3,2);bx.fillRect(cx+ew2/2-3,cy-eh/2,3,2);
+  bx.shadowColor='rgba(0,212,255,0.7)';bx.shadowBlur=8;
+  bx.strokeStyle='rgba(0,212,255,0.25)';bx.lineWidth=1;
+  bx.beginPath();bx.roundRect(cx-ew2/2-2,cy-eh/2-2,ew2+4,eh+4,4);bx.stroke();
+  bx.shadowBlur=0;
+
+  if(_lv==='ESCALATE'&&Math.sin(Date.now()/600)>0){
+    bx.fillStyle='rgba(255,30,60,0.04)';bx.fillRect(0,0,w,h);
+    bx.strokeStyle='rgba(255,30,60,0.3)';bx.lineWidth=2;bx.strokeRect(1,1,w-2,h-2);
+  }
+}
+
+// ── Camera ────────────────────────────────────────────────────────────────────
 const vid=document.getElementById('camVid'),noC=document.getElementById('nocam'),fr=document.getElementById('frect');
 (async()=>{try{const s=await navigator.mediaDevices.getUserMedia({video:{width:320,height:240,facingMode:'user'},audio:false});vid.srcObject=s;await vid.play();noC.style.display='none'}catch(e){noC.style.display='flex';vid.style.display='none'}})();
 
-// Helpers
+// ── Helpers ───────────────────────────────────────────────────────────────────
 function sc(v){return v>=.85?'var(--red)':v>=.65?'var(--orange)':v>=.45?'var(--yellow)':'var(--green)'}
 function lc(l){return{NOMINAL:'var(--green)',ADVISORY:'var(--yellow)',CAUTION:'var(--orange)',PULLOVER:'var(--orange)',ESCALATE:'var(--red)',INACTIVE:'var(--muted)'}[l]||'var(--green)'}
 function pct(v,m=1){return Math.min(100,Math.round((v||0)/m*100))+'%'}
 function f2(v){return(v||0).toFixed(2)}
 function f3(v){return(v||0).toFixed(3)}
-function cc(base,cls,s){return base+' '+cls+(s>=.85?' wr':s>=.65?' wo':s>=.45?' wy':'')}
+function ccard(base,cls,s){return base+' '+cls+(s>=.85?' wr':s>=.65?' wo':s>=.45?' wy':'')}
 
 function sleepText(tb,wm){
   const bs=tb?.score||0,pc=wm?.perclos_30s||wm?.perclos||0,yn=wm?.yawn_events_30s||wm?.yawns||0,cs=wm?.drowsy_score||wm?.webcam_score||0;
-  if(bs<.35&&pc<.1&&yn<=1)return '✅ Alert — no fatigue indicators';
-  if(yn>=2&&bs<.5&&pc<.15)return '😴 Sleepy — yawning detected. Physio normal.\nPlan a rest break soon.';
-  if(bs>=.5&&pc>=.15&&cs>=.4)return '⚠️ Drowsy — physio + camera both confirm.\nPull over immediately.';
-  if(bs>=.5||pc>=.2)return '⚠️ Drowsy — fatigue confirmed by physio signals.';
-  if(yn>=1)return '😴 Sleepy — early yawning. Rest stop advised.';
-  return '✅ Alert';
+  if(bs<.35&&pc<.1&&yn<=1)return '✅ ALERT — No fatigue indicators';
+  if(yn>=2&&bs<.5&&pc<.15)return '😴 SLEEPY — Yawning detected. Physio normal.\n   Plan a rest break soon.';
+  if(bs>=.5&&pc>=.15&&cs>=.4)return '⚠️ DROWSY — Physio + camera both confirm.\n   Pull over now.';
+  if(bs>=.5||pc>=.2)return '⚠️ DROWSY — Fatigue confirmed by physio signals.';
+  if(yn>=1)return '😴 SLEEPY — Early yawning. Rest stop advised.';
+  return '✅ ALERT';
 }
 
-let _lv='NOMINAL',_last={};
+let _lv='NOMINAL',_last={},_bevData=null,bt=0,bevLevel='NOMINAL';
 
 function applyState(s){
   if(!s)return;_last=s;
   const pol=s.policy||{},lv=(pol.level_name||s.level||'NOMINAL').toUpperCase(),col=lc(lv);
-  _lv=lv;
-  document.getElementById('pill').textContent=lv;document.getElementById('pill').style.color=col;document.getElementById('pill').style.borderColor=col;
-  document.getElementById('sumTxt').textContent=pol.display_message||pol.voice_message||s.summary||'Monitoring.';
+  _lv=lv;bevLevel=lv;
+  const pill=document.getElementById('pill');
+  pill.textContent=lv;pill.style.color=col;pill.style.borderColor=col;
+  document.getElementById('sumtxt').textContent=pol.display_message||pol.voice_message||s.summary||'Monitoring.';
+
+  // Autopilot badge
+  const veh=s.vehicle||{};
+  const apBadge=document.getElementById('apBadge');
+  if(veh.autopilot){apBadge.classList.add('on')}else{apBadge.classList.remove('on')}
+
   const ta=s.task_a||{},tb=s.task_b||{},tc=s.task_c||{},wm=s.webcam||{};
   const mx=Math.max(ta.confidence||ta.score||0,tb.score||0,tc.score||tc.confidence||0);
-  // ring
-  document.getElementById('rf').style.strokeDashoffset=408-408*Math.min(mx,1);document.getElementById('rf').style.stroke=col;
-  document.getElementById('riskS').textContent=f2(mx);document.getElementById('riskS').style.color=col;
-  document.getElementById('riskL').textContent=lv;document.getElementById('riskL').style.color=col;
+
+  // Ring
+  const rf=document.getElementById('rf');
+  rf.style.strokeDashoffset=383-383*Math.min(mx,1);rf.style.stroke=col;
+  const rs2=document.getElementById('riskS');rs2.textContent=f2(mx);rs2.style.color=col;
+  const rl=document.getElementById('riskL');rl.textContent=lv;rl.style.color=col;
+
+  // Vehicle telemetry
+  document.getElementById('vSpd').textContent=veh.speed_kph!=null?veh.speed_kph.toFixed(0):'—';
+  document.getElementById('vThr').textContent=veh.throttle!=null?(veh.throttle*100).toFixed(0)+'%':'—';
+  const brkEl=document.getElementById('vBrk');
+  brkEl.textContent=veh.brake!=null?(veh.brake*100).toFixed(0)+'%':'—';
+  brkEl.style.color=veh.brake>0.3?'var(--red)':'var(--cyan)';
+  document.getElementById('vGear').textContent=veh.gear||'D';
+  document.getElementById('vSrc').textContent=s.runtime?.source||'—';
+
   // Task A
-  const ac=ta.confidence||ta.score||0;const ae=document.getElementById('aScore');ae.textContent=f2(ac);ae.style.color=sc(ac);
-  const cls=(ta.cls||'unknown').toUpperCase();const ce=document.getElementById('aCls');ce.textContent=cls;ce.style.color=cls==='NORMAL'?'var(--green)':'var(--red)';ce.style.borderColor=ce.style.color;
-  hr=ta.hr_bpm||75;document.getElementById('hrBig').textContent=Math.round(hr);
+  const ac=ta.confidence||ta.score||0;
+  const ae=document.getElementById('aScore');ae.textContent=f2(ac);ae.style.color=sc(ac);
+  const cls=(ta.cls||'unknown').toUpperCase();
+  const ce=document.getElementById('aCls');ce.textContent=cls;ce.style.color=cls==='NORMAL'?'var(--green)':'var(--red)';ce.style.borderColor=ce.style.color;
+  hr=ta.hr_bpm||72;document.getElementById('hrBig').textContent=Math.round(hr);
   const rr=ta.rr_irr||0;document.getElementById('rrBar').style.width=pct(rr,.4);document.getElementById('rrBar').style.background=rr>.25?'var(--red)':'var(--blue)';document.getElementById('rrV').textContent=f3(rr);
   const pf=ta.p_frac||0;document.getElementById('pfBar').style.width=pct(pf);document.getElementById('pfV').textContent=f2(pf);
   document.getElementById('aRsn').textContent=(ta.reason||'').slice(0,55);
-  document.getElementById('cA').className=cc('card r2c1','',ac);
+  document.getElementById('cA').className=ccard('card r2c1','',ac);
+
   // Task B
   const bs=tb.score||0;const be=document.getElementById('bScore');be.textContent=f2(bs);be.style.color=sc(bs);
-  const bst=tb.abstained?'ABSTAIN':bs>.65?'DROWSY':bs>.45?'FATIGUED':'ALERT';const bse=document.getElementById('bSt');bse.textContent=bst;bse.style.color=sc(bs);
-  document.getElementById('cHR').style.width=pct(tb.hr_contrib||0);document.getElementById('cHRV').style.width=pct(tb.hrv_contrib||0);document.getElementById('cResp').style.width=pct(tb.resp_contrib||0);document.getElementById('cEDA').style.width=pct(tb.eda_contrib||0);
+  const bst=tb.abstained?'ABSTAIN':bs>.65?'DROWSY':bs>.45?'FATIGUED':'ALERT';
+  const bse=document.getElementById('bSt');bse.textContent=bst;bse.style.color=sc(bs);
+  document.getElementById('cHR').style.width=pct(tb.hr_contrib||0);
+  document.getElementById('cHRV').style.width=pct(tb.hrv_contrib||0);
+  document.getElementById('cResp').style.width=pct(tb.resp_contrib||0);
+  document.getElementById('cEDA').style.width=pct(tb.eda_contrib||0);
   document.getElementById('bRsn').textContent=(tb.reason||'').slice(0,55);
   document.getElementById('sleepB').textContent=sleepText(tb,wm);
-  document.getElementById('cB').className=cc('card r3c1','',bs);
+  document.getElementById('cB').className=ccard('card r3c1','',bs);
+
   // Webcam
   const ear=wm.ear,pc=wm.perclos_30s||wm.perclos,yn=wm.yawn_events_30s||wm.yawns,bl=wm.blink_rate_30s;
   const closed=wm.eyes_closed===true||wm.eyes==='closed',csc=wm.drowsy_score||wm.webcam_score;
-  document.getElementById('eyeTag').textContent='EYES '+(ear!=null?(closed?'CLOSED':'OPEN'):'—');document.getElementById('eyeTag').style.color=closed?'var(--red)':'var(--green)';
+  document.getElementById('eyeTag').textContent='EYES '+(ear!=null?(closed?'CLOSED':'OPEN'):'—');
+  document.getElementById('eyeTag').style.color=closed?'var(--red)':'var(--green)';
   document.getElementById('earTag').textContent='EAR '+(ear!=null?f3(ear):'—');
-  document.getElementById('perTag').textContent='PERCLOS '+(pc!=null?f2(pc):'—');
-  document.getElementById('perVal').textContent=pc!=null?f2(pc):'—';document.getElementById('yawnVal').textContent=yn!=null?yn:'—';document.getElementById('blinkVal').textContent=bl!=null?Math.round(bl):'—';
+  document.getElementById('perTag').textContent='PCLS '+(pc!=null?f2(pc):'—');
+  document.getElementById('perVal').textContent=pc!=null?f2(pc):'—';
+  document.getElementById('yawnVal').textContent=yn!=null?yn:'—';
+  document.getElementById('blinkVal').textContent=bl!=null?Math.round(bl):'—';
   const csv=document.getElementById('camSV');csv.textContent=csc!=null?f2(csc):'—';csv.style.color=csc!=null?sc(csc):'var(--muted)';
-  fr.style.display=(wm.face_detected||(wm.available&&ear!=null))?'block':'none';fr.style.borderColor=closed?'var(--red)':'var(--cyan)';
+  fr.style.display=(wm.face_detected||(wm.available&&ear!=null))?'block':'none';
+  fr.style.borderColor=closed?'var(--red)':'var(--cyan)';
+  fr.style.boxShadow=closed?'0 0 8px rgba(255,30,60,.6)':'0 0 8px rgba(0,212,255,.5)';
+
   // Task C
   const cc2=tc.score||tc.confidence||0;const cce=document.getElementById('cScore');cce.textContent=f2(cc2);cce.style.color=sc(cc2);
-  const sv=(tc.severity||'none').toUpperCase();const sve=document.getElementById('cSev');sve.textContent=sv;sve.style.color=sv==='NONE'?'var(--green)':sv==='MILD'?'var(--orange)':'var(--red)';sve.style.borderColor=sve.style.color;
-  const gp=tc.g_peak||0;document.getElementById('gBig').textContent=gp.toFixed(1);document.getElementById('gBar').style.width=pct(gp,10);document.getElementById('gBar').style.background=gp>3?'var(--red)':'var(--orange)';document.getElementById('gPct').textContent=pct(gp,10);document.getElementById('cRsn').textContent=(tc.reason||'').slice(0,50);
-  document.getElementById('cC').className=cc('card r3c3','',cc2);
+  const sv=(tc.severity||'none').toUpperCase();const sve=document.getElementById('cSev');
+  sve.textContent=sv;sve.style.color=sv==='NONE'?'var(--green)':sv==='MILD'?'var(--orange)':'var(--red)';sve.style.borderColor=sve.style.color;
+  const gp=tc.g_peak||0;document.getElementById('gBig').textContent=gp.toFixed(1);
+  document.getElementById('gBar').style.width=pct(gp,10);document.getElementById('gBar').style.background=gp>3?'var(--red)':'var(--orange)';
+  document.getElementById('gPct').textContent=pct(gp,10);document.getElementById('cRsn').textContent=(tc.reason||'').slice(0,50);
+  document.getElementById('cC').className=ccard('card r3c3','',cc2);
+
   // GPS
   const gps=s.gps||{},rt=s.route||{};
   if(gps.lat){document.getElementById('gpsLn').textContent=`${gps.lat.toFixed(4)}, ${gps.lon.toFixed(4)}`;const gb=document.getElementById('gpsBtn');gb.style.display='';gb.href=gps.maps||`https://www.google.com/maps?q=${gps.lat},${gps.lon}`}
   if(rt.destination_name){const eta=rt.eta_sec?` · ${Math.round(rt.eta_sec/60)}min`:'';document.getElementById('routeLn').textContent=rt.destination_name+eta}
+
   // SQI
-  const sqi=s.sqi||{},so=sqi.overall_confidence||sqi.overall||0;
+  const sqi=s.sqi||{},so=sqi.overall||sqi.overall_confidence||0;
   const sqe=document.getElementById('sqiBig');sqe.textContent=Math.round(so*100)+'%';sqe.style.color=so<.5?'var(--red)':so<.7?'var(--yellow)':'var(--green)';
   function ss(fi,vi,v){document.getElementById(fi).style.width=pct(v);document.getElementById(fi).style.background=v<.5?'var(--red)':v<.7?'var(--yellow)':'var(--green)';document.getElementById(vi).textContent=f2(v)}
   ss('sqiE','sqiEV',sqi.ecg_quality||sqi.ecg||0);ss('sqiA','sqiAV',sqi.eda_contact||sqi.eda||0);ss('sqiR','sqiRV',sqi.resp_quality||sqi.resp||0);
+
   // Rest
-  const rst=s.rest_guidance,rs2=document.getElementById('restS');
-  if(rst?.message){rs2.classList.add('on');document.getElementById('restMsg').textContent=rst.message}else rs2.classList.remove('on');
+  const rst=s.rest_guidance,rs3=document.getElementById('restS');
+  if(rst?.message){rs3.classList.add('on');document.getElementById('restMsg').textContent=rst.message}else rs3.classList.remove('on');
+
   // POI
   const poi=s.poi,ps=document.getElementById('poiS');
   if(poi?.name&&lv!=='NOMINAL'){ps.classList.add('on');document.getElementById('poiLbl').textContent=s.poi_label||'Nearest stop';document.getElementById('poiName').textContent=poi.name;document.getElementById('poiDist').textContent=poi.distance_mi?`${poi.distance_mi} mi away`:poi.distance_m?`${poi.distance_m}m`:'';document.getElementById('poiNav').href=poi.maps_url||'#'}else ps.classList.remove('on');
+
   // Emergency
   const esc=pol.escalate_911||s.escalate_911||lv==='ESCALATE',es=document.getElementById('emerS');
   if(esc){es.classList.add('on');document.getElementById('emerR').textContent=pol.log_reason||s.reason||'Emergency protocol active.';if(rt.lat)document.getElementById('erNav').href=`https://www.google.com/maps/dir/?api=1&destination=${rt.lat},${rt.lon}`}else es.classList.remove('on');
-  // Timestamp
+
   const ts=s.ts||Date.now()/1000,t=new Date(ts*1000).toLocaleTimeString();
   document.getElementById('tsLbl').textContent=t;document.getElementById('ftrT').textContent=t;
 }
 
-function copyDispatch(){fetch('/api/dispatch_script').then(r=>r.json()).then(d=>{navigator.clipboard.writeText(d.script||'').catch(()=>alert(d.script||''))}).catch(()=>{const s=_last,p=s.policy||{},g=s.gps||{},r=s.route||{};const t=['GUARDIAN DRIVE™ EMERGENCY DISPATCH',`Level: ${p.level_name||_lv}`,`GPS: ${g.lat?.toFixed(5)}, ${g.lon?.toFixed(5)}`,`ER: ${r.destination_name||'—'}`].join('\n');navigator.clipboard.writeText(t).catch(()=>alert(t))})}
-function fireDiscord(){fetch('/api/notify_discord',{method:'POST'}).then(r=>r.json()).then(d=>alert(d.ok?'✓ Discord notified':'Error: '+d.error)).catch(e=>alert('Error: '+e))}
+function copyDispatch(){fetch('/api/dispatch_script').then(r=>r.json()).then(d=>{navigator.clipboard.writeText(d.script||'').catch(()=>alert(d.script||''))}).catch(()=>{const s=_last,p=s.policy||{},g=s.gps||{};const t=['GUARDIAN DRIVE DISPATCH',`Level: ${_lv}`,`GPS: ${g.lat?.toFixed(5)}, ${g.lon?.toFixed(5)}`].join('\n');navigator.clipboard.writeText(t).catch(()=>alert(t))})}
+function fireDiscord(){fetch('/api/notify_discord',{method:'POST'}).then(r=>r.json()).then(d=>alert(d.ok?'Discord notified':'Error: '+d.error)).catch(e=>alert('Error: '+e))}
 function changeScenario(v){fetch('/api/scenario',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({scenario:v})})}
 
+// ── WebSocket ─────────────────────────────────────────────────────────────────
 let ws;
 function connect(){
   const p=location.protocol==='https:'?'wss:':'ws:';
@@ -361,10 +566,11 @@ function connect(){
 }
 connect();
 
+// ── Render loop ───────────────────────────────────────────────────────────────
 function loop(){
-  et+=.03;eb.push(ew(et,hr)+(Math.random()-.5)*.012);if(eb.length>EN)eb.shift();
-  const ec2=_lv==='ESCALATE'?'#ff2244':_lv==='CAUTION'||_lv==='PULLOVER'?'#ff8800':'#00ff88';
-  dECG(ec2);bt+=.5;dBEV(_lv);requestAnimationFrame(loop);
+  et+=.03;eb.push(ew(et,hr)+(Math.random()-.5)*.01);if(eb.length>EN)eb.shift();
+  const ec2=_lv==='ESCALATE'?'#ff1e3c':_lv==='CAUTION'||_lv==='PULLOVER'?'#ff8c00':_lv==='ADVISORY'?'#ffd600':'#00ff88';
+  dECG(ec2);bt+=.4;drawBEV();requestAnimationFrame(loop);
 }
 loop();
 </script>

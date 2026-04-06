@@ -1,0 +1,15 @@
+{
+  "model": "WaypointTransformer",
+  "architecture": "GPT-2 causal self-attention",
+  "dataset": "nuScenes mini",
+  "n_ego_poses": 31206,
+  "n_scenes": 10,
+  "seq_len": 10,
+  "pred_len": 5,
+  "best_val_loss": 61.878231,
+  "best_ade_m": 7.7048,
+  "params": 151626,
+  "epochs": 30,
+  "framework": "PyTorch",
+  "note": "Trained on real nuScenes driving trajectories. ADE = Average Displacement Error in meters."
+}

@@ -80,12 +80,12 @@ class WebcamMonitor:
     ROLLING_SEC = 30.0
 
     # EAR hysteresis thresholds
-    EAR_CLOSE_THR = 0.205
-    EAR_OPEN_THR = 0.235
+    EAR_CLOSE_THR = 0.14
+    EAR_OPEN_THR  = 0.17
 
     # Mouth / yawn thresholds
-    MOUTH_OPEN_THR = 0.34
-    YAWN_MIN_OPEN_SEC = 0.80
+    MOUTH_OPEN_THR = 0.28
+    YAWN_MIN_OPEN_SEC = 0.60
     YAWN_COOLDOWN_SEC = 1.20
 
     # Blink thresholds

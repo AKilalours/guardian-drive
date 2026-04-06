@@ -46,6 +46,18 @@ from integrations.telephony_console import ConsoleTelephony
 from integrations.vehicle_sim import NoOpVehicleControl
 from integrations.base import DispatchMessage
 from integrations.discord_webhook import DiscordNotifier
+# nuScenes real BEV
+try:
+    from acquisition.nuscenes_bev import NuScenesBEV as _NuScenesBEV
+    _NUSCENES = _NuScenesBEV()
+    if _NUSCENES.available:
+        print(f"[GD] nuScenes BEV loaded — real perception data active")
+    else:
+        _NUSCENES = None
+except Exception as _e:
+    print(f"[GD] nuScenes not available: {_e}")
+    _NUSCENES = None
+
 
 try:
     from integrations.telephony_twilio import TwilioTelephony
@@ -402,6 +414,8 @@ import subprocess as _sp, threading as _thr
 
 _LAST_VOICE_LEVEL = None
 _VOICE_COOLDOWN = 30.0
+_VOICE_ENABLED = os.getenv('GD_VOICE','1').strip().lower() in {'1','true','yes','on'}
+_LAST_VOICE_LV: str = ''
 _LAST_VOICE_TS = 0.0
 
 def _speak(msg: str) -> None:
@@ -488,7 +502,33 @@ async def _pipeline():
 
         payload=_build(rs,action,fb,wm,fix,route,poi_r,seat,sc_name)
         async with _lock: _state.update(payload)
+
+        # nuScenes real BEV frame
+        _bev_frame = None
+        if _NUSCENES is not None:
+            try:
+                _bev_frame = _NUSCENES.next_frame()
+            except Exception:
+                pass
+
+        if _bev_frame:
+            payload["bev"] = _bev_frame
         await _broadcast(payload)
+
+        # Voice alert on level change
+        global _LAST_VOICE_LV,_LAST_VOICE_TS
+        _now_v=time.time()
+        _vscript=_VOICE_SCRIPTS.get(lv,"")
+        _cooldown=45.0 if lv!="ESCALATE" else 60.0
+        if _vscript and (lv!=_LAST_VOICE_LV or (_now_v-_LAST_VOICE_TS)>_cooldown):
+            # Append POI name if available
+            _poi_r=payload.get("poi") or {}
+            if _poi_r.get("name") and lv in ("ADVISORY","CAUTION","PULLOVER"):
+                _vscript+=f" There is a {_poi_r['name']} in {_poi_r.get('distance_mi','?')} miles."
+            elif payload.get("route",{}) and lv=="ESCALATE":
+                _vscript+=f" Routing to {payload.get('route',{}).get('destination_name','')}."
+            _speak(_vscript)
+            _LAST_VOICE_LV=lv; _LAST_VOICE_TS=_now_v
 
         if lv=="ESCALATE":
             now=time.time()
