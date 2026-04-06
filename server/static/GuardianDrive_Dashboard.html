@@ -528,7 +528,7 @@ function applyState(s){
 
   // Webcam
   const ear=wm.ear,pc=wm.perclos_30s||wm.perclos,yn=wm.yawn_events_30s||wm.yawns,bl=wm.blink_rate_30s;
-  const closed=wm.eyes_closed===true||wm.eyes==='closed',csc=wm.drowsy_score||wm.webcam_score;
+  const ear2=wm.ear||0; const closed=wm.eyes_closed===true||wm.eyes==='closed'||(ear2>0&&ear2<0.19),csc=wm.drowsy_score||wm.webcam_score;
   document.getElementById('eyeTag').textContent='EYES '+(ear!=null?(closed?'CLOSED':'OPEN'):'—');
   document.getElementById('eyeTag').style.color=closed?'var(--red)':'var(--green)';
   document.getElementById('earTag').textContent='EAR '+(ear!=null?f3(ear):'—');
@@ -604,10 +604,12 @@ function showMap(lat, lon, destLat, destLon, destName, emergency) {
 function closeMap() {
   const panel = document.getElementById('mapPanel');
   if (panel) panel.classList.remove('on');
+  _mapLocked = false; _mapShownFor = '';
 }
 
 let _lastMapLevel = '';
 let _mapShownFor = '';
+let _mapLocked = false;
 
 function updateMap(s) {
   const lv = s.level || 'NOMINAL';
@@ -618,18 +620,22 @@ function updateMap(s) {
   
   if (!gps.lat) return;
   
+  // Only show map when level changes, not every cycle
+  if (lv === _lastMapLevel && _mapLocked) return;
+  _lastMapLevel = lv;
+  
   const key = lv + '|' + (poi.name||'') + '|' + (route.destination_name||'');
   if (key === _mapShownFor) return;  // don't re-render same state
   
   if (lv === 'ESCALATE') {
-    _mapShownFor = key;
+    _mapShownFor = key; _mapLocked = true;
     const destLat = poi.lat || route.lat;
     const destLon = poi.lon || route.lon;
     const destName = poi.name || route.destination_name || 'nearest hospital';
     showMap(gps.lat, gps.lon, destLat, destLon, destName, true);
     if (apStrip) apStrip.classList.add('on');
   } else if (['ADVISORY','CAUTION','PULLOVER'].includes(lv) && poi.name) {
-    _mapShownFor = key;
+    _mapShownFor = key; _mapLocked = true;
     showMap(gps.lat, gps.lon, poi.lat, poi.lon, poi.name, false);
     if (apStrip) apStrip.classList.remove('on');
   } else if (lv === 'NOMINAL' || lv === 'INACTIVE') {

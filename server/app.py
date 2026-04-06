@@ -422,6 +422,7 @@ _LAST_VOICE_TS = 0.0
 
 def _speak(msg: str) -> None:
     """Non-blocking macOS voice alert."""
+    if not _VOICE_ENABLED: return
     def _run():
         try:
             _sp.run(["say", "-v", "Samantha", "-r", "160", msg],
