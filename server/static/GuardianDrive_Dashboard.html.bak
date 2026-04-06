@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guardian Drive™</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ── reset & base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #080c10;
+    --bg2:       #0d1219;
+    --bg3:       #131b24;
+    --border:    rgba(255,255,255,0.07);
+    --border2:   rgba(255,255,255,0.12);
+    --text:      #e8edf2;
+    --muted:     #6b7a8d;
+    --dim:       #3a4452;
+
+    --green:     #00e896;
+    --green-dim: rgba(0,232,150,0.12);
+    --yellow:    #f5c842;
+    --yellow-dim:rgba(245,200,66,0.12);
+    --orange:    #ff7a2f;
+    --orange-dim:rgba(255,122,47,0.12);
+    --red:       #ff3b5c;
+    --red-dim:   rgba(255,59,92,0.12);
+    --blue:      #3d9fff;
+    --blue-dim:  rgba(61,159,255,0.10);
+
+    --font-head: 'Syne', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    overflow-x: hidden;
+  }
+
+  /* ── scanline overlay ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ── layout ── */
+  .shell {
+    display: grid;
+    grid-template-rows: 52px 1fr 44px;
+    grid-template-columns: 1fr;
+    height: 100vh;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* ── header ── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+  .logo {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 18px;
+    letter-spacing: 0.04em;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 10px var(--green);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.5; transform: scale(0.85); }
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .live-badge {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--green);
+    border: 1px solid rgba(0,232,150,0.3);
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+  }
+  .scenario-select {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    cursor: pointer;
+    outline: none;
+  }
+  .scenario-select:focus { border-color: var(--blue); }
+
+  /* ── main grid ── */
+  .grid {
+    display: grid;
+    grid-template-columns: 280px 1fr 280px;
+    grid-template-rows: 1fr 1fr;
+    gap: 12px;
+    padding: 12px 0;
+    overflow: hidden;
+  }
+
+  /* ── card ── */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+  }
+  .card-label {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .card-label::before {
+    content: '';
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+  }
+
+  /* ── CENTER: status panel ── */
+  .card-status {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 20px;
+  }
+  .status-ring {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    margin: 0 auto;
+  }
+  .status-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .ring-bg   { fill: none; stroke: var(--bg3); stroke-width: 6; }
+  .ring-fill { fill: none; stroke-width: 6; stroke-linecap: round;
+               stroke-dasharray: 502; stroke-dashoffset: 502;
+               transition: stroke-dashoffset 0.8s cubic-bezier(.4,0,.2,1), stroke 0.4s; }
+  .status-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .status-level {
+    font-family: var(--font-head);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .status-score {
+    font-size: 36px;
+    font-weight: 800;
+    font-family: var(--font-head);
+    line-height: 1;
+    transition: color 0.3s;
+  }
+  .status-sub { font-size: 10px; color: var(--muted); }
+  .status-summary {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+    max-width: 320px;
+    text-align: center;
+  }
+
+  /* ── POI banner ── */
+  .poi-banner {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    max-width: 380px;
+    transition: all 0.3s;
+  }
+  .poi-banner.visible { display: flex; }
+  .poi-label-small { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .poi-name { font-size: 15px; font-weight: 500; font-family: var(--font-head); color: #fff; }
+  .poi-dist { font-size: 11px; color: var(--muted); }
+  .poi-actions { display: flex; gap: 8px; margin-top: 4px; }
+  .btn {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s;
+  }
+  .btn:hover { background: var(--bg3); border-color: var(--border2); }
+  .btn-red { border-color: var(--red); color: var(--red); }
+  .btn-red:hover { background: var(--red-dim); }
+  .btn-green { border-color: var(--green); color: var(--green); }
+  .btn-green:hover { background: var(--green-dim); }
+
+  /* ── 911 emergency panel ── */
+  .emergency-bar {
+    display: none;
+    width: 100%;
+    max-width: 420px;
+    background: var(--red-dim);
+    border: 1px solid var(--red);
+    border-radius: 8px;
+    padding: 12px 16px;
+    flex-direction: column;
+    gap: 8px;
+    animation: flashBorder 1s ease-in-out infinite;
+  }
+  .emergency-bar.visible { display: flex; }
+  @keyframes flashBorder {
+    0%,100% { border-color: var(--red); box-shadow: 0 0 0 0 rgba(255,59,92,0); }
+    50%     { border-color: #ff6080; box-shadow: 0 0 16px rgba(255,59,92,0.3); }
+  }
+  .emergency-title {
+    font-family: var(--font-head);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--red);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .emergency-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* ── metric rows ── */
+  .metric {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .metric-label { color: var(--muted); font-size: 11px; white-space: nowrap; }
+  .metric-val   { font-weight: 500; font-size: 13px; white-space: nowrap; }
+  .metric-bar-wrap {
+    flex: 1;
+    height: 3px;
+    background: var(--bg3);
+    border-radius: 2px;
+    overflow: hidden;
+    min-width: 40px;
+  }
+  .metric-bar {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.6s cubic-bezier(.4,0,.2,1), background 0.3s;
+  }
+
+  /* ── ECG waveform ── */
+  .ecg-canvas-wrap {
+    height: 60px;
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--bg);
+  }
+  canvas.ecg { width: 100%; height: 100%; display: block; }
+
+  /* ── gauge ── */
+  .gauge-wrap { position: relative; width: 100%; max-width: 120px; margin: 0 auto; }
+  .gauge-wrap svg { width: 100%; display: block; }
+
+  /* ── webcam box ── */
+  .webcam-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .eye-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+  }
+  .eye-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    transition: background 0.3s;
+  }
+
+  /* ── SQI bar group ── */
+  .sqi-bars { display: flex; gap: 4px; align-items: flex-end; height: 28px; }
+  .sqi-bar {
+    width: 6px;
+    border-radius: 2px 2px 0 0;
+    background: var(--green);
+    transition: height 0.5s, background 0.3s;
+    min-height: 4px;
+  }
+
+  /* ── task header ── */
+  .task-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .task-score {
+    font-family: var(--font-head);
+    font-size: 22px;
+    font-weight: 700;
+    transition: color 0.3s;
+  }
+  .cls-badge {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 2px 8px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    font-weight: 500;
+    border: 1px solid currentColor;
+    transition: all 0.3s;
+  }
+  .tag {
+    font-size: 9px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    background: var(--bg3);
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  /* ── contrib bars ── */
+  .contrib-row { display: flex; gap: 4px; align-items: center; }
+  .contrib-label { font-size: 9px; color: var(--muted); width: 32px; flex-shrink: 0; }
+  .contrib-bar-wrap { flex: 1; height: 4px; background: var(--bg3); border-radius: 2px; }
+  .contrib-bar { height: 4px; border-radius: 2px; transition: width 0.6s; background: var(--blue); }
+
+  /* ── footer ── */
+  footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--border);
+    font-size: 10px;
+    color: var(--dim);
+    letter-spacing: 0.06em;
+  }
+  .conn-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--muted);
+    display: inline-block;
+    margin-right: 5px;
+    transition: background 0.3s;
+  }
+  .conn-dot.live { background: var(--green); box-shadow: 0 0 6px var(--green); }
+
+  /* ── color helpers ── */
+  .c-green  { color: var(--green)!important; }
+  .c-yellow { color: var(--yellow)!important; }
+  .c-orange { color: var(--orange)!important; }
+  .c-red    { color: var(--red)!important; }
+  .c-blue   { color: var(--blue)!important; }
+  .c-muted  { color: var(--muted)!important; }
+
+  .flash { animation: flashText 0.6s ease-in-out 3; }
+  @keyframes flashText { 0%,100% { opacity:1 } 50% { opacity:0.2 } }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ── HEADER ── -->
+  <header>
+    <div class="logo">
+      <div class="logo-dot"></div>
+      Guardian Drive™
+    </div>
+    <div class="header-right">
+      <select class="scenario-select" id="scenarioSelect" onchange="changeScenario(this.value)">
+        <option value="normal">Normal</option>
+        <option value="drowsy">Drowsy</option>
+        <option value="afib">AFib</option>
+        <option value="tachycardia">Tachycardia</option>
+        <option value="bradycardia">Bradycardia</option>
+        <option value="crash_mild">Crash Mild</option>
+        <option value="crash_severe">Crash Severe</option>
+      </select>
+      <div class="live-badge">● Live</div>
+    </div>
+  </header>
+
+  <!-- ── MAIN GRID ── -->
+  <div class="grid">
+
+    <!-- COL 1 ROW 1: Task A — ECG / Arrhythmia -->
+    <div class="card" id="cardA">
+      <div class="card-label">Task A — Cardiac / ECG</div>
+      <div class="task-header">
+        <div>
+          <div class="task-score" id="aScore">0.00</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">confidence</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+          <span class="cls-badge c-green" id="aCls">NORMAL</span>
+          <span class="tag" id="aSource">PTB-XL</span>
+        </div>
+      </div>
+      <div class="ecg-canvas-wrap">
+        <canvas class="ecg" id="ecgCanvas"></canvas>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Heart rate</span>
+        <div class="metric-bar-wrap"><div class="metric-bar" id="hrBar" style="width:50%"></div></div>
+        <span class="metric-val" id="hrVal">— bpm</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">RR irregularity</span>
+        <div class="metric-bar-wrap"><div class="metric-bar" id="rrBar" style="width:0%"></div></div>
+        <span class="metric-val" id="rrVal">—</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">P-wave frac</span>
+        <div class="metric-bar-wrap"><div class="metric-bar" id="pfBar" style="width:0%"></div></div>
+        <span class="metric-val" id="pfVal">—</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px" id="aReason">—</div>
+    </div>
+
+    <!-- COL 1 ROW 2: SQI + system -->
+    <div class="card" id="cardSQI">
+      <div class="card-label">Signal Quality</div>
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:8px">
+        <div>
+          <div style="font-family:var(--font-head);font-size:28px;font-weight:700" id="sqiVal">—</div>
+          <div style="font-size:10px;color:var(--muted)">overall SQI</div>
+        </div>
+        <div class="sqi-bars" id="sqiBars">
+          <div class="sqi-bar" style="height:60%" title="ECG"></div>
+          <div class="sqi-bar" style="height:80%" title="EDA"></div>
+          <div class="sqi-bar" style="height:70%" title="Resp"></div>
+          <div class="sqi-bar" style="height:50%" title="Motion"></div>
+        </div>
+      </div>
+      <div class="metric">
+        <span class="metric-label">ECG</span>
+        <div class="metric-bar-wrap"><div class="metric-bar" id="sqiEcg" style="width:70%"></div></div>
+        <span class="metric-val" id="sqiEcgVal">—</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">EDA</span>
+        <div class="metric-bar-wrap"><div class="metric-bar" id="sqiEda" style="width:70%"></div></div>
+        <span class="metric-val" id="sqiEdaVal">—</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Resp</span>
+        <div class="metric-bar-wrap"><div class="metric-bar" id="sqiResp" style="width:70%"></div></div>
+        <span class="metric-val" id="sqiRespVal">—</span>
+      </div>
+      <div style="margin-top:auto;padding-top:8px;border-top:1px solid var(--border)">
+        <div class="card-label" style="margin-bottom:6px">Scenario</div>
+        <div style="font-family:var(--font-head);font-size:13px;font-weight:600;color:#fff" id="scenarioLabel">NORMAL</div>
+      </div>
+    </div>
+
+    <!-- COL 2: Status (full height) -->
+    <div class="card card-status" id="cardStatus">
+      <div class="card-label" style="justify-content:center">System State</div>
+      <div class="status-ring">
+        <svg viewBox="0 0 180 180">
+          <circle class="ring-bg"   cx="90" cy="90" r="80"/>
+          <circle class="ring-fill" cx="90" cy="90" r="80" id="ringFill"/>
+        </svg>
+        <div class="status-inner">
+          <div class="status-level" id="statusLevel">NOMINAL</div>
+          <div class="status-score" id="statusScore">—</div>
+          <div class="status-sub">risk score</div>
+        </div>
+      </div>
+
+      <div class="status-summary" id="statusSummary">Initialising pipeline…</div>
+
+      <!-- POI Banner -->
+      <div class="poi-banner" id="poiBanner">
+        <div class="poi-label-small" id="poiLabel">Nearest rest stop</div>
+        <div class="poi-name" id="poiName">—</div>
+        <div class="poi-dist" id="poiDist">—</div>
+        <div class="poi-actions">
+          <a class="btn btn-green" id="poiMapsBtn" href="#" target="_blank">↗ Maps</a>
+        </div>
+      </div>
+
+      <!-- Emergency panel -->
+      <div class="emergency-bar" id="emergencyBar">
+        <div class="emergency-title">⚡ Emergency Protocol Active</div>
+        <div style="font-size:11px;color:var(--text)" id="emergencyReason">Medical emergency detected.</div>
+        <div class="emergency-actions">
+          <a class="btn btn-red" href="tel:911">📞 Call 911</a>
+          <a class="btn btn-red" id="erMapsBtn" href="#" target="_blank">🏥 ER Maps</a>
+          <button class="btn" onclick="copyDispatch()">📋 Copy Dispatch</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- COL 3 ROW 1: Task B — Drowsiness -->
+    <div class="card" id="cardB">
+      <div class="card-label">Task B — Drowsiness / Fatigue</div>
+      <div class="task-header">
+        <div>
+          <div class="task-score" id="bScore">0.00</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">drowsy score</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:10px;color:var(--muted)">WESAD TCN</div>
+          <div style="font-size:10px;color:var(--muted)" id="bStatus">—</div>
+        </div>
+      </div>
+
+      <!-- Physio contributors -->
+      <div class="contrib-row"><span class="contrib-label">HR</span><div class="contrib-bar-wrap"><div class="contrib-bar" id="hrContrib" style="width:0%"></div></div></div>
+      <div class="contrib-row"><span class="contrib-label">HRV</span><div class="contrib-bar-wrap"><div class="contrib-bar" id="hrvContrib" style="width:0%"></div></div></div>
+      <div class="contrib-row"><span class="contrib-label">Resp</span><div class="contrib-bar-wrap"><div class="contrib-bar" id="respContrib" style="width:0%"></div></div></div>
+      <div class="contrib-row"><span class="contrib-label">EDA</span><div class="contrib-bar-wrap"><div class="contrib-bar" id="edaContrib" style="width:0%"></div></div></div>
+
+      <!-- Webcam section -->
+      <div style="border-top:1px solid var(--border);padding-top:8px;margin-top:4px">
+        <div class="card-label" style="margin-bottom:6px">Camera — Driver Monitor</div>
+        <div class="webcam-grid">
+          <div>
+            <div class="eye-indicator">
+              <div class="eye-dot" id="eyeDot" style="background:var(--green)"></div>
+              <span id="eyeStatus">—</span>
+            </div>
+            <div style="font-size:10px;color:var(--muted);margin-top:3px">EAR: <span id="earVal">—</span></div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--muted)">PERCLOS</div>
+            <div style="font-size:16px;font-weight:600;font-family:var(--font-head)" id="perclosVal">—</div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--muted)">Yawns 30s</div>
+            <div style="font-size:16px;font-weight:600;font-family:var(--font-head)" id="yawnVal">—</div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--muted)">Cam score</div>
+            <div style="font-size:16px;font-weight:600;font-family:var(--font-head)" id="camScore">—</div>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:10px;color:var(--muted)" id="bReason">—</div>
+    </div>
+
+    <!-- COL 3 ROW 2: Task C — Crash + GPS -->
+    <div class="card" id="cardC">
+      <div class="card-label">Task C — Crash Detection</div>
+      <div class="task-header">
+        <div>
+          <div class="task-score" id="cScore">0.00</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">confidence</div>
+        </div>
+        <div>
+          <span class="cls-badge c-green" id="cSeverity">NONE</span>
+        </div>
+      </div>
+      <div class="metric">
+        <span class="metric-label">G-force peak</span>
+        <div class="metric-bar-wrap"><div class="metric-bar" id="gBar" style="width:0%"></div></div>
+        <span class="metric-val" id="gVal">— g</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px" id="cReason">—</div>
+
+      <!-- GPS section -->
+      <div style="border-top:1px solid var(--border);padding-top:8px;margin-top:auto">
+        <div class="card-label" style="margin-bottom:6px">GPS Location</div>
+        <div id="gpsStatus" style="font-size:11px;color:var(--muted)">Acquiring fix…</div>
+        <div id="gpsCoords" style="font-size:12px;font-weight:500;margin-top:3px;display:none"></div>
+        <a class="btn" id="gpsMapsLink" href="#" target="_blank" style="margin-top:8px;display:none">
+          ↗ Open in Maps
+        </a>
+      </div>
+    </div>
+
+  </div><!-- .grid -->
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div>
+      <span class="conn-dot" id="connDot"></span>
+      <span id="connStatus">Connecting…</span>
+    </div>
+    <div id="tsLabel">—</div>
+    <div>Guardian Drive™ v4.2 · Real-Time Safety Pipeline</div>
+  </footer>
+
+</div><!-- .shell -->
+
+<script>
+// ── ECG canvas ────────────────────────────────────────────────────────────────
+const ecgCanvas = document.getElementById('ecgCanvas');
+const ecgCtx    = ecgCanvas.getContext('2d');
+const ECG_POINTS = 120;
+let ecgBuf = Array(ECG_POINTS).fill(0);
+let ecgHR  = 75;
+let ecgT   = 0;
+
+function ecgWaveform(t, hr) {
+  const period = 60 / hr;
+  const phase  = (t % period) / period;
+  if (phase < 0.08)  return Math.sin(phase / 0.08 * Math.PI) * 0.15;
+  if (phase < 0.12)  return -0.1;
+  if (phase < 0.18)  return Math.sin((phase - 0.12) / 0.06 * Math.PI) * 0.2;
+  if (phase < 0.22)  return -(Math.sin((phase - 0.18) / 0.04 * Math.PI)) * 1.0;
+  if (phase < 0.26)  return Math.sin((phase - 0.22) / 0.04 * Math.PI) * 0.9;
+  if (phase < 0.30)  return Math.sin((phase - 0.26) / 0.04 * Math.PI) * 0.25;
+  if (phase < 0.36)  return Math.sin((phase - 0.30) / 0.06 * Math.PI) * 0.15;
+  return 0;
+}
+
+function drawECG(color) {
+  const w = ecgCanvas.width  = ecgCanvas.offsetWidth;
+  const h = ecgCanvas.height = ecgCanvas.offsetHeight;
+  ecgCtx.clearRect(0, 0, w, h);
+
+  // Grid lines
+  ecgCtx.strokeStyle = 'rgba(255,255,255,0.04)';
+  ecgCtx.lineWidth = 1;
+  for (let x = 0; x < w; x += 20) {
+    ecgCtx.beginPath(); ecgCtx.moveTo(x, 0); ecgCtx.lineTo(x, h); ecgCtx.stroke();
+  }
+  for (let y = 0; y < h; y += 15) {
+    ecgCtx.beginPath(); ecgCtx.moveTo(0, y); ecgCtx.lineTo(w, y); ecgCtx.stroke();
+  }
+
+  // Waveform
+  ecgCtx.strokeStyle = color || '#00e896';
+  ecgCtx.lineWidth   = 1.5;
+  ecgCtx.shadowColor = color || '#00e896';
+  ecgCtx.shadowBlur  = 4;
+  ecgCtx.beginPath();
+  ecgBuf.forEach((v, i) => {
+    const x = (i / ECG_POINTS) * w;
+    const y = h / 2 - v * (h * 0.38);
+    i === 0 ? ecgCtx.moveTo(x, y) : ecgCtx.lineTo(x, y);
+  });
+  ecgCtx.stroke();
+  ecgCtx.shadowBlur = 0;
+}
+
+function tickECG() {
+  const step = 0.025;
+  ecgT += step;
+  const noiseAmp = 0.02;
+  const val = ecgWaveform(ecgT, ecgHR) + (Math.random() - 0.5) * noiseAmp;
+  ecgBuf.push(val);
+  if (ecgBuf.length > ECG_POINTS) ecgBuf.shift();
+}
+
+// ── color helpers ─────────────────────────────────────────────────────────────
+function scoreColor(v) {
+  if (v >= 0.85) return 'var(--red)';
+  if (v >= 0.65) return 'var(--orange)';
+  if (v >= 0.45) return 'var(--yellow)';
+  return 'var(--green)';
+}
+
+function levelColor(level) {
+  const m = {NOMINAL:'var(--green)',ADVISORY:'var(--yellow)',
+             CAUTION:'var(--orange)',PULLOVER:'var(--orange)',
+             ESCALATE:'var(--red)',INACTIVE:'var(--muted)'};
+  return m[level] || 'var(--green)';
+}
+
+function pct(v) { return Math.round((v || 0) * 100) + '%'; }
+function f2(v)  { return (v || 0).toFixed(2); }
+function f3(v)  { return (v || 0).toFixed(3); }
+
+// ── ring update ───────────────────────────────────────────────────────────────
+function updateRing(score, level) {
+  const ring  = document.getElementById('ringFill');
+  const total = 502;
+  const dash  = total - total * Math.min(score, 1.0);
+  ring.style.strokeDashoffset = dash;
+  ring.style.stroke = levelColor(level);
+
+  const el = document.getElementById('statusScore');
+  el.textContent = f2(score);
+  el.style.color = levelColor(level);
+
+  const lel = document.getElementById('statusLevel');
+  lel.textContent = level;
+  lel.style.color = levelColor(level);
+}
+
+// ── card border flash ─────────────────────────────────────────────────────────
+function setCardState(cardId, level) {
+  const card = document.getElementById(cardId);
+  card.style.borderColor = level === 'ESCALATE' ? 'var(--red)'
+    : level === 'PULLOVER' || level === 'CAUTION' ? 'var(--orange)'
+    : level === 'ADVISORY' ? 'var(--yellow)'
+    : 'var(--border)';
+}
+
+// ── main state update ─────────────────────────────────────────────────────────
+let _prevLevel = 'NOMINAL';
+let _dispatchState = {};
+
+function applyState(s) {
+  if (!s || !s.level) return;
+  _dispatchState = s;
+
+  const level = s.level;
+  const col   = levelColor(level);
+
+  // Overall risk score = max of all task scores
+  const riskScore = Math.max(
+    s.task_a?.score || 0,
+    s.task_b?.score || 0,
+    s.task_c?.score || 0
+  );
+
+  updateRing(riskScore, level);
+  document.getElementById('statusSummary').textContent = s.summary || '—';
+  setCardState('cardStatus', level);
+
+  // ── Task A ────────────────────────────────────────────────────────────────
+  const a = s.task_a || {};
+  const aCol = scoreColor(a.score || 0);
+  const aScoreEl = document.getElementById('aScore');
+  aScoreEl.textContent = f2(a.confidence || a.score || 0);
+  aScoreEl.style.color = aCol;
+
+  const clsEl = document.getElementById('aCls');
+  const cls   = (a.cls || 'unknown').toUpperCase();
+  clsEl.textContent = cls;
+  clsEl.className   = 'cls-badge';
+  clsEl.style.color = cls === 'NORMAL' ? 'var(--green)' : 'var(--red)';
+  clsEl.style.borderColor = cls === 'NORMAL' ? 'var(--green)' : 'var(--red)';
+
+  ecgHR = a.hr_bpm || 75;
+  const hrPct = Math.min((ecgHR - 40) / 140, 1);
+  document.getElementById('hrBar').style.width = pct(hrPct);
+  document.getElementById('hrBar').style.background = hrPct > 0.7 ? 'var(--red)' : hrPct > 0.5 ? 'var(--orange)' : 'var(--green)';
+  document.getElementById('hrVal').textContent = Math.round(ecgHR) + ' bpm';
+
+  const rr = a.rr_irr || 0;
+  document.getElementById('rrBar').style.width  = pct(Math.min(rr * 3, 1));
+  document.getElementById('rrBar').style.background = rr > 0.25 ? 'var(--red)' : 'var(--blue)';
+  document.getElementById('rrVal').textContent  = f3(rr);
+
+  const pf = a.p_frac || 0;
+  document.getElementById('pfBar').style.width  = pct(pf);
+  document.getElementById('pfVal').textContent  = f2(pf);
+  document.getElementById('aReason').textContent = (a.reason || '').slice(0, 70);
+
+  setCardState('cardA', cls !== 'NORMAL' && !a.abstained ? 'CAUTION' : 'NOMINAL');
+
+  // ── Task B ────────────────────────────────────────────────────────────────
+  const b = s.task_b || {};
+  const bScore = b.score || 0;
+  const bEl = document.getElementById('bScore');
+  bEl.textContent = f2(bScore);
+  bEl.style.color = scoreColor(bScore);
+
+  document.getElementById('bStatus').textContent =
+    b.abstained ? 'ABSTAIN' : bScore > 0.65 ? 'DROWSY' : bScore > 0.45 ? 'FATIGUED' : 'ALERT';
+
+  document.getElementById('hrContrib').style.width   = pct(b.hr_contrib   || 0);
+  document.getElementById('hrvContrib').style.width  = pct(b.hrv_contrib  || 0);
+  document.getElementById('respContrib').style.width = pct(b.resp_contrib || 0);
+  document.getElementById('edaContrib').style.width  = pct(b.eda_contrib  || 0);
+
+  // webcam
+  const w = s.webcam || {};
+  if (w.ear !== undefined) {
+    const closed = w.eyes_closed === true || w.eyes === 'closed';
+    document.getElementById('eyeDot').style.background = closed ? 'var(--red)' : 'var(--green)';
+    document.getElementById('eyeStatus').textContent   = closed ? 'CLOSED' : (w.eyes === 'open' ? 'OPEN' : '—');
+    document.getElementById('earVal').textContent      = w.ear != null ? f3(w.ear) : '—';
+    document.getElementById('perclosVal').textContent  = w.perclos_30s != null ? f2(w.perclos_30s) : '—';
+    document.getElementById('yawnVal').textContent     = w.yawn_events_30s != null ? w.yawn_events_30s : '—';
+    const cs = w.drowsy_score;
+    const csEl = document.getElementById('camScore');
+    csEl.textContent = cs != null ? f2(cs) : '—';
+    csEl.style.color  = cs != null ? scoreColor(cs) : 'var(--muted)';
+  }
+  document.getElementById('bReason').textContent = (b.reason || '').slice(0, 70);
+  setCardState('cardB', bScore > 0.65 ? 'PULLOVER' : bScore > 0.45 ? 'CAUTION' : 'NOMINAL');
+
+  // ── Task C ────────────────────────────────────────────────────────────────
+  const c = s.task_c || {};
+  const cScore = c.score || 0;
+  const cEl = document.getElementById('cScore');
+  cEl.textContent = f2(cScore);
+  cEl.style.color = scoreColor(cScore);
+
+  const sevEl = document.getElementById('cSeverity');
+  const sev   = (c.severity || 'none').toUpperCase();
+  sevEl.textContent  = sev;
+  sevEl.style.color  = sev === 'NONE' ? 'var(--green)' : sev === 'MILD' ? 'var(--orange)' : 'var(--red)';
+  sevEl.style.borderColor = sevEl.style.color;
+
+  const gPeak = c.g_peak || 0;
+  document.getElementById('gBar').style.width  = pct(Math.min(gPeak / 10, 1));
+  document.getElementById('gBar').style.background = gPeak > 3 ? 'var(--red)' : 'var(--orange)';
+  document.getElementById('gVal').textContent  = gPeak.toFixed(1) + ' g';
+  document.getElementById('cReason').textContent = (c.reason || '').slice(0, 60);
+  setCardState('cardC', c.detected ? 'ESCALATE' : 'NOMINAL');
+
+  // ── SQI ───────────────────────────────────────────────────────────────────
+  const sqi = s.sqi || {};
+  const sqiO = sqi.overall || 0;
+  const sqiEl = document.getElementById('sqiVal');
+  sqiEl.textContent = Math.round(sqiO * 100) + '%';
+  sqiEl.style.color = sqiO < 0.5 ? 'var(--red)' : sqiO < 0.7 ? 'var(--yellow)' : 'var(--green)';
+
+  const bars = document.querySelectorAll('#sqiBars .sqi-bar');
+  const sqiVals = [sqi.ecg||0, sqi.eda||0, sqi.resp||0, 1-(sqi.motion||0)];
+  bars.forEach((b,i) => {
+    b.style.height   = Math.max(4, sqiVals[i]*100)+'%';
+    b.style.background = sqiVals[i] < 0.5 ? 'var(--red)' : sqiVals[i] < 0.7 ? 'var(--yellow)' : 'var(--green)';
+  });
+  ['sqiEcg','sqiEda','sqiResp'].forEach((id,i) => {
+    const v = [sqi.ecg,sqi.eda,sqi.resp][i]||0;
+    document.getElementById(id).style.width     = pct(v);
+    document.getElementById(id+'Val').textContent = f2(v);
+  });
+
+  // ── GPS ───────────────────────────────────────────────────────────────────
+  const gps = s.gps || {};
+  if (gps.lat) {
+    document.getElementById('gpsStatus').style.display = 'none';
+    const coordsEl = document.getElementById('gpsCoords');
+    coordsEl.style.display = 'block';
+    coordsEl.textContent   = `${gps.lat.toFixed(5)}, ${gps.lon.toFixed(5)}`;
+    const mapsEl = document.getElementById('gpsMapsLink');
+    mapsEl.style.display = '';
+    mapsEl.href = gps.maps || '#';
+  }
+
+  // ── POI banner ────────────────────────────────────────────────────────────
+  const poi = s.poi;
+  const poiBanner = document.getElementById('poiBanner');
+  if (poi && poi.name && level !== 'NOMINAL') {
+    poiBanner.classList.add('visible');
+    document.getElementById('poiLabel').textContent   = s.poi_label || 'Nearest stop';
+    document.getElementById('poiName').textContent    = poi.name;
+    document.getElementById('poiDist').textContent    =
+      poi.distance_mi ? `${poi.distance_mi} mi away` : poi.distance_m ? `${poi.distance_m}m away` : '';
+    document.getElementById('poiMapsBtn').href = poi.maps_url || '#';
+  } else {
+    poiBanner.classList.remove('visible');
+  }
+
+  // ── Emergency panel ───────────────────────────────────────────────────────
+  const emergBar = document.getElementById('emergencyBar');
+  if (s.escalate_911) {
+    emergBar.classList.add('visible');
+    document.getElementById('emergencyReason').textContent = s.reason || 'Medical emergency.';
+    if (poi && poi.maps_url) {
+      document.getElementById('erMapsBtn').href = poi.maps_url;
+    }
+    if (_prevLevel !== 'ESCALATE') {
+      document.getElementById('statusSummary').classList.add('flash');
+      setTimeout(() => document.getElementById('statusSummary').classList.remove('flash'), 2000);
+    }
+  } else {
+    emergBar.classList.remove('visible');
+  }
+
+  document.getElementById('scenarioLabel').textContent = (s.level === 'NOMINAL' ? level : level);
+  document.getElementById('tsLabel').textContent = new Date(s.ts * 1000).toLocaleTimeString();
+  _prevLevel = level;
+}
+
+// ── copy dispatch to clipboard ─────────────────────────────────────────────
+function copyDispatch() {
+  const s  = _dispatchState;
+  const t  = new Date(s.ts * 1000).toISOString();
+  const gps = s.gps || {};
+  const poi = s.poi || {};
+  const text = [
+    `GUARDIAN DRIVE™ EMERGENCY DISPATCH`,
+    `Time: ${t}`,
+    `Level: ${s.level}`,
+    `Reason: ${s.reason}`,
+    `GPS: ${gps.lat?.toFixed(5)}, ${gps.lon?.toFixed(5)}`,
+    `Maps: ${gps.maps || '—'}`,
+    `Nearest ER: ${poi.name || '—'} (${poi.distance_mi || '?'} mi)`,
+    `ER Maps: ${poi.maps_url || '—'}`,
+    `Task A (ECG): score=${s.task_a?.score} cls=${s.task_a?.cls} HR=${s.task_a?.hr_bpm}bpm`,
+    `Task B (Drowsy): score=${s.task_b?.score}`,
+    `Task C (Crash): ${s.task_c?.detected ? 'DETECTED' : 'none'} g=${s.task_c?.g_peak}`,
+  ].join('\n');
+  navigator.clipboard.writeText(text).catch(() => alert(text));
+}
+
+// ── scenario switcher ─────────────────────────────────────────────────────
+function changeScenario(v) {
+  fetch('/api/scenario', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({scenario: v}),
+  });
+}
+
+// ── WebSocket connection ──────────────────────────────────────────────────
+let ws;
+function connect() {
+  const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  ws = new WebSocket(`${proto}//${location.host}/ws`);
+  const dot  = document.getElementById('connDot');
+  const stat = document.getElementById('connStatus');
+
+  ws.onopen = () => {
+    dot.classList.add('live');
+    stat.textContent = 'Connected — live stream';
+  };
+  ws.onmessage = (e) => {
+    try { applyState(JSON.parse(e.data)); } catch {}
+  };
+  ws.onerror = () => {
+    dot.classList.remove('live');
+    stat.textContent = 'Reconnecting…';
+  };
+  ws.onclose = () => {
+    dot.classList.remove('live');
+    stat.textContent = 'Reconnecting…';
+    setTimeout(connect, 2000);
+  };
+}
+connect();
+
+// ── ECG animation loop ────────────────────────────────────────────────────
+function ecgLoop() {
+  tickECG();
+  const level = _prevLevel;
+  const col = level === 'ESCALATE' ? '#ff3b5c'
+            : level === 'PULLOVER' || level === 'CAUTION' ? '#ff7a2f'
+            : '#00e896';
+  drawECG(col);
+  requestAnimationFrame(ecgLoop);
+}
+ecgLoop();
+</script>
+</body>
+</html>

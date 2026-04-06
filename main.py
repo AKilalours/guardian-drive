@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 """
-Guardian Drive™ v4.1 — Live Pipeline Demo (Terminal)
+Guardian Drive™ v4.2 — Live Pipeline Demo (Terminal)
 
 Usage:
   python main.py --scenario crash_severe --dispatch
@@ -9,13 +9,15 @@ Usage:
   python main.py --eval
   python main.py --list
   python main.py --scenario normal --seat-from-ecg
+  python main.py --scenario drowsy --no-webcam       # disable camera
 
-Notes on “real” (truth in advertising):
+Notes on "real" (truth in advertising):
 - Telephony can be console, Discord webhook, or Twilio (your configured numbers).
 - GPS can be mock or phone-driven (gps_sender.html -> /api/gps) or manual lat/lon.
 - Routing can be offline (local haversine) or OSRM (online / self-hosted).
 - Vehicle can be noop or OBD-II telemetry (read-only).
 - --seat-from-ecg is a bench-test bridge that routes existing ECG windows through the new seat path.
+- Webcam driver monitoring starts automatically. Use --no-webcam to disable.
 
 Emergency calling (e.g., 911) is NOT a drop-in feature. This demo escalates to
 your configured emergency contact(s) and provides a Google Maps link + nearest
@@ -26,7 +28,7 @@ import argparse
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 import numpy as np
 
@@ -52,13 +54,21 @@ from integrations.navigation_osrm import OSRMHospitalNav
 from integrations.telephony_console import ConsoleTelephony
 from integrations.vehicle_sim import NoOpVehicleControl
 
-R = "\033[0m"
-B = "\033[1m"
-C = "\033[96m"
-G = "\033[92m"
-Y = "\033[93m"
-RE = "\033[91m"
-DM = "\033[2m"
+# ── webcam (optional — degrades gracefully if unavailable) ────────────────────
+try:
+    from integrations.vision_webcam import WebcamMonitor
+    _WEBCAM_AVAILABLE = True
+except Exception:
+    WebcamMonitor = None  # type: ignore
+    _WEBCAM_AVAILABLE = False
+
+R   = "\033[0m"
+B   = "\033[1m"
+C   = "\033[96m"
+G   = "\033[92m"
+Y   = "\033[93m"
+RE  = "\033[91m"
+DM  = "\033[2m"
 BRE = "\033[41m"
 
 
@@ -120,12 +130,12 @@ def _task_to_policy_block(task: Any, kind: str) -> dict:
     elif kind == "task_b":
         score = float(getattr(task, "score", 0.0) or 0.0)
         details.update({
-            "hr_contrib": float(getattr(task, "hr_contrib", 0.0) or 0.0),
-            "hrv_contrib": float(getattr(task, "hrv_contrib", 0.0) or 0.0),
+            "hr_contrib":   float(getattr(task, "hr_contrib",   0.0) or 0.0),
+            "hrv_contrib":  float(getattr(task, "hrv_contrib",  0.0) or 0.0),
             "resp_contrib": float(getattr(task, "resp_contrib", 0.0) or 0.0),
-            "eda_contrib": float(getattr(task, "eda_contrib", 0.0) or 0.0),
-            "imu_contrib": float(getattr(task, "imu_contrib", 0.0) or 0.0),
-            "confidence": float(getattr(task, "confidence", 0.0) or 0.0),
+            "eda_contrib":  float(getattr(task, "eda_contrib",  0.0) or 0.0),
+            "imu_contrib":  float(getattr(task, "imu_contrib",  0.0) or 0.0),
+            "confidence":   float(getattr(task, "confidence",   0.0) or 0.0),
         })
 
     elif kind == "task_c":
@@ -140,9 +150,9 @@ def _task_to_policy_block(task: Any, kind: str) -> dict:
         else:
             score = 0.0
         details.update({
-            "detected": detected,
-            "severity": sev_val,
-            "g_peak": float(getattr(task, "g_peak", 0.0) or 0.0),
+            "detected":  detected,
+            "severity":  sev_val,
+            "g_peak":    float(getattr(task, "g_peak",    0.0) or 0.0),
             "jerk_peak": float(getattr(task, "jerk_peak", 0.0) or 0.0),
         })
 
@@ -152,8 +162,8 @@ def _task_to_policy_block(task: Any, kind: str) -> dict:
 def _riskstate_to_policy_input(rs: RiskState) -> dict:
     return {
         "task_a": _task_to_policy_block(rs.arrhythmia, "task_a"),
-        "task_b": _task_to_policy_block(rs.drowsiness, "task_b"),
-        "task_c": _task_to_policy_block(rs.crash, "task_c"),
+        "task_b": _task_to_policy_block(rs.drowsiness,  "task_b"),
+        "task_c": _task_to_policy_block(rs.crash,       "task_c"),
         "task_d": {"score": 0.0, "details": {}},
     }
 
@@ -169,19 +179,19 @@ def _normalize_policy_action(raw: Any) -> PolicyAction | CompatPolicyAction:
     if hasattr(raw, "level") and hasattr(raw, "display_message"):
         return raw
 
-    state_name = _get_field(raw, "state", "nominal")
-    summary = str(_get_field(raw, "summary", "") or "Monitoring.")
-    reasons = list(_get_field(raw, "reasons", []) or [])
-    route_kind = str(_get_field(raw, "route_kind", "none") or "none")
+    state_name      = _get_field(raw, "state",           "nominal")
+    summary         = str(_get_field(raw, "summary",     "") or "Monitoring.")
+    reasons         = list(_get_field(raw, "reasons",    []) or [])
+    route_kind      = str(_get_field(raw, "route_kind",  "none") or "none")
     prepare_dispatch = bool(_get_field(raw, "prepare_dispatch", False))
-    notify_contact = bool(_get_field(raw, "notify_contact", False))
+    notify_contact   = bool(_get_field(raw, "notify_contact",   False))
 
     level_map = {
-        "nominal": AlertLevel.NOMINAL,
-        "advisory": AlertLevel.ADVISORY,
-        "caution": AlertLevel.CAUTION,
+        "nominal":   AlertLevel.NOMINAL,
+        "advisory":  AlertLevel.ADVISORY,
+        "caution":   AlertLevel.CAUTION,
         "pull_over": AlertLevel.PULLOVER,
-        "escalate": AlertLevel.ESCALATE,
+        "escalate":  AlertLevel.ESCALATE,
     }
     level = level_map.get(state_name, AlertLevel.NOMINAL)
 
@@ -269,6 +279,20 @@ def _make_vehicle(args):
     return NoOpVehicleControl()
 
 
+def _start_webcam(cam_index: int = 0) -> Optional["WebcamMonitor"]:
+    """Start webcam monitor. Returns None if unavailable — never crashes main loop."""
+    if not _WEBCAM_AVAILABLE or WebcamMonitor is None:
+        print(f"{Y}[webcam] WebcamMonitor not available (mediapipe/opencv missing?){R}")
+        return None
+    try:
+        monitor = WebcamMonitor(cam_index=cam_index)
+        print(f"{G}[webcam] Driver monitor started on camera {cam_index}{R}")
+        return monitor
+    except Exception as e:
+        print(f"{Y}[webcam] Could not start (camera {cam_index}): {e}{R}")
+        return None
+
+
 def bar(v: float, w: int = 20) -> str:
     c = RE if v > .75 else Y if v > .45 else G
     filled = max(0, min(w, int(v * w)))
@@ -295,10 +319,11 @@ class DispatchLimiter:
         return False
 
 
-def render(fb, rs, action, i: int, sc: str, t_elapsed: float) -> None:
+def render(fb, rs, action, i: int, sc: str, t_elapsed: float,
+           webcam_metrics: Optional[dict] = None) -> None:
     print("\033[2J\033[H", end="")
     print(B + C + "━" * 70)
-    print(f"  GUARDIAN DRIVE™ v4.1  │  {sc.upper():<15}│  Window #{i:<3}│  T+{t_elapsed:.0f}s")
+    print(f"  GUARDIAN DRIVE™ v4.2  │  {sc.upper():<15}│  Window #{i:<3}│  T+{t_elapsed:.0f}s")
     print("━" * 70 + R)
 
     sqi = fb.sqi
@@ -310,6 +335,29 @@ def render(fb, rs, action, i: int, sc: str, t_elapsed: float) -> None:
     ecg_source = str(getattr(fb.ecg, "source", "") or "")
     if ecg_source:
         print(f"  {DM}ECG source: {ecg_source} | seat_q={getattr(sqi, 'seat_ecg_quality', 0.0):.2f}{R}")
+
+    # ── Webcam panel ──────────────────────────────────────────────────────────
+    print(f"\n{B}  WEBCAM — Driver Monitor{R}")
+    if webcam_metrics and webcam_metrics.get("available"):
+        if webcam_metrics.get("face_detected"):
+            ear_v   = webcam_metrics.get("ear")
+            perc_v  = webcam_metrics.get("perclos_30s")
+            dscore  = webcam_metrics.get("drowsy_score")
+            yawns   = webcam_metrics.get("yawn_events_30s", 0)
+            eyes    = webcam_metrics.get("eyes")
+            eye_col = RE if eyes == "closed" else G
+            dc      = RE if (dscore or 0) > 0.65 else Y if (dscore or 0) > 0.40 else G
+            ear_txt   = f"{ear_v:.3f}" if ear_v is not None else "--"
+            perc_txt  = f"{perc_v:.2f}" if perc_v is not None else "--"
+            dscore_txt = f"{dscore:.2f}" if dscore is not None else "--"
+            print(f"  Eyes: {eye_col}{eyes or '--'}{R}  "
+                  f"EAR: {ear_txt}  PERCLOS: {perc_txt}  "
+                  f"Yawns(30s): {yawns}  "
+                  f"Drowsy: {dc}{dscore_txt}{R}")
+        else:
+            print(f"  {DM}Face not detected{R}")
+    else:
+        print(f"  {DM}Webcam not active (use --no-webcam to suppress this){R}")
 
     print(f"\n{B}  TASK A — Arrhythmia Screening{R}")
     if rs.arrhythmia:
@@ -336,11 +384,11 @@ def render(fb, rs, action, i: int, sc: str, t_elapsed: float) -> None:
             dc = RE if d.score > 0.65 else Y if d.score > 0.40 else G
             print(f"  Score: {bar(d.score)} {dc}{d.score:.2f}{R}  Confidence: {d.confidence:.2f}")
             contribs = [(k, v) for k, v in [
-                ("HR", getattr(d, "hr_contrib", 0.0)),
-                ("HRV", getattr(d, "hrv_contrib", 0.0)),
+                ("HR",   getattr(d, "hr_contrib",   0.0)),
+                ("HRV",  getattr(d, "hrv_contrib",  0.0)),
                 ("Resp", getattr(d, "resp_contrib", 0.0)),
-                ("EDA", getattr(d, "eda_contrib", 0.0)),
-                ("IMU", getattr(d, "imu_contrib", 0.0)),
+                ("EDA",  getattr(d, "eda_contrib",  0.0)),
+                ("IMU",  getattr(d, "imu_contrib",  0.0)),
             ] if v > 0.1]
             if contribs:
                 print(f"  {DM}Contributors: {', '.join(f'{k}={v:.2f}' for k, v in contribs)}{R}")
@@ -349,12 +397,13 @@ def render(fb, rs, action, i: int, sc: str, t_elapsed: float) -> None:
     if rs.crash:
         c_ = rs.crash
         if getattr(c_, "detected", False):
-            sev = getattr(c_, "severity", None)
+            sev     = getattr(c_, "severity", None)
             sev_val = getattr(sev, "value", 0) if sev is not None else 0
-            cc = RE if sev_val >= 2 else Y
+            cc      = RE if sev_val >= 2 else Y
             print(
                 f"  {cc}{B}CRASH DETECTED — {getattr(sev,'name','UNKNOWN')}{R}  "
-                f"g={getattr(c_,'g_peak',0):.1f}  conf={c_.confidence:.2f}  latency={getattr(c_,'latency_ms',0):.0f}ms"
+                f"g={getattr(c_,'g_peak',0):.1f}  conf={c_.confidence:.2f}  "
+                f"latency={getattr(c_,'latency_ms',0):.0f}ms"
             )
         else:
             print(f"  {G}No crash: {getattr(c_,'reason','')[:60]}{R}")
@@ -372,35 +421,44 @@ def render(fb, rs, action, i: int, sc: str, t_elapsed: float) -> None:
 
 
 def main() -> None:
-    p = argparse.ArgumentParser(description="Guardian Drive™ v4.1")
+    p = argparse.ArgumentParser(description="Guardian Drive™ v4.2")
     p.add_argument("--scenario", default="normal", choices=list(SCENARIO_PARAMS))
     p.add_argument("--duration", type=float, default=120.0)
-    p.add_argument("--window", type=float, default=30.0)
-    p.add_argument("--step", type=float, default=8.0)
-    p.add_argument("--list", action="store_true")
-    p.add_argument("--eval", action="store_true")
-    p.add_argument("--log", default="", help="Write JSONL event log to this path")
-    p.add_argument("--dispatch", action="store_true", help="Send dispatch + contact messages on ESCALATE")
+    p.add_argument("--window",   type=float, default=30.0)
+    p.add_argument("--step",     type=float, default=8.0)
+    p.add_argument("--list",     action="store_true")
+    p.add_argument("--eval",     action="store_true")
+    p.add_argument("--log",      default="", help="Write JSONL event log to this path")
+    p.add_argument("--dispatch", action="store_true",
+                   help="Send dispatch + contact messages on ESCALATE")
 
     p.add_argument("--telephony", choices=["console", "twilio", "discord"], default="console")
-    p.add_argument("--nav", choices=["local", "osrm"], default="local")
+    p.add_argument("--nav",       choices=["local", "osrm"],                default="local")
 
-    p.add_argument("--gps", choices=["mock", "manual", "phone"], default="mock")
-    p.add_argument("--lat", type=float, default=None, help="Manual GPS latitude (required if --gps manual)")
-    p.add_argument("--lon", type=float, default=None, help="Manual GPS longitude (required if --gps manual)")
-    p.add_argument("--gps-server", default="http://127.0.0.1:8000", help="Server base URL (needed for --gps phone)")
+    p.add_argument("--gps",        choices=["mock", "manual", "phone"],     default="mock")
+    p.add_argument("--lat",        type=float, default=None,
+                   help="Manual GPS latitude (required if --gps manual)")
+    p.add_argument("--lon",        type=float, default=None,
+                   help="Manual GPS longitude (required if --gps manual)")
+    p.add_argument("--gps-server", default="http://127.0.0.1:8000",
+                   help="Server base URL (needed for --gps phone)")
 
-    p.add_argument("--vehicle", choices=["noop", "obd"], default="noop")
-    p.add_argument("--obd-port", default=None, help="OBD serial port (e.g. /dev/tty.usbserial-xxxx)")
+    p.add_argument("--vehicle",  choices=["noop", "obd"], default="noop")
+    p.add_argument("--obd-port", default=None,
+                   help="OBD serial port (e.g. /dev/tty.usbserial-xxxx)")
 
-    p.add_argument(
-        "--seat-from-ecg",
-        action="store_true",
-        help="Route existing ECG windows through the new seat ECG path for bench testing.",
-    )
+    p.add_argument("--seat-from-ecg", action="store_true",
+                   help="Route existing ECG windows through the new seat ECG path for bench testing.")
 
     p.add_argument("--dispatch-min-interval", type=float, default=60.0,
                    help="Seconds between dispatch sends while ESCALATE persists")
+
+    # ── webcam flags ──────────────────────────────────────────────────────────
+    p.add_argument("--no-webcam",   action="store_true",
+                   help="Disable webcam driver monitoring entirely")
+    p.add_argument("--cam-index",   type=int, default=0,
+                   help="Camera index for webcam monitor (default: 0)")
+
     args = p.parse_args()
 
     if args.list:
@@ -414,9 +472,9 @@ def main() -> None:
         run_evaluation(save_json=True)
         return
 
-    fusion = FusionEngine()
-    sm = SafetyStateMachine()
-    logger = EventLogger(Path(args.log)) if args.log else None
+    fusion  = FusionEngine()
+    sm      = SafetyStateMachine()
+    logger  = EventLogger(Path(args.log)) if args.log else None
     limiter = DispatchLimiter(args.dispatch_min_interval)
 
     gps = _make_gps(args)
@@ -426,7 +484,14 @@ def main() -> None:
 
     sim = GuardianSimulator(args.scenario, args.duration, inject_artifacts=False)
 
-    print(f"\n{B}{C}Guardian Drive™ v4.1 — Initializing {args.scenario.upper()}...{R}\n")
+    # ── start webcam ──────────────────────────────────────────────────────────
+    webcam: Optional[WebcamMonitor] = None
+    if not args.no_webcam:
+        webcam = _start_webcam(cam_index=args.cam_index)
+    else:
+        print(f"{DM}[webcam] Disabled via --no-webcam{R}")
+
+    print(f"\n{B}{C}Guardian Drive™ v4.2 — Initializing {args.scenario.upper()}...{R}\n")
     if args.seat_from_ecg:
         print(f"{Y}[bench] --seat-from-ecg enabled: legacy ECG will be routed through seat ECG path.{R}\n")
     time.sleep(0.25)
@@ -444,65 +509,92 @@ def main() -> None:
                 }
 
             sqi = compute_sqi(frame)
-            fb = extract_features(frame, sqi, args.window)
-            rs = fusion.run(fb)
+            fb  = extract_features(frame, sqi, args.window)
+
+            # ── inject live webcam metrics into FeatureBundle ─────────────────
+            webcam_metrics: Optional[dict] = None
+            if webcam is not None:
+                try:
+                    wm = webcam.latest_metrics()
+                    webcam_metrics    = wm.to_dict()
+                    fb.webcam_metrics = webcam_metrics
+                except Exception:
+                    pass  # never let webcam crash the safety loop
+
+            rs     = fusion.run(fb)
             action = _run_policy(sm, rs)
 
-            fix = gps.get_fix()
+            fix      = gps.get_fix()
             advisory = nav.nearest_er(fix) if fix else None
 
             if args.dispatch and action.escalate_911:
                 now = time.monotonic()
                 if limiter.allow(now):
                     gps_payload = None if not fix else {
-                        "lat": fix.point.lat,
-                        "lon": fix.point.lon,
+                        "lat":   fix.point.lat,
+                        "lon":   fix.point.lon,
                         "acc_m": fix.accuracy_m,
-                        "maps": _maps_url(fix.point.lat, fix.point.lon),
+                        "maps":  _maps_url(fix.point.lat, fix.point.lon),
                     }
                     er_payload = None if not advisory else {
-                        "name": advisory.destination_name,
-                        "eta_sec": advisory.eta_sec,
+                        "name":       advisory.destination_name,
+                        "eta_sec":    advisory.eta_sec,
                         "distance_m": advisory.distance_m,
-                        "provider": getattr(advisory, "provider", "unknown"),
+                        "provider":   getattr(advisory, "provider", "unknown"),
                     }
                     tel.dispatch_simulation(message=DispatchMessage(
                         title="GUARDIAN DRIVE — ESCALATION",
-                        body=f"scenario={args.scenario} action={action.level.name} reason={action.log_reason}",
+                        body=(f"scenario={args.scenario} action={action.level.name} "
+                              f"reason={action.log_reason}"),
                         meta={
-                            "gps": gps_payload,
-                            "er": er_payload,
-                            "vehicle": veh.snapshot(),
+                            "gps":        gps_payload,
+                            "er":         er_payload,
+                            "vehicle":    veh.snapshot(),
                             "ecg_source": str(getattr(fb.ecg, "source", "") or ""),
+                            "webcam":     webcam_metrics,
                         },
                     ))
 
             if logger is not None:
                 logger.write("window", {
-                    "i": i + 1,
-                    "scenario": args.scenario,
-                    "t": time.monotonic() - t0,
-                    "sqi": fb.sqi.to_dict(),
-                    "task_a": None if not rs.arrhythmia else rs.arrhythmia.to_dict(),
-                    "task_b": None if not rs.drowsiness else rs.drowsiness.to_dict(),
-                    "task_c": None if not rs.crash else rs.crash.to_dict(),
-                    "action": action.to_dict(),
-                    "gps": None if not fix else {"lat": fix.point.lat, "lon": fix.point.lon, "acc_m": fix.accuracy_m},
-                    "route": None if not advisory else {
-                        "dest": advisory.destination_name,
-                        "eta_sec": advisory.eta_sec,
-                        "distance_m": advisory.distance_m,
-                        "provider": getattr(advisory, "provider", "unknown")
+                    "i":          i + 1,
+                    "scenario":   args.scenario,
+                    "t":          time.monotonic() - t0,
+                    "sqi":        fb.sqi.to_dict(),
+                    "task_a":     None if not rs.arrhythmia else rs.arrhythmia.to_dict(),
+                    "task_b":     None if not rs.drowsiness else rs.drowsiness.to_dict(),
+                    "task_c":     None if not rs.crash      else rs.crash.to_dict(),
+                    "action":     action.to_dict(),
+                    "gps":        None if not fix else {
+                        "lat":   fix.point.lat,
+                        "lon":   fix.point.lon,
+                        "acc_m": fix.accuracy_m,
                     },
-                    "vehicle": veh.snapshot(),
+                    "route":      None if not advisory else {
+                        "dest":       advisory.destination_name,
+                        "eta_sec":    advisory.eta_sec,
+                        "distance_m": advisory.distance_m,
+                        "provider":   getattr(advisory, "provider", "unknown"),
+                    },
+                    "vehicle":    veh.snapshot(),
                     "ecg_source": str(getattr(fb.ecg, "source", "") or ""),
                     "seat_status": dict(getattr(fb, "seat_ecg_status", {}) or {}),
+                    "webcam":     webcam_metrics,
                 })
 
-            render(fb, rs, action, i + 1, args.scenario, time.monotonic() - t0)
+            render(fb, rs, action, i + 1, args.scenario,
+                   time.monotonic() - t0, webcam_metrics=webcam_metrics)
             time.sleep(0.4)
 
     finally:
+        # ── clean shutdown ────────────────────────────────────────────────────
+        if webcam is not None:
+            try:
+                webcam.close()
+                print(f"{DM}[webcam] Closed.{R}")
+            except Exception:
+                pass
+
         if hasattr(veh, "close"):
             try:
                 veh.close()

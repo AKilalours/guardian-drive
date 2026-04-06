@@ -3,21 +3,20 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional
 
 import numpy as np
 
 
 @dataclass
 class TaskBInference:
-    """Optional learned inference for Task B.
-
-    If weights are not configured, .predict() returns None.
-
-    Configure:
-      export GD_TASK_B_MLP_WEIGHTS=artifacts/task_b_mlp.pt
     """
-
+    Task B learned inference stub.
+    The trained task_b_tcn.pt uses a custom TCN architecture that requires
+    raw multi-channel physiological sequences, not the flat feature vector
+    passed here. Task B runtime is handled by models/task_b.py webcam +
+    physio rule path instead.
+    """
     weights_path: Optional[Path] = None
 
     def __post_init__(self):
@@ -27,31 +26,7 @@ class TaskBInference:
         self._model = None
 
     def _load(self, n_features: int):
-        try:
-            import torch
-            from .mlp import TinyMLP
-        except Exception:
-            return None
-
-        if not self.weights_path or not self.weights_path.exists():
-            return None
-
-        model = TinyMLP(n_features=n_features)
-        state = torch.load(self.weights_path, map_location="cpu")
-        model.load_state_dict(state)
-        model.eval()
-        self._model = model
-        return model
+        return None  # TCN requires sequence input — not compatible with flat features
 
     def predict(self, x: np.ndarray) -> Optional[float]:
-        """x: (n_features,)"""
-        x = np.asarray(x, dtype=np.float32).reshape(1, -1)
-        n_features = x.shape[1]
-        if self._model is None:
-            m = self._load(n_features)
-            if m is None:
-                return None
-        import torch
-        with torch.no_grad():
-            p = float(self._model(torch.from_numpy(x))[0].item())
-        return float(np.clip(p, 0.0, 1.0))
+        return None  # signals models/task_b.py to use rule-based + webcam path
