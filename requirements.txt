@@ -1,12 +1,24 @@
+# Guardian Drive — Python Dependencies
+
+# Server
 fastapi>=0.110.0
 uvicorn[standard]>=0.29.0
 websockets>=12.0
 httpx>=0.27.0
+
+# Deep Learning
 torch>=2.2.0
 torchaudio>=2.2.0
+
+# Computer Vision
 mediapipe>=0.10.14
 opencv-python>=4.9.0
+
+# Signal Processing
 scipy>=1.12.0
 scikit-learn>=1.4.0
 numpy>=1.26.0
 wfdb>=4.1.0
+
+# Utilities
+python-dotenv>=1.0.0
