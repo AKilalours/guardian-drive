@@ -1,8 +1,8 @@
 # Contributing to Guardian Drive
 
 ## Team
-- Akila Lourdes Miriyala Francis -- ML pipeline, model training, server
-- Akilan Manivannan -- BEV perception, nuScenes integration, dashboard
+- Akila Lourdes Miriyala Francis 
+- Akilan Manivannan 
 
 ## Setup
     git clone https://github.com/AKilalours/guardian-drive.git
