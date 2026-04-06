@@ -103,6 +103,19 @@ canvas.bev{position:absolute;inset:0;width:100%;height:100%}
 .ap-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:3px;background:rgba(0,255,136,.1);border:1px solid var(--green);color:var(--green);font-family:var(--mono);letter-spacing:1px;display:none}
 .ap-badge.on{display:inline-block;animation:apblink 1.5s infinite}
 @keyframes apblink{0%,100%{opacity:1}50%{opacity:.6}}
+
+/* Inline map panel */
+.map-panel{position:fixed;bottom:20px;right:20px;width:320px;height:240px;border-radius:10px;overflow:hidden;border:2px solid var(--cyan);box-shadow:0 0 30px rgba(0,212,255,.3);z-index:9999;display:none;flex-direction:column}
+.map-panel.on{display:flex}
+.map-panel.emergency{border-color:var(--red);box-shadow:0 0 30px rgba(255,30,60,.4)}
+.map-hdr{background:var(--bg3);padding:5px 8px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.map-title{font-size:10px;font-weight:700;letter-spacing:1px;font-family:var(--mono);color:var(--cyan)}
+.map-title.em{color:var(--red)}
+.map-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:0 4px}
+.map-frame{flex:1;border:none;width:100%;height:100%}
+.ap-strip{background:rgba(0,255,136,.08);border:1px solid var(--green);border-radius:5px;padding:5px 8px;font-size:9px;font-family:var(--mono);color:var(--green);display:none;align-items:center;gap:6px;margin-top:4px}
+.ap-strip.on{display:flex}
+
 </style>
 </head>
 <body>
@@ -275,6 +288,21 @@ canvas.bev{position:absolute;inset:0;width:100%;height:100%}
   <div id="ftrT">—</div>
   <div>WESAD TCN AUC 0.9514 · PTB-XL · BEV RADAR · CARLA</div>
 </div>
+
+<!-- Inline map panel -->
+<div class="map-panel" id="mapPanel">
+  <div class="map-hdr">
+    <div class="map-title" id="mapTitle">ROUTE TO REST STOP</div>
+    <button class="map-close" onclick="closeMap()">✕</button>
+  </div>
+  <iframe class="map-frame" id="mapFrame" src="" allowfullscreen loading="lazy"></iframe>
+</div>
+
+<div class="ap-strip" id="apStrip">
+  <span>🤖</span>
+  <span>AUTOPILOT ENGAGED — Routing to emergency care. Stay calm.</span>
+</div>
+
 </div>
 
 <script>
@@ -552,6 +580,64 @@ function applyState(s){
 function copyDispatch(){fetch('/api/dispatch_script').then(r=>r.json()).then(d=>{navigator.clipboard.writeText(d.script||'').catch(()=>alert(d.script||''))}).catch(()=>{const s=_last,p=s.policy||{},g=s.gps||{};const t=['GUARDIAN DRIVE DISPATCH',`Level: ${_lv}`,`GPS: ${g.lat?.toFixed(5)}, ${g.lon?.toFixed(5)}`].join('\n');navigator.clipboard.writeText(t).catch(()=>alert(t))})}
 function fireDiscord(){fetch('/api/notify_discord',{method:'POST'}).then(r=>r.json()).then(d=>alert(d.ok?'Discord notified':'Error: '+d.error)).catch(e=>alert('Error: '+e))}
 function changeScenario(v){fetch('/api/scenario',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({scenario:v})})}
+
+
+// ── Inline map panel ─────────────────────────────────────────────────────────
+function showMap(lat, lon, destLat, destLon, destName, emergency) {
+  const panel = document.getElementById('mapPanel');
+  const frame = document.getElementById('mapFrame');
+  const title = document.getElementById('mapTitle');
+  if (!panel || !frame) return;
+  
+  const em = emergency || false;
+  panel.classList.add('on');
+  panel.classList.toggle('emergency', em);
+  title.textContent = em ? '🚨 EMERGENCY ROUTE' : '🗺 ROUTE TO REST STOP';
+  title.className = 'map-title' + (em ? ' em' : '');
+  
+  // Google Maps directions embed
+  const origin = `${lat},${lon}`;
+  const dest = destLat ? `${destLat},${destLon}` : encodeURIComponent(destName);
+  frame.src = `https://www.google.com/maps/embed/v1/directions?key=AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY&origin=${origin}&destination=${dest}&mode=driving`;
+}
+
+function closeMap() {
+  const panel = document.getElementById('mapPanel');
+  if (panel) panel.classList.remove('on');
+}
+
+let _lastMapLevel = '';
+let _mapShownFor = '';
+
+function updateMap(s) {
+  const lv = s.level || 'NOMINAL';
+  const gps = s.gps || {};
+  const poi = s.poi || {};
+  const route = s.route || {};
+  const apStrip = document.getElementById('apStrip');
+  
+  if (!gps.lat) return;
+  
+  const key = lv + '|' + (poi.name||'') + '|' + (route.destination_name||'');
+  if (key === _mapShownFor) return;  // don't re-render same state
+  
+  if (lv === 'ESCALATE') {
+    _mapShownFor = key;
+    const destLat = poi.lat || route.lat;
+    const destLon = poi.lon || route.lon;
+    const destName = poi.name || route.destination_name || 'nearest hospital';
+    showMap(gps.lat, gps.lon, destLat, destLon, destName, true);
+    if (apStrip) apStrip.classList.add('on');
+  } else if (['ADVISORY','CAUTION','PULLOVER'].includes(lv) && poi.name) {
+    _mapShownFor = key;
+    showMap(gps.lat, gps.lon, poi.lat, poi.lon, poi.name, false);
+    if (apStrip) apStrip.classList.remove('on');
+  } else if (lv === 'NOMINAL' || lv === 'INACTIVE') {
+    closeMap();
+    if (apStrip) apStrip.classList.remove('on');
+    _mapShownFor = '';
+  }
+}
 
 // ── WebSocket ─────────────────────────────────────────────────────────────────
 let ws;

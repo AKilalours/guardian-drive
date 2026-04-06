@@ -250,8 +250,10 @@ async def _poi(lat,lon,amenities,radius=2500):
     except: return None
 
 
-def _nav(fix,nav_osm,nav_local):
+def _nav(fix,nav_osm,nav_local,level="NOMINAL"):
+    # Only route to hospital during ESCALATE
     if not fix: return None
+    if level not in ("ESCALATE","PULLOVER"): return None
     now=time.monotonic(); cf=_NAV_CACHE["fix"]; cr=_NAV_CACHE["route"]; ct=_NAV_CACHE["ts"]
     need=cr is None or (now-ct)>=GD_NAV_REFRESH
     if not need and cf:
@@ -454,7 +456,7 @@ async def _pipeline():
             except: pass
 
         sw,seat=_seat_win(GD_WINDOW)
-        fix=gps.read_fix(); route=_nav(fix,nav_osm,nav_local)
+        fix=gps.read_fix(); route=_nav(fix,nav_osm,nav_local,'NOMINAL')
 
         if sw is not None:
             frame=SensorFrame(session_id="live",subject_id="live",
