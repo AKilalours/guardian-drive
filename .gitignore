@@ -33,3 +33,8 @@ replay/
 
 # Logs
 *.log
+.venv_gd/
+.venv/
+datasets/
+*.dylib
+*.so
