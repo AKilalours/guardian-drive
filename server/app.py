@@ -397,6 +397,30 @@ def _seat_win(ws):
     return win,snap
 
 
+
+import subprocess as _sp, threading as _thr
+
+_LAST_VOICE_LEVEL = None
+_VOICE_COOLDOWN = 30.0
+_LAST_VOICE_TS = 0.0
+
+def _speak(msg: str) -> None:
+    """Non-blocking macOS voice alert."""
+    def _run():
+        try:
+            _sp.run(["say", "-v", "Samantha", "-r", "160", msg],
+                    timeout=10, capture_output=True)
+        except Exception:
+            pass
+    _thr.Thread(target=_run, daemon=True).start()
+
+_VOICE_SCRIPTS = {
+    "ADVISORY": "Attention. Early fatigue detected. Consider taking a short break soon.",
+    "CAUTION":  "Warning. Fatigue confirmed. Please find a rest stop within the next few miles.",
+    "PULLOVER": "Alert. Severe drowsiness detected. Pull over immediately and rest.",
+    "ESCALATE": "Emergency. Medical event detected. Routing to nearest hospital. Emergency contacts notified.",
+}
+
 async def _pipeline():
     global _LAST_DISC
     fusion=FusionEngine(); sm=SafetyStateMachine()
