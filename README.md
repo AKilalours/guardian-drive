@@ -75,7 +75,7 @@
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │                         SENSOR LAYER                                │
-│        ECG · EDA · IMU · Camera · GPS (IP/CoreLocation)            │
+│        ECG · EDA · IMU · Camera · GPS (IP/CoreLocation)             │
 └──────────────────────────────┬──────────────────────────────────────┘
                                │
                                ▼
@@ -88,45 +88,45 @@
                                ▼
 ┌─────────────────────────────────────────────────────────────────────┐
 │                     FEATURE EXTRACTION                              │
-│   HR/HRV/RMSSD/SDNN · R-peak · FFT · Resp rate                    │
-│   EDA SCL/SCR · IMU posture · EAR/PERCLOS/MAR                      │
+│   HR/HRV/RMSSD/SDNN · R-peak · FFT · Resp rate                      │
+│   EDA SCL/SCR · IMU posture · EAR/PERCLOS/MAR                       │
 └──────────────────────────────┬──────────────────────────────────────┘
                                │
                                ▼
 ┌─────────────────────────────────────────────────────────────────────┐
 │                      FUSION ENGINE                                  │
 │                                                                     │
-│  Task A: Arrhythmia          Task B: Drowsiness                    │
-│  PTB-XL RandomForest         WESAD TCN AUC 0.9514                  │
-│  1D CNN ECG features         Camera EAR/PERCLOS fusion             │
+│  Task A: Arrhythmia          Task B: Drowsiness                     │
+│  PTB-XL RandomForest         WESAD TCN AUC 0.9514                   │
+│  1D CNN ECG features         Camera EAR/PERCLOS fusion              │
 │                                                                     │
-│  Task C: Crash Detection     Task D: Neuro Risk Proxy              │
-│  IMU g-force threshold       HRV + EDA heuristic                   │
+│  Task C: Crash Detection     Task D: Neuro Risk Proxy               │
+│  IMU g-force threshold       HRV + EDA heuristic                    │
 │                                                                     │
-│  Waypoint Transformer (GPT-2 causal attention)                     │
-│  nuScenes ego poses → next 5 waypoints (ADE 7.70m)                │
+│  Waypoint Transformer (GPT-2 causal attention)                      │
+│  nuScenes ego poses → next 5 waypoints (ADE 7.70m)                  │
 └──────────────────────────────┬──────────────────────────────────────┘
                                │
                                ▼
 ┌─────────────────────────────────────────────────────────────────────┐
 │                  SAFETY STATE MACHINE                               │
 │                                                                     │
-│  NOMINAL → ADVISORY → CAUTION → PULLOVER → ESCALATE                │
+│  NOMINAL → ADVISORY → CAUTION → PULLOVER → ESCALATE                 │
 │                                                                     │
 │  NOMINAL:   Monitor only                                            │
-│  ADVISORY:  Voice · Nearest cafe (OSM) · Map panel                 │
-│  CAUTION:   Voice · Nearest motel (OSM) · Map panel                │
-│  PULLOVER:  Voice · Pull over NOW · Rest stop routing              │
-│  ESCALATE:  Hospital routing · Discord auto-fire · 911             │
-│             Autopilot banner · Voice emergency alert               │
+│  ADVISORY:  Voice · Nearest cafe (OSM) · Map panel                  │
+│  CAUTION:   Voice · Nearest motel (OSM) · Map panel                 │
+│  PULLOVER:  Voice · Pull over NOW · Rest stop routing               │
+│  ESCALATE:  Hospital routing · Discord auto-fire · 911              │
+│             Autopilot banner · Voice emergency alert                │
 └──────────────────────────────┬──────────────────────────────────────┘
                                │
                                ▼
 ┌─────────────────────────────────────────────────────────────────────┐
 │               REAL-TIME DASHBOARD (WebSocket)                       │
-│  ECG waveform · nuScenes BEV radar · MediaPipe camera              │
-│  Risk ring · Vehicle telemetry · GPS + inline Google Maps          │
-│  POI banner · Emergency panel · Sleepiness vs Drowsiness           │
+│  ECG waveform · nuScenes BEV radar · MediaPipe camera               │
+│  Risk ring · Vehicle telemetry · GPS + inline Google Maps           │
+│  POI banner · Emergency panel · Sleepiness vs Drowsiness            │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
