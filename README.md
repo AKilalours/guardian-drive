@@ -38,7 +38,7 @@
 
 <br/>
 
-> **Production-architecture multimodal AI safety system** fusing real-time ECG cardiac screening, physiological drowsiness detection (WESAD TCN AUC 0.9514), camera-based driver monitoring, nuScenes BEV perception, GPT-2 waypoint transformer, Visual Odometry, SLAM occupancy mapping, Structure from Motion 3D reconstruction, CoreML on-device inference, and ONNX cross-platform deployment — with automated hospital routing, Discord dispatch, voice alerts, and real GPS integration.
+> **Safety-critical production-architecture multimodal AI system — real-time fleet telemetry pipeline for autonomous vehicle driver monitoring.** fusing real-time ECG cardiac screening, physiological drowsiness detection (WESAD TCN AUC 0.9514), camera-based driver monitoring, nuScenes BEV perception, GPT-2 waypoint transformer, Visual Odometry, SLAM occupancy mapping, Structure from Motion 3D reconstruction, CoreML on-device inference, and ONNX cross-platform deployment — with automated hospital routing, Discord dispatch, voice alerts, and real GPS integration.
 
 > **Every model trained on real clinical data. Every claim verified. No inflated metrics.**
 
@@ -329,6 +329,36 @@ Exported trained PyTorch TCN (AUC 0.9514) to CoreML for Apple Neural Engine on-d
 
 ---
 
+
+---
+
+## 🔬 SQI Gating — Semi-Supervised Inference
+
+> **Akila Lourdes Miriyala Francis** — SQI design & implementation
+> **Akilan Manivannan** — Confidence thresholds & abstention logic
+
+The Signal Quality Index implements **semi-supervised inference**: the model only produces predictions on high-confidence (high-quality) inputs. Low-quality signal windows are rejected rather than producing unreliable predictions. This matches the semi-supervised learning paradigm where uncertain examples are excluded from the decision boundary.
+
+| SQI Level | Threshold | Action |
+|-----------|-----------|--------|
+| High quality | SQI > 0.70 | Full multi-task prediction — all 4 tasks run |
+| Medium quality | 0.30–0.70 | Prediction with degraded confidence flag |
+| Low quality | SQI < 0.30 | **Abstain** — returns "signal quality insufficient" |
+
+This prevents false positives from artifact-corrupted signals — a critical safety property. The system would rather say nothing than say something wrong.
+
+```python
+# sqi/compute.py — real implementation
+if sqi.overall_confidence < 0.3:
+    return RiskState(abstained=True)  # abstain
+elif sqi.overall_confidence < 0.7:
+    return run_inference(fb, confidence_penalty=True)  # degraded
+else:
+    return run_inference(fb)  # full prediction
+```
+
+---
+
 ## 🚨 Escalation Flow
 
 ```
@@ -402,6 +432,20 @@ python learned/waypoint_transformer.py --infer
 | Bradycardia | Low HR cardiac alert |
 | Crash Mild | IMU impact detection |
 | **Crash Severe** | Full escalation — hospital + Discord + 911 |
+
+
+### Data Logging & Replay
+
+`server/data_logger.py` implements a telemetry logging and replay system:
+
+- **TelemetryLogger** — logs every sensor frame (ECG, IMU, camera features, GPS, task scores) to timestamped JSONL files
+- **TelemetryReplayer** — replays sessions at configurable speed (1x, 2x, 4x, or maximum) for debugging and offline evaluation
+- **Session summary** — frame count, duration, level distribution, escalation count
+- **Replay mode** — feeds logged data back through full fusion pipeline to reproduce any session deterministically
+
+```bash
+python server/data_logger.py
+```
 
 ### Retrain
 
