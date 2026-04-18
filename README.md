@@ -71,7 +71,7 @@
 | Task A PTB-XL | Real clinical training | RandomForest + CNN | ✅ |
 | Waypoint Transformer | ADE nuScenes mini | **7.70m** | ✅ |
 | nuScenes BEV | Real 3D annotations | **18,538** | ✅ |
-| nuScenes ego poses | Real driving data | **31,206** | ✅ |
+| nuScenes ego poses | Real driving demonstrations | **31,206** (imitation learning) | ✅ |
 | Visual Odometry | Velocity estimation | **33.4 kph** | ✅ |
 | SLAM | Landmarks discovered | **19+ real** | ✅ |
 | SfM | 3D point cloud | Real nuScenes | ✅ |
@@ -385,7 +385,7 @@ Cardiac / crash / sustained drowsiness → ESCALATE
 | Visual Odometry | ✅ Real poses | acquisition/visual_odometry.py |
 | SLAM mapping | ✅ Real landmarks | acquisition/slam_mapper.py |
 | SfM 3D reconstruction | ✅ Real calibration | acquisition/structure_from_motion.py |
-| CoreML deployment | ✅ Real export | guardian_drive_tcn.mlpackage |
+| CoreML Apple Neural Engine | ✅ Real ct.convert() macOS13 target | convert_to_coreml.py |
 | ONNX deployment | ✅ Real export | wesad_tcn.onnx |
 | SQI gating | ✅ Abstains | sqi/compute.py |
 | GPS + OSM routing | ✅ Real API | integrations/navigation_osm.py |
