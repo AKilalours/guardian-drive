@@ -71,7 +71,7 @@
 | Task A PTB-XL | Real clinical training | RandomForest + CNN | ✅ |
 | Waypoint Transformer | ADE nuScenes mini | **7.70m** | ✅ |
 | nuScenes BEV | Real 3D annotations | **18,538** | ✅ |
-| nuScenes ego poses | Real driving demonstrations | **31,206** (imitation learning) | ✅ |
+| nuScenes ego poses | Real driving demonstrations | **31,206 (imitation learning)** | ✅ |
 | Visual Odometry | Velocity estimation | **33.4 kph** | ✅ |
 | SLAM | Landmarks discovered | **19+ real** | ✅ |
 | SfM | 3D point cloud | Real nuScenes | ✅ |
@@ -210,7 +210,7 @@
 | Property | Value |
 |----------|-------|
 | Architecture | Causal self-attention (GPT-2 style) |
-| Dataset | nuScenes mini — 31,206 real ego poses |
+| Dataset | nuScenes mini — 31,206 real ego pose demonstrations (imitation learning) |
 | Layers | 3 blocks · 4 heads · d=64 · 151,626 params |
 | **ADE** | **7.70m** on held-out nuScenes scenes |
 
