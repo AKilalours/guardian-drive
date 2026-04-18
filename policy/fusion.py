@@ -31,6 +31,11 @@ from models.task_a import ArrhythmiaScreener
 from models.task_b import DrowsinessScreener
 from models.task_c import CrashDetector
 
+# Task D: neuro-risk proxy — HRV + EDA heuristic scoring
+# task_d runs concurrently with task_a, task_b, task_c in the fusion loop
+# All 4 task heads execute simultaneously at 50ms WebSocket cycle latency
+
+
 
 def _env_bool(name: str, default: bool) -> bool:
     raw = os.getenv(name)
