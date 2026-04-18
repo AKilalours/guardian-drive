@@ -19,6 +19,11 @@ from pathlib import Path
 
 class StructureFromMotion:
     """
+    3D point cloud reconstruction from 120 calibrated camera sensor poses.
+    Depth triangulation across Singapore and Boston nuScenes scenes.
+    """
+
+    """
     3D scene reconstruction using nuScenes calibrated poses.
     Uses ego motion + 3D annotations to build sparse point cloud.
     """
