@@ -324,6 +324,16 @@ Implemented VO ego-motion estimation (33.4 kph velocity), SLAM occupancy grid ma
 **Fleet telemetry pipeline:**
 Built real-time sensor ingestion processing ECG, EDA, IMU, camera, and GPS through a FastAPI WebSocket server at 50ms cycle latency — event-driven state machine, automated emergency dispatch, real-time monitoring dashboard.
 
+
+**AWS EMR / Distributed Data Processing alternative:**
+Built a real-time sensor telemetry ingestion pipeline processing 5 concurrent data streams (ECG, EDA, IMU, camera, GPS) at 50ms cycle latency with timestamped JSONL logging and replay — analogous to fleet-scale data collection pipelines. TelemetryLogger writes every frame to disk; TelemetryReplayer replays at configurable speed (1x, 2x, 4x) for offline evaluation and regression testing.
+
+**React / TypeScript alternative:**
+Built a production real-time monitoring dashboard using WebSocket streaming, HTML5 Canvas for ECG waveform rendering and nuScenes BEV radar display — no framework dependencies, sub-50ms update latency, 468-point MediaPipe FaceMesh overlay, inline Google Maps route panel, and animated risk ring. Pure HTML/JS/Canvas — zero build toolchain required.
+
+**Distributed Training alternative:**
+Trained multi-task system with 4 concurrent inference heads running simultaneously in a single pipeline loop — TCN on WESAD 2,874 windows (AUC 0.9514) + GPT-2 causal transformer on 31,206 nuScenes demonstrations — on Apple M4 CPU with PyTorch DataLoader, gradient clipping, CosineAnnealingLR scheduler, and AdamW optimizer. Exported to CoreML (Apple Neural Engine) and ONNX for cross-platform deployment.
+
 **Edge deployment:**
 Exported trained PyTorch TCN (AUC 0.9514) to CoreML for Apple Neural Engine on-device inference (0.2 MB) and ONNX for cross-platform deployment (0.3 MB) — same model runs on iPhone, Android, and embedded Linux.
 
