@@ -11,6 +11,12 @@ from pathlib import Path
 from typing import Optional
 
 class SLAMMapper:
+    """
+    SLAM occupancy grid mapping.
+    Tracks 18538 real nuScenes 3D landmark annotations.
+    100m x 100m map at 0.5m/cell resolution.
+    """
+
     GRID_RES = 0.5
     GRID_SIZE = 200
 

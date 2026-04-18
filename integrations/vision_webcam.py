@@ -62,6 +62,7 @@ class WebcamMetrics:
         }
 
 
+# MediaPipe FaceMesh 468-point landmark model
 class WebcamMonitor:
     """
     Live webcam runtime with:
