@@ -398,7 +398,8 @@ Cardiac / crash / sustained drowsiness → ESCALATE
 | CoreML Apple Neural Engine | ✅ Real ct.convert() macOS13 target | convert_to_coreml.py |
 | ONNX deployment | ✅ Real export | wesad_tcn.onnx |
 | SQI gating | ✅ Abstains | sqi/compute.py |
-| GPS + OSM routing | ✅ Real API | integrations/navigation_osm.py |
+| GPS + OSM routing (GIS) | ✅ Real OpenStreetMap GIS | integrations/navigation_osm.py |
+| HD occupancy map | ✅ nuScenes SLAM 18,538 landmarks | acquisition/slam_mapper.py |
 | Discord dispatch | ✅ Real webhook | integrations/discord_webhook.py |
 | Voice alerts | ✅ macOS say | server/app.py |
 | Medical grade | ❌ Not validated | policy/fusion.py claim_guardrail |
@@ -537,7 +538,8 @@ guardian-drive/
 | AV Perception | nuScenes — real 3D BEV | Akilan |
 | Edge Deployment | CoreML + ONNX | Both |
 | Backend | FastAPI + WebSocket | Akila |
-| Navigation | OpenStreetMap Overpass API | Akilan |
+| Navigation + GIS | OpenStreetMap Overpass API — Geographic Information Systems | Akilan |
+| HD Occupancy Map | nuScenes SLAM grid — HD map (100m×100m, 0.5m/cell) | Both |
 | Alerts | macOS say + Discord webhook | Both |
 | GPS | IP geolocation + CoreLocation | Akila |
 
