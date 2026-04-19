@@ -38,7 +38,7 @@
 
 <br/>
 
-> **Safety-critical production-architecture multimodal AI system — real-time fleet telemetry pipeline for autonomous vehicle driver monitoring.** fusing real-time ECG cardiac screening, physiological drowsiness detection (WESAD TCN AUC 0.9514), camera-based driver monitoring, nuScenes BEV perception, GPT-2 waypoint transformer, Visual Odometry, SLAM occupancy mapping, Structure from Motion 3D reconstruction, CoreML on-device inference, and ONNX cross-platform deployment — with automated hospital routing, Discord dispatch, voice alerts, and real GPS integration.
+> **Safety-critical production-architecture multimodal AI system — real-time fleet telemetry pipeline for autonomous vehicle driver monitoring.** fusing real-time ECG cardiac screening, physiological drowsiness detection (WESAD TCN AUC 0.9738 on Tesla T4 GPU), camera-based driver monitoring, nuScenes BEV perception, GPT-2 waypoint transformer, Visual Odometry, SLAM occupancy mapping, Structure from Motion 3D reconstruction, CoreML on-device inference, and ONNX cross-platform deployment — with automated hospital routing, Discord dispatch, voice alerts, and real GPS integration.
 
 > **Every model trained on real clinical data. Every claim verified. No inflated metrics.**
 
@@ -412,7 +412,8 @@ Cardiac / crash / sustained drowsiness → ESCALATE
 
 | Component | Status | Evidence |
 |-----------|--------|---------|
-| Task B AUC 0.9514 | ✅ Real WESAD | learned/results/task_b_eval.json |
+| Task B AUC 0.9514 (CPU) | ✅ Real WESAD MacBook M4 | learned/results/task_b_eval.json |
+| Task B AUC 0.9738 (GPU) | ✅ Real WESAD Tesla T4 | learned/results/task_b_cuda_eval.json |
 | Task A PTB-XL | ✅ Real clinical | artifacts/task_a_model_real_ptbxl.joblib |
 | nuScenes BEV | ✅ Real 3D | acquisition/nuscenes_bev.py |
 | Waypoint transformer | ✅ Real PyTorch | learned/models/waypoint_transformer.pt |
@@ -525,10 +526,12 @@ guardian-drive/
 │   ├── task_a_trainer.py            PTB-XL CNN trainer
 │   ├── waypoint_transformer.py      GPT-2 trajectory predictor
 │   ├── models/
-│   │   ├── task_b_tcn.pt            AUC 0.9514
+│   │   ├── task_b_tcn.pt            AUC 0.9514 (MacBook M4)
+│   │   ├── task_b_tcn_cuda.pt       AUC 0.9738 (Tesla T4 GPU)
 │   │   └── waypoint_transformer.pt  ADE 7.70m
 │   └── results/
-│       ├── task_b_eval.json
+│       ├── task_b_eval.json         CPU results
+│       ├── task_b_cuda_eval.json    GPU results
 │       └── waypoint_transformer_eval.json
 ├── policy/
 │   ├── fusion.py                    Multi-task fusion engine
