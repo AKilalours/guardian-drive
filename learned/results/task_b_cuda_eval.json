@@ -1,0 +1,14 @@
+{
+  "auc": 0.9738,
+  "device": "Tesla T4 GPU",
+  "cuda": true,
+  "framework": "PyTorch 2.x + CUDA 12.8",
+  "batch_size": 64,
+  "epochs": 15,
+  "best_epoch": 15,
+  "dataset": "WESAD 15 subjects",
+  "windows": 28930,
+  "alert": 24997,
+  "drowsy": 3933,
+  "note": "Trained on Kaggle Tesla T4 GPU \u2014 AUC improved from 0.9514 (MacBook M4) to 0.9738 (Tesla T4)"
+}
