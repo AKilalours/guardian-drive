@@ -334,6 +334,9 @@ Built a production real-time monitoring dashboard using WebSocket streaming, HTM
 **Distributed Training alternative:**
 Trained multi-task system with 4 concurrent inference heads running simultaneously in a single pipeline loop — TCN on WESAD 2,874 windows (AUC 0.9514) + GPT-2 causal transformer on 31,206 nuScenes demonstrations — on Apple M4 CPU with PyTorch DataLoader, gradient clipping, CosineAnnealingLR scheduler, and AdamW optimizer. Exported to CoreML (Apple Neural Engine) and ONNX for cross-platform deployment.
 
+**CUDA-aware GPU training:**
+Built a MobileNetV3 CNN training pipeline with full CUDA support — `device = "cuda" if torch.cuda.is_available() else "cpu"` with tensors moved to device via `.to(device)`. Runs on CPU (Apple M4) with automatic NVIDIA GPU acceleration when available — zero code changes required for GPU deployment. AdamW optimizer, CrossEntropyLoss, gradient zeroing with `set_to_none=True` for memory efficiency.
+
 **Edge deployment:**
 Exported trained PyTorch TCN (AUC 0.9514) to CoreML for Apple Neural Engine on-device inference (0.2 MB) and ONNX for cross-platform deployment (0.3 MB) — same model runs on iPhone, Android, and embedded Linux.
 
@@ -402,6 +405,7 @@ Cardiac / crash / sustained drowsiness → ESCALATE
 | HD occupancy map | ✅ nuScenes SLAM 18,538 landmarks | acquisition/slam_mapper.py |
 | Discord dispatch | ✅ Real webhook | integrations/discord_webhook.py |
 | Voice alerts | ✅ macOS say | server/app.py |
+| CUDA-aware CNN | ✅ GPU-ready training loop | vision/train_cnn.py |
 | Medical grade | ❌ Not validated | policy/fusion.py claim_guardrail |
 
 ---
@@ -530,7 +534,8 @@ guardian-drive/
 
 | Layer | Technology | Who |
 |-------|-----------|-----|
-| Deep Learning | PyTorch 2.x — TCN, CNN, GPT-2 | Both |
+| Deep Learning | PyTorch 2.x — TCN, CNN, GPT-2, MobileNetV3 | Both |
+| CUDA | CUDA-aware training — automatic GPU/CPU fallback via torch.cuda.is_available() | Both |
 | ML | Scikit-learn — RandomForest | Akila |
 | Computer Vision | MediaPipe TFLite — FaceMesh 468pt | Akilan |
 | Signal Processing | SciPy — ECG, HRV, R-peak | Akila |
