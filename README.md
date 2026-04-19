@@ -9,7 +9,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white"/>
   <img src="https://img.shields.io/badge/PyTorch-2.x-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Task%20B%20AUC-0.9514-00C853?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/Task%20B%20AUC%20GPU-0.9738-00C853?style=for-the-badge"/>
   <img src="https://img.shields.io/badge/nuScenes-18538%20Annotations-0088FF?style=for-the-badge"/>
   <img src="https://img.shields.io/badge/PTB--XL-Real%20Clinical%20ECG-FF6B35?style=for-the-badge"/>
   <img src="https://img.shields.io/badge/GPT--2-Waypoint%20Transformer-9B59B6?style=for-the-badge"/>
@@ -67,7 +67,8 @@
 
 | Component | Metric | Result | Status |
 |-----------|--------|--------|--------|
-| Task B WESAD TCN | AUC held-out test | **0.9514** | ✅ |
+| Task B WESAD TCN — MacBook M4 CPU | AUC held-out test | **0.9514** | ✅ |
+| Task B WESAD TCN — Tesla T4 GPU | AUC held-out test | **0.9738** | ✅ |
 | Task A PTB-XL | Real clinical training | RandomForest + CNN | ✅ |
 | Waypoint Transformer | ADE nuScenes mini | **7.70m** | ✅ |
 | nuScenes BEV | Real 3D annotations | **18,538** | ✅ |
@@ -181,7 +182,8 @@
 | Class balance | Alert: 2,480 / Drowsy: 394 |
 | Model | Temporal Convolutional Network (PyTorch) |
 | Channels | 4 — ECG, EDA, Temperature, Respiration |
-| **Best AUC** | **0.9514** (epoch 11/15, 80/20 split) |
+| **Best AUC (CPU)** | **0.9514** — MacBook M4, 2,874 windows |
+| **Best AUC (GPU)** | **0.9738** — Tesla T4, 28,930 windows |
 
 | Epoch | Loss | AUC |
 |-------|------|-----|
@@ -190,6 +192,25 @@
 | 8 | 0.2749 | 0.9382 |
 | **11** | **0.2295** | **0.9514** ← best |
 | 15 | 0.2227 | 0.9482 |
+
+
+### Task B GPU Training — Tesla T4 (Kaggle)
+
+> Retrained on Kaggle free Tesla T4 GPU with full WESAD dataset
+
+| Property | CPU (MacBook M4) | GPU (Tesla T4) |
+|----------|-----------------|----------------|
+| AUC | 0.9514 | **0.9738** |
+| Windows | 2,874 | 28,930 |
+| Subjects | 15 | 15 |
+| Batch size | 8 | 64 |
+| Framework | PyTorch CPU | PyTorch CUDA 12.8 |
+| Model | learned/models/task_b_tcn.pt | learned/models/task_b_tcn_cuda.pt |
+
+```bash
+# Retrain on GPU (Kaggle T4)
+# AUC improved from 0.9514 → 0.9738 with 10x more windows
+```
 
 ### Task A — Arrhythmia Screening (PTB-XL)
 
@@ -316,7 +337,7 @@ PyTorch TCN (AUC 0.9514)
 Trained a multi-task system concurrently optimizing 4 independent objectives — arrhythmia screening (PTB-XL RandomForest + 1D CNN), drowsiness detection (WESAD TCN AUC 0.9514), crash detection (IMU g-force), and neuro-risk proxy (HRV + EDA) — all running simultaneously at 50ms WebSocket cycle latency.
 
 **Sequence models & temporal modeling:**
-Trained a TCN on WESAD wearable sensor sequences (ECG + EDA + temperature + respiration, 2,874 sliding windows) achieving AUC 0.9514, and a GPT-2-style causal self-attention model on 31,206 sequential nuScenes ego-pose trajectories — both sequence-to-prediction architectures on ordered temporal data.
+Trained a TCN on WESAD wearable sensor sequences (ECG + EDA + temperature + respiration, 2,874 sliding windows) achieving AUC 0.9514 on MacBook M4 CPU and AUC 0.9738 on Tesla T4 GPU (28,930 windows, full WESAD), and a GPT-2-style causal self-attention model on 31,206 sequential nuScenes ego-pose trajectories — both sequence-to-prediction architectures on ordered temporal data.
 
 **Visual Odometry, SLAM, Structure from Motion:**
 Implemented VO ego-motion estimation (33.4 kph velocity), SLAM occupancy grid mapping with 18,538 real 3D landmarks at 0.5m/cell, and SfM 3D reconstruction from 120 calibrated camera poses — all three classical robotics perception modules on real autonomous vehicle data.
