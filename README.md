@@ -352,6 +352,9 @@ Built a real-time sensor telemetry ingestion pipeline processing 5 concurrent da
 **React / TypeScript alternative:**
 Built a production real-time monitoring dashboard using WebSocket streaming, HTML5 Canvas for ECG waveform rendering and nuScenes BEV radar display — no framework dependencies, sub-50ms update latency, 468-point MediaPipe FaceMesh overlay, inline Google Maps route panel, and animated risk ring. Pure HTML/JS/Canvas — zero build toolchain required.
 
+**Distributed Training (PyTorch DDP):**
+Guardian Drive's multi-task 4-head architecture is designed for `torch.nn.parallel.DistributedDataParallel` (DistributedDataParallel) scaling — each task head (A/B/C/D) is an independent nn.Module, batch size scales linearly with GPU count via NCCL all-reduce gradient sync. See `DISTRIBUTED_TRAINING.md` for full scale-up path from 1 to 8 GPUs.
+
 **Distributed Training alternative:**
 Trained multi-task system with 4 concurrent inference heads running simultaneously in a single pipeline loop — TCN on WESAD 2,874 windows (AUC 0.9514) + GPT-2 causal transformer on 31,206 nuScenes demonstrations — on Apple M4 CPU with PyTorch DataLoader, gradient clipping, CosineAnnealingLR scheduler, and AdamW optimizer. Exported to CoreML (Apple Neural Engine) and ONNX for cross-platform deployment.
 
