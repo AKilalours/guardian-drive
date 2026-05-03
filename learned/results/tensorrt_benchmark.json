@@ -1,0 +1,21 @@
+{
+  "model": "WESAD TCN",
+  "device": "Tesla T4",
+  "tensorrt": "10.16.1.11",
+  "cuda": "12.8",
+  "results": {
+    "FP32": {
+      "median_ms": 0.157,
+      "throughput": 6357
+    },
+    "FP16": {
+      "median_ms": 0.183,
+      "throughput": 5456
+    },
+    "PyTorch": {
+      "median_ms": 1.181
+    },
+    "speedup_fp32": 7.52,
+    "speedup_fp16": 6.45
+  }
+}
