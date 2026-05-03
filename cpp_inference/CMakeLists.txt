@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.18)
+project(guardian_inference)
+set(CMAKE_CXX_STANDARD 17)
+find_package(Torch REQUIRED)
+add_executable(guardian_inference guardian_inference.cpp)
+target_link_libraries(guardian_inference "${TORCH_LIBRARIES}")
+set_property(TARGET guardian_inference PROPERTY CXX_STANDARD 17)

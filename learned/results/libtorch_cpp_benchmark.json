@@ -1,0 +1,29 @@
+{
+  "model": "WESAD TCN (AUC 0.9738)",
+  "runtime": "LibTorch C++",
+  "compiled": "CMake + LibTorch arm64 macOS",
+  "authors": "Akilan Manivannan & Akila Lourdes Miriyala Francis",
+  "results": [
+    {
+      "batch": 1,
+      "median_ms": 1.99854,
+      "p95_ms": 2.41283,
+      "p99_ms": 2.7055,
+      "throughput": 500.365
+    },
+    {
+      "batch": 8,
+      "median_ms": 12.586,
+      "p95_ms": 19.6838,
+      "p99_ms": 21.6177,
+      "throughput": 635.629
+    },
+    {
+      "batch": 32,
+      "median_ms": 249.554,
+      "p95_ms": 277.091,
+      "p99_ms": 344.248,
+      "throughput": 128.229
+    }
+  ]
+}
