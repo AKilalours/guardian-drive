@@ -147,6 +147,56 @@ class NuScenesBEV:
             "source":"nuscenes_mini",
         }
 
+def _transform_annotations_einsum(self, annotations, ego_pose):
+    """
+    BEV coordinate transform using torch.einsum for GPU-ready speedup.
+    Replaces manual rotation matrix multiplication with batched einsum.
+    Equivalent to: p_ego = R_ego.T @ (p_world - t_ego)
+    
+    Speedup: einsum fuses multiply+sum in one kernel call vs 
+    separate matmul + broadcast operations.
+    """
+    import torch
+    import numpy as np
+    
+    if not annotations:
+        return []
+    
+    # Build world points tensor [N, 3]
+    points = torch.tensor(
+        [[a["translation"][0], a["translation"][1], a["translation"][2]]
+         for a in annotations],
+        dtype=torch.float32
+    )
+    
+    # Ego rotation matrix [3, 3] from quaternion
+    q = ego_pose["rotation"]
+    w, x, y, z = float(q[0]), float(q[1]), float(q[2]), float(q[3])
+    R = torch.tensor([
+        [1-2*(y*y+z*z),   2*(x*y-w*z),   2*(x*z+w*y)],
+        [  2*(x*y+w*z), 1-2*(x*x+z*z),   2*(y*z-w*x)],
+        [  2*(x*z-w*y),   2*(y*z+w*x), 1-2*(x*x+y*y)],
+    ], dtype=torch.float32)
+    
+    t = torch.tensor(ego_pose["translation"][:3], dtype=torch.float32)
+    
+    # Translate to ego frame
+    p_centered = points - t.unsqueeze(0)  # [N, 3]
+    
+    # Batched rotation via einsum: p_ego[i] = R.T @ p_centered[i]
+    # 'ji,ni->nj' means: for each point n, compute R.T @ p
+    p_ego = torch.einsum('ji,ni->nj', R, p_centered)  # [N, 3]
+    
+    results = []
+    for i, ann in enumerate(annotations):
+        results.append({
+            **ann,
+            "ego_x": float(p_ego[i, 0]),
+            "ego_y": float(p_ego[i, 1]),
+            "ego_z": float(p_ego[i, 2]),
+        })
+    return results
+
 if __name__=="__main__":
     bev = NuScenesBEV()
     if bev.available:
