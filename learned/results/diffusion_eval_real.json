@@ -1,14 +1,10 @@
 {
   "model": "TrajectoryDDPM",
-  "architecture": "Attention DDPM T=1000 DDIM-style sampling",
-  "parameters": 217218,
-  "device": "cuda (Tesla T4)",
-  "epochs": 50,
-  "best_loss": 0.0019,
   "ade_m": 3.3,
   "fde_m": 3.36,
   "windows": 10397,
-  "data": "Real nuScenes mini ego poses (31,206 poses)",
-  "sampling": "DDIM-style 100 steps",
-  "note": "Models trajectory distribution. Not compared to Wayformer."
+  "data": "Real nuScenes 31206 poses",
+  "device": "cuda (Tesla T4)",
+  "epochs": 50,
+  "best_loss": 0.0019
 }

@@ -1,0 +1,8 @@
+{
+  "kernel": "hrv_features_cuda",
+  "speedup": 61.7,
+  "cuda_median_ms": 0.0644,
+  "numpy_median_ms": 3.9691,
+  "correctness_rmssd_diff": 0.0,
+  "device": "Tesla T4"
+}

@@ -1,0 +1,16 @@
+{
+  "kernels": [
+    "sqi_cuda",
+    "ear_cuda"
+  ],
+  "sqi": {
+    "speedup": 73.4,
+    "cuda_median_ms": 0.0458
+  },
+  "ear": {
+    "speedup": 319.0,
+    "cuda_median_ms": 0.0307,
+    "max_diff": 1e-06
+  },
+  "device": "Tesla T4"
+}
