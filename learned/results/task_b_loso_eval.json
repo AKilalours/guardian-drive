@@ -1,0 +1,92 @@
+{
+  "evaluation": "Leave-One-Subject-Out (LOSO)",
+  "subjects": 15,
+  "mean_auc": 0.673,
+  "std_auc": 0.1521,
+  "min_auc": 0.3402,
+  "max_auc": 0.8981,
+  "ci_95": [
+    0.3749,
+    0.9711
+  ],
+  "window_level_auc": 0.9738,
+  "note": "LOSO is the honest evaluation. Window-level AUC 0.9738 has known temporal and subject-identity leakage. LOSO mean AUC 0.673 is the correct generalization estimate.",
+  "interpretation": "High variance (std=0.152) indicates significant inter-subject physiological variability. S4 (0.340) and S9 (0.497) below chance -- model fails on some subjects. S14 (0.898) and S13 (0.847) show strong generalization. Further work: longer training per fold, subject-adaptive normalization.",
+  "per_subject": [
+    {
+      "subject": "S10",
+      "auc": 0.6067,
+      "n_test": 1830
+    },
+    {
+      "subject": "S11",
+      "auc": 0.5155,
+      "n_test": 1743
+    },
+    {
+      "subject": "S13",
+      "auc": 0.8473,
+      "n_test": 1844
+    },
+    {
+      "subject": "S14",
+      "auc": 0.8981,
+      "n_test": 1848
+    },
+    {
+      "subject": "S15",
+      "auc": 0.5953,
+      "n_test": 1749
+    },
+    {
+      "subject": "S16",
+      "auc": 0.7918,
+      "n_test": 1875
+    },
+    {
+      "subject": "S17",
+      "auc": 0.7365,
+      "n_test": 1972
+    },
+    {
+      "subject": "S2",
+      "auc": 0.692,
+      "n_test": 2025
+    },
+    {
+      "subject": "S3",
+      "auc": 0.8744,
+      "n_test": 2163
+    },
+    {
+      "subject": "S4",
+      "auc": 0.3402,
+      "n_test": 2139
+    },
+    {
+      "subject": "S5",
+      "auc": 0.7104,
+      "n_test": 2084
+    },
+    {
+      "subject": "S6",
+      "auc": 0.7992,
+      "n_test": 2355
+    },
+    {
+      "subject": "S7",
+      "auc": 0.579,
+      "n_test": 1744
+    },
+    {
+      "subject": "S8",
+      "auc": 0.6118,
+      "n_test": 1820
+    },
+    {
+      "subject": "S9",
+      "auc": 0.4969,
+      "n_test": 1739
+    }
+  ]
+}
