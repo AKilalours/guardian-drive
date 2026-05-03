@@ -1,0 +1,11 @@
+{
+  "method": "COLMAP Structure-from-Motion",
+  "dataset": "Oxford Buildings -- All Souls College (real photos)",
+  "tool": "COLMAP 4.0.4",
+  "input_images": 30,
+  "registered_images": 26,
+  "cameras": 26,
+  "n_3d_points": 4641,
+  "note": "Real SfM from real unordered photos. SIFT features + bundle adjustment.",
+  "authors": "Akilan Manivannan & Akila Lourdes Miriyala Francis"
+}
