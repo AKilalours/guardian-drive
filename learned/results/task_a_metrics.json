@@ -1,0 +1,35 @@
+{
+  "task": "Task A -- Normal vs Abnormal ECG",
+  "dataset": "PTB Diagnostic ECG Database (PTBDB)",
+  "n_patients": 290,
+  "n_records": 549,
+  "evaluation": "Patient-level 5-fold CV",
+  "fold_aucs": [
+    0.749,
+    0.6608,
+    0.576,
+    0.6326,
+    0.5708
+  ],
+  "mean_auc": 0.6378,
+  "std_auc": 0.0652,
+  "overall_auc": 0.6364,
+  "sensitivity": 0.1317,
+  "specificity": 0.9372,
+  "ppv": 0.4783,
+  "npv": 0.7117,
+  "cm": [
+    [
+      358,
+      24
+    ],
+    [
+      145,
+      22
+    ]
+  ],
+  "model": "RandomForest 200 trees balanced classes",
+  "features": "33 features: statistical + FFT spectrum",
+  "note": "Binary normal/abnormal. Not multi-class AUROC. Not validated for clinical use. Patient-level split prevents data leakage.",
+  "authors": "Akilan Manivannan & Akila Lourdes Miriyala Francis"
+}
