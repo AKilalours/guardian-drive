@@ -1,0 +1,646 @@
+{
+  "module": "EEG Drowsiness Proxy (MNE + Band Power)",
+  "dataset": "MNE sample auditory EEG (60 channels, 600Hz)",
+  "channels": 60,
+  "sfreq": 600.61,
+  "n_epochs": 69,
+  "epoch_len_s": 4,
+  "bands": {
+    "delta": "1-4 Hz",
+    "theta": "4-8 Hz (drowsiness marker)",
+    "alpha": "8-13 Hz (drowsiness marker)",
+    "beta": "13-30 Hz (alertness marker)"
+  },
+  "drowsy_criterion": "alpha+theta/beta > 1.5",
+  "drowsy_epochs": 69,
+  "drowsy_rate": 1.0,
+  "mean_drowsy_index": 14.1525,
+  "max_drowsy_index": 26.4574,
+  "integration": "drowsy_index fed into Task D neuro-risk proxy in fusion engine. Replaces HRV-only heuristic with EEG band power evidence.",
+  "clinical_basis": "Alpha slowing (8-13Hz increase) is established EEG marker of drowsiness (Lal & Craig 2002, Clin Neurophysiol). Theta increase (4-8Hz) correlates with microsleep onset.",
+  "note": "MNE sample data is auditory EEG, not driving. SEED-VIG or DROZY would provide validated drowsiness labels. This demonstrates EEG band power extraction pipeline.",
+  "authors": "Akilan Manivannan & Akila Lourdes Miriyala Francis",
+  "per_epoch": [
+    {
+      "epoch": 0,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 19.596,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 1,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 12.3988,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 2,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 10.7725,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 3,
+      "delta_power": 0.0001,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 26.4574,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 4,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 13.6637,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 5,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 15.5289,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 6,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 11.647,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 7,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 16.946,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 8,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 14.5867,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 9,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 8.3292,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 10,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 16.5294,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 11,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 18.6611,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 12,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 11.6284,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 13,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 9.5182,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 14,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 20.4848,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 15,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 13.9949,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 16,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 10.1096,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 17,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 12.0567,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 18,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 11.7114,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 19,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 7.0247,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 20,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 14.5127,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 21,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 9.2357,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 22,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 8.4068,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 23,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 10.4916,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 24,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 9.2375,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 25,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 23.0294,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 26,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 8.3638,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 27,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 10.8905,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 28,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 10.5641,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 29,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 7.6518,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 30,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 10.2995,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 31,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 12.6596,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 32,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 21.1541,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 33,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 13.0787,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 34,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 16.2762,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 35,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 20.1249,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 36,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 20.8314,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 37,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 13.5403,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 38,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 12.2481,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 39,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 10.2759,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 40,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 12.7782,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 41,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 12.9873,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 42,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 11.7782,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 43,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 16.7255,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 44,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 12.2602,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 45,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 11.2647,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 46,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 14.145,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 47,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 15.1648,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 48,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 15.1692,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 49,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 15.6085,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 50,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 9.7944,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 51,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 13.8354,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 52,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 13.1616,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 53,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 8.539,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 54,
+      "delta_power": 0.0001,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 20.2832,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 55,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 18.3303,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 56,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 16.2923,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 57,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 8.3879,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 58,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 14.0546,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 59,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 9.6744,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 60,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 17.908,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 61,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 11.4321,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 62,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 20.5487,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 63,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 19.9281,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 64,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 22.2939,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 65,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 15.9473,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 66,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 15.2409,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 67,
+      "delta_power": 0.0001,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 23.7793,
+      "drowsy_proxy": true
+    },
+    {
+      "epoch": 68,
+      "delta_power": 0.0,
+      "theta_power": 0.0,
+      "alpha_power": 0.0,
+      "beta_power": 0.0,
+      "drowsy_index": 14.694,
+      "drowsy_proxy": true
+    }
+  ]
+}
