@@ -1,0 +1,12 @@
+{
+  "frames_processed": 893,
+  "frames_tracked": 890,
+  "map_points": 1316,
+  "trajectory_length_m": 890.0,
+  "mean_inliers": 198.3,
+  "method": "Monocular Visual SLAM -- ORB features + PnP",
+  "hardware": "MacBook M4 webcam",
+  "authors": "Akilan Manivannan & Akila Lourdes Miriyala Francis",
+  "trajectory_points": 891,
+  "duration_s": 30.1
+}
