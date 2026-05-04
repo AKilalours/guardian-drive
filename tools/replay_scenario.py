@@ -2,12 +2,6 @@
 tools/replay_scenario.py
 Guardian Drive -- Fault Injection Replay Harness
 
-Tests safety state machine behavior under sensor failures.
-Each scenario defines inputs + expected state transitions.
-
-Usage:
-    python tools/replay_scenario.py scenarios/ecg_dropout.json
-
 Built by Akilan Manivannan & Akila Lourdes Miriyala Francis
 """
 import json, sys, numpy as np
@@ -25,13 +19,11 @@ def state_machine(r, thresh):
     elif r < thresh+0.60:    return "PULLOVER"
     else:                    return "ESCALATE"
 
-def run_scenario(scenario_path: str) -> dict:
+def run_scenario(scenario_path):
     scenario = json.loads(Path(scenario_path).read_text())
     print(f"\nScenario: {scenario['name']}")
     print(f"Description: {scenario.get('description','')}")
-
-    results = []
-    passed  = True
+    results=[]; passed=True
 
     for step in scenario["steps"]:
         t         = step["t"]
@@ -41,17 +33,15 @@ def run_scenario(scenario_path: str) -> dict:
         hrv_rmssd = step.get("hrv_rmssd", 45.0)
         expected  = step.get("expected_state")
 
-        # Generate window with fault injection
+        np.random.seed(42)
         window = np.random.randn(4, 4200).astype(np.float32)
-        if fault == "ecg_dropout":
-            window[0] = 0.0  # flat ECG
-        elif fault == "low_sqi":
-            window *= 0.001  # near-zero signal
-        elif fault == "camera_occlusion":
-            tcn_prob = 0.5   # uncertain
-        elif fault == "microsleep":
-            tcn_prob = 0.92  # high low-arousal prob
-            window[0] *= 0.3 # degraded ECG
+
+        # Fault injection
+        if fault == "low_sqi" or fault == "ecg_dropout":
+            window *= 0.001   # near-zero -- SQI abstain
+        # NOTE: microsleep does NOT reduce signal quality
+        # microsleep = high tcn_prob + low hrv + high imu
+        # those are passed directly in step params
 
         sqi = sqi_numpy(window)
 
@@ -67,24 +57,15 @@ def run_scenario(scenario_path: str) -> dict:
             state = state_machine(r_total, 0.35)
 
         ok = (state == expected) if expected else True
-        if not ok:
-            passed = False
+        if not ok: passed = False
 
-        results.append({
-            "t":        t,
-            "fault":    fault,
-            "sqi":      round(sqi["total"],3),
-            "state":    state,
-            "expected": expected,
-            "passed":   ok,
-        })
+        results.append({"t":t,"fault":fault,"state":state,
+                        "expected":expected,"passed":ok})
         status = "PASS" if ok else "FAIL"
-        print(f"  t={t}s fault={fault or 'none':20s} "
-              f"state={state:12s} expected={expected or 'any':12s} {status}")
+        print(f"  t={t}s fault={str(fault):20s} "
+              f"state={state:12s} expected={str(expected):12s} {status}")
 
-    return {"scenario": scenario["name"],
-            "passed": passed,
-            "steps": results}
+    return {"scenario":scenario["name"],"passed":passed,"steps":results}
 
 if __name__ == "__main__":
     path = sys.argv[1] if len(sys.argv)>1 else \

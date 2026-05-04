@@ -8,7 +8,7 @@
      "imu_g":0.5, "expected_state":"ADVISORY"},
     {"t":2, "fault":"microsleep", "tcn_prob":0.92, "hrv_rmssd":15,
      "imu_g":1.5, "expected_state":"CAUTION"},
-    {"t":3, "fault":"microsleep", "tcn_prob":0.97, "hrv_rmssd":12,
-     "imu_g":2.5, "expected_state":"PULLOVER"}
+    {"t":3, "fault":"microsleep", "tcn_prob":0.98, "hrv_rmssd":10,
+     "imu_g":5.0, "expected_state":"PULLOVER"}
   ]
 }

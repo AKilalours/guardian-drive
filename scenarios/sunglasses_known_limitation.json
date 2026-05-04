@@ -1,0 +1,8 @@
+{
+  "name": "Sunglasses -- Known limitation",
+  "description": "Sunglasses compress EAR below threshold. Vision degrades to physiology-only mode. Real footage needed for production fix.",
+  "steps": [
+    {"t":0, "fault":null,        "tcn_prob":0.3, "expected_state":"NOMINAL"},
+    {"t":1, "fault":"low_sqi",   "tcn_prob":0.3, "expected_state":"ABSTAIN"}
+  ]
+}
