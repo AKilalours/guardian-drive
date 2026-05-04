@@ -1,0 +1,10 @@
+{
+  "name": "Low SQI -- No false escalation",
+  "description": "Noisy signal should abstain not escalate to PULLOVER.",
+  "steps": [
+    {"t":0, "fault":null,    "tcn_prob":0.3, "expected_state":"NOMINAL"},
+    {"t":1, "fault":"low_sqi","tcn_prob":0.9, "expected_state":"ABSTAIN"},
+    {"t":2, "fault":"low_sqi","tcn_prob":0.9, "expected_state":"ABSTAIN"},
+    {"t":3, "fault":null,    "tcn_prob":0.3, "expected_state":"NOMINAL"}
+  ]
+}

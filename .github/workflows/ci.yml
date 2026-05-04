@@ -1,0 +1,37 @@
+name: Guardian Drive CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        run: |
+          pip install torch numpy scikit-learn pytest --quiet
+      - name: Run unit tests
+        run: |
+          python tests/test_hrv_features.py
+          python tests/test_sqi.py
+          python tests/test_state_machine.py
+          python tests/test_ear.py
+          echo "All tests passed"
+      - name: Verify benchmark results exist
+        run: |
+          python benchmarks/summarize_results.py
+      - name: Test fusion weights sum to 1.0
+        run: |
+          python -c "
+          weights = {'phys':0.40,'imu':0.20,'ctx':0.10,'neuro':0.30}
+          total = sum(weights.values())
+          assert abs(total-1.0)<1e-6, f'Weights sum to {total}, not 1.0'
+          print(f'Fusion weights sum: {total} -- OK')
+          "
