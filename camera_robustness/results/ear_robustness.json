@@ -1,0 +1,88 @@
+{
+  "suite": "Camera Robustness -- EAR Stability",
+  "method": "Synthetic landmark perturbation proxy",
+  "real_footage": "Required for production validation",
+  "drowsy_threshold": 0.18,
+  "n_trials": 1000,
+  "baseline_ear": 0.3,
+  "conditions": {
+    "normal": {
+      "mean_ear": 0.3004,
+      "std_ear": 0.0055,
+      "ear_drift_from_normal": 0.0004,
+      "false_drowsy_rate": 0.0,
+      "p50_ms_per_frame": 0.0042,
+      "n_trials": 1000,
+      "pass": true
+    },
+    "low_light": {
+      "mean_ear": 0.3041,
+      "std_ear": 0.0277,
+      "ear_drift_from_normal": 0.0041,
+      "false_drowsy_rate": 0.0,
+      "p50_ms_per_frame": 0.004,
+      "n_trials": 1000,
+      "pass": true
+    },
+    "glare": {
+      "mean_ear": 0.3089,
+      "std_ear": 0.0445,
+      "ear_drift_from_normal": 0.0089,
+      "false_drowsy_rate": 0.001,
+      "p50_ms_per_frame": 0.0038,
+      "n_trials": 1000,
+      "pass": true
+    },
+    "glasses": {
+      "mean_ear": 0.2111,
+      "std_ear": 0.0106,
+      "ear_drift_from_normal": 0.0889,
+      "false_drowsy_rate": 0.001,
+      "p50_ms_per_frame": 0.0055,
+      "n_trials": 1000,
+      "pass": true
+    },
+    "sunglasses": {
+      "mean_ear": 0.0533,
+      "std_ear": 0.0193,
+      "ear_drift_from_normal": 0.2467,
+      "false_drowsy_rate": 1.0,
+      "p50_ms_per_frame": 0.0049,
+      "n_trials": 1000,
+      "pass": false
+    },
+    "head_yaw_30deg": {
+      "mean_ear": 0.3477,
+      "std_ear": 0.0131,
+      "ear_drift_from_normal": 0.0477,
+      "false_drowsy_rate": 0.0,
+      "p50_ms_per_frame": 0.0056,
+      "n_trials": 1000,
+      "pass": true
+    },
+    "motion_blur": {
+      "mean_ear": 0.3026,
+      "std_ear": 0.0249,
+      "ear_drift_from_normal": 0.0026,
+      "false_drowsy_rate": 0.0,
+      "p50_ms_per_frame": 0.0127,
+      "n_trials": 1000,
+      "pass": true
+    },
+    "partial_occlusion": {
+      "mean_ear": 0.2271,
+      "std_ear": 0.016,
+      "ear_drift_from_normal": 0.0729,
+      "false_drowsy_rate": 0.001,
+      "p50_ms_per_frame": 0.0045,
+      "n_trials": 1000,
+      "pass": true
+    }
+  },
+  "summary": {
+    "passed": 7,
+    "failed": 1,
+    "total": 8
+  },
+  "authors": "Akilan Manivannan & Akila Lourdes Miriyala Francis"
+}

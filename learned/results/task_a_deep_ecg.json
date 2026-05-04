@@ -1,0 +1,24 @@
+{
+  "task": "Task A Deep ECG",
+  "model": "1D CNN + Self-Attention",
+  "dataset": "PTBDB 290 patients",
+  "evaluation": "Patient-level 5-fold CV",
+  "fold_aucs": [
+    0.6726,
+    0.7051,
+    0.7056,
+    0.6065,
+    0.5359
+  ],
+  "mean_auc": 0.6451,
+  "std_auc": 0.0655,
+  "overall_auc": 0.6362,
+  "sensitivity": 0.5689,
+  "specificity": 0.6178,
+  "ppv": 0.3942,
+  "npv": 0.7662,
+  "vs_rf_mean_auc": 0.6378,
+  "improvement": 0.0073,
+  "note": "Not validated for clinical use.",
+  "authors": "Akilan Manivannan & Akila Lourdes Miriyala Francis"
+}
