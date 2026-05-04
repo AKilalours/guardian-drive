@@ -25,3 +25,9 @@ A multimodal AI research prototype for driver physiological monitoring.
 **Not a medical device. Not clinically validated.**
 
 GitHub: https://github.com/AkilanManivannanak/guardian-drive
+
+## Implementation Maturity
+
+See [docs/maturity_levels.md](docs/maturity_levels.md) for honest
+classification of every component as:
+Implemented & Benchmarked / Implemented / Prototyped / Designed.
