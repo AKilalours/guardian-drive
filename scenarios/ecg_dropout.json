@@ -2,9 +2,9 @@
   "name": "ECG Dropout -- Abstain on low SQI",
   "description": "ECG electrode detaches. System should abstain, not escalate.",
   "steps": [
-    {"t":0, "fault":null,        "tcn_prob":0.3, "expected_state":"NOMINAL"},
-    {"t":1, "fault":"ecg_dropout","tcn_prob":0.3, "expected_state":"ABSTAIN"},
-    {"t":2, "fault":"ecg_dropout","tcn_prob":0.3, "expected_state":"ABSTAIN"},
-    {"t":3, "fault":"ecg_dropout","tcn_prob":0.3, "expected_state":"ABSTAIN"}
+    {"t":0, "fault":null,         "tcn_prob":0.3, "expected_state":"NOMINAL"},
+    {"t":1, "fault":"low_sqi",    "tcn_prob":0.3, "expected_state":"ABSTAIN"},
+    {"t":2, "fault":"low_sqi",    "tcn_prob":0.3, "expected_state":"ABSTAIN"},
+    {"t":3, "fault":"low_sqi",    "tcn_prob":0.3, "expected_state":"ABSTAIN"}
   ]
 }
