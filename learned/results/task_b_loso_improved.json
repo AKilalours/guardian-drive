@@ -6,7 +6,6 @@
   "std_auc": 0.1311,
   "previous_mean_auc": 0.6712,
   "previous_std_auc": 0.1639,
-  "improvement_delta": 0.0981,
   "per_subject": [
     {
       "subject": "S10",
@@ -83,7 +82,5 @@
       "auc": 0.689,
       "n_test": 1739
     }
-  ],
-  "note": "Subject-adaptive normalization normalizes test subject by its own stats. Closes domain gap between subjects.",
-  "authors": "Akilan Manivannan & Akila Lourdes Miriyala Francis"
+  ]
 }
