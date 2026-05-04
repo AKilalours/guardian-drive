@@ -1,0 +1,68 @@
+{
+  "module": "Task A ECG Analysis -- NeuroKit2",
+  "method": "Pan-Tompkins R-peak + HRV feature extraction",
+  "features": [
+    "HR",
+    "RMSSD",
+    "SDNN",
+    "LF/HF",
+    "R-peaks"
+  ],
+  "conditions": [
+    {
+      "condition": "Normal Sinus Rhythm",
+      "target_hr": 72,
+      "mean_hr": 72.1,
+      "rmssd_ms": 16.84,
+      "sdnn_ms": 13.69,
+      "lf_hf": NaN,
+      "r_peaks": 11,
+      "risk_flag": false
+    },
+    {
+      "condition": "Tachycardia",
+      "target_hr": 120,
+      "mean_hr": 120.1,
+      "rmssd_ms": 2.61,
+      "sdnn_ms": 3.03,
+      "lf_hf": NaN,
+      "r_peaks": 19,
+      "risk_flag": true
+    },
+    {
+      "condition": "Bradycardia",
+      "target_hr": 45,
+      "mean_hr": 45.1,
+      "rmssd_ms": 60.66,
+      "sdnn_ms": 39.14,
+      "lf_hf": NaN,
+      "r_peaks": 7,
+      "risk_flag": true
+    },
+    {
+      "condition": "AFib (irregular)",
+      "target_hr": 80,
+      "mean_hr": 80.1,
+      "rmssd_ms": 11.79,
+      "sdnn_ms": 10.63,
+      "lf_hf": NaN,
+      "r_peaks": 13,
+      "risk_flag": true
+    },
+    {
+      "condition": "ST elevation (MI proxy)",
+      "target_hr": 75,
+      "mean_hr": 75.1,
+      "rmssd_ms": 14.6,
+      "sdnn_ms": 11.73,
+      "lf_hf": NaN,
+      "r_peaks": 12,
+      "risk_flag": false
+    }
+  ],
+  "ptbdb_rf_auc": 0.6378,
+  "ptbdb_cnn_auc": 0.6451,
+  "integration": "HRV features (RMSSD, SDNN, LF/HF) fed into Task A arrhythmia risk score. risk_flag triggers ADVISORY state in safety FSM.",
+  "note": "Not validated for clinical use.",
+  "authors": "Akilan Manivannan & Akila Lourdes Miriyala Francis"
+}
