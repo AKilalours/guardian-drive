@@ -1,0 +1,107 @@
+{
+  "model_params": 184616910,
+  "nds_results": {
+    "NDS": 0.351,
+    "mAP": 0.298,
+    "mATE": 0.743,
+    "mASE": 0.286,
+    "mAOE": 0.512,
+    "mAVE": 0.638,
+    "mAAE": 0.224,
+    "note": "Synthetic NDS for demo. Full BEVFormer-Small achieves NDS=47.4%"
+  },
+  "forward_pass_results": [
+    {
+      "run": 0,
+      "n_objects_in": 1,
+      "n_detections": 1,
+      "trajectory_risk": 0.0,
+      "n_danger_objects": 0,
+      "min_ttc_sec": 3.8,
+      "closest_object_m": 57.3
+    },
+    {
+      "run": 1,
+      "n_objects_in": 12,
+      "n_detections": 12,
+      "trajectory_risk": 0.38,
+      "n_danger_objects": 1,
+      "min_ttc_sec": 0.52,
+      "closest_object_m": 8.3
+    },
+    {
+      "run": 2,
+      "n_objects_in": 9,
+      "n_detections": 9,
+      "trajectory_risk": 0.302,
+      "n_danger_objects": 1,
+      "min_ttc_sec": 0.22,
+      "closest_object_m": 7.8
+    },
+    {
+      "run": 3,
+      "n_objects_in": 8,
+      "n_detections": 8,
+      "trajectory_risk": 0.403,
+      "n_danger_objects": 2,
+      "min_ttc_sec": 0.57,
+      "closest_object_m": 12.1
+    },
+    {
+      "run": 4,
+      "n_objects_in": 11,
+      "n_detections": 11,
+      "trajectory_risk": 0.405,
+      "n_danger_objects": 1,
+      "min_ttc_sec": 0.2,
+      "closest_object_m": 8.7
+    },
+    {
+      "run": 5,
+      "n_objects_in": 11,
+      "n_detections": 11,
+      "trajectory_risk": 0.317,
+      "n_danger_objects": 1,
+      "min_ttc_sec": 0.6,
+      "closest_object_m": 11.6
+    },
+    {
+      "run": 6,
+      "n_objects_in": 4,
+      "n_detections": 4,
+      "trajectory_risk": 0.0,
+      "n_danger_objects": 0,
+      "min_ttc_sec": 2.2,
+      "closest_object_m": 50.4
+    },
+    {
+      "run": 7,
+      "n_objects_in": 12,
+      "n_detections": 12,
+      "trajectory_risk": 0.359,
+      "n_danger_objects": 1,
+      "min_ttc_sec": 0.37,
+      "closest_object_m": 9.1
+    },
+    {
+      "run": 8,
+      "n_objects_in": 10,
+      "n_detections": 10,
+      "trajectory_risk": 0.272,
+      "n_danger_objects": 1,
+      "min_ttc_sec": 0.35,
+      "closest_object_m": 11.0
+    },
+    {
+      "run": 9,
+      "n_objects_in": 8,
+      "n_detections": 8,
+      "trajectory_risk": 0.595,
+      "n_danger_objects": 1,
+      "min_ttc_sec": 0.19,
+      "closest_object_m": 5.3
+    }
+  ],
+  "bev_grid_size": "50\u00d750 @ 2m",
+  "integration": "trajectory_risk feeds r_ctx in Guardian Drive fusion"
+}

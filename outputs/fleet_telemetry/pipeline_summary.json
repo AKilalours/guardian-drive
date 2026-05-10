@@ -1,0 +1,24 @@
+{
+  "total_events": 4300,
+  "sources": [
+    "nuPlan (1300h real driving)",
+    "Waymo Open Dataset",
+    "Guardian Drive Pi logs"
+  ],
+  "crash_precursors": 20,
+  "drowsy_sequences": 30,
+  "cardiac_events": 15,
+  "fleet_stats": {
+    "total_events": 1800,
+    "total_scenes": 12,
+    "avg_speed_kph": 52.3,
+    "max_speed_kph": 118.0,
+    "avg_g_peak": 0.13,
+    "max_g_peak": 3.8,
+    "total_collisions": 3,
+    "total_lane_invasions": 22,
+    "avg_hrv": 38.2,
+    "avg_perclos": 0.11,
+    "n_sources": 3
+  }
+}
