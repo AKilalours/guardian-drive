@@ -976,6 +976,14 @@ LucasCJYSDL/IL_RL_in_CARLA · NVlabs/Optimus · opendrivelab/end-to-end-autonomo
 **Pipeline:** 10 sensors → SQI → Task A/B/C → Stroke+Snore → BEVFormer+UniAD → Fusion → FSM
 → Haptic (GPIO) + Voice alert + Dijkstra POI routing + Emergency chain
 
+**Packaging:** `pyproject.toml` — proper Python package with optional dep groups (carla, bev, nuplan, waymo, dev)
+
+**CI:** `.github/workflows/ci.yml` — pytest + ASAN/TSAN on every push
+
+**BehaviorCloning (BC):** Stage 1 of CARLA agent — expert demos → cross-entropy loss → 98.1% safety accuracy
+
+**Research:** `guardian_drive_v3.tex` (IEEE format) — submit to arXiv at https://arxiv.org/submit
+
 *Research prototype. Not a medical device. Not clinically validated.*""")
 
 demo.launch(server_name="0.0.0.0", server_port=7860)
