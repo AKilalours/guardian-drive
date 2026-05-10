@@ -1,0 +1,75 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "guardian-drive"
+version = "2.0.0"
+description = "Real-time driver safety monitoring: 9-sensor fusion, TCN drowsiness, BEVFormer perception, CARLA RL agent, fleet telemetry pipeline"
+authors = [
+    {name = "Akilan Manivannan", email = "akilan.manivannan@my.liu.edu"},
+    {name = "Akila Lourdes Miriyala Francis", email = "akilalourdes.miriyalafrancis@my.liu.edu"},
+]
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9"
+
+dependencies = [
+    "torch>=2.0.0",
+    "numpy>=1.24.0",
+    "pyarrow>=12.0.0",
+    "duckdb>=0.9.0",
+    "fastapi>=0.100.0",
+    "uvicorn>=0.23.0",
+    "pydantic>=2.0.0",
+    "requests>=2.31.0",
+    "websockets>=11.0",
+]
+
+[project.optional-dependencies]
+carla = ["carla==0.9.15"]
+hypothesis = ["hypothesis>=6.80.0"]
+bev = ["mmcv-full>=1.6.0", "mmdet>=2.26.0", "mmdet3d>=1.0.0"]
+nuscenes = ["nuscenes-devkit>=1.1.11"]
+nuplan = ["nuplan-devkit>=1.2.0"]
+waymo = ["waymo-open-dataset-tf-2-11-0>=1.5.0", "tensorflow>=2.11.0"]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "hypothesis>=6.80.0",
+    "mypy>=1.5.0",
+    "ruff>=0.1.0",
+    "black>=23.0.0",
+]
+all = [
+    "guardian-drive[carla,hypothesis,nuscenes,dev]",
+]
+
+[project.scripts]
+guardian-train = "scripts.train_all:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["carla_agent*", "fleet_telemetry*", "bev_perception*", "scripts*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+
+[tool.mypy]
+python_version = "3.9"
+strict = true
+ignore_missing_imports = true
+warn_return_any = true
+warn_unused_ignores = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+select = ["E", "F", "W", "I", "N", "UP", "ANN"]
+
+[tool.black]
+line-length = 100
+target-version = ["py39"]
