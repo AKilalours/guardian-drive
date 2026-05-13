@@ -39,3 +39,4 @@ datasets/
 *.dylib
 *.so
 .env
+.env
