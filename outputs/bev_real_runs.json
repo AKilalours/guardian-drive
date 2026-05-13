@@ -1,0 +1,146 @@
+{
+  "model": "GuardianBEVPerception",
+  "params": 184616910,
+  "runs": [
+    {
+      "run": 0,
+      "n_detections": 10,
+      "trajectory_risk": 0.134,
+      "min_ttc_sec": 0.49,
+      "closest_object_m": 19.6
+    },
+    {
+      "run": 1,
+      "n_detections": 7,
+      "trajectory_risk": 0.355,
+      "min_ttc_sec": 0.31,
+      "closest_object_m": 8.1
+    },
+    {
+      "run": 2,
+      "n_detections": 8,
+      "trajectory_risk": 0.32,
+      "min_ttc_sec": 0.18,
+      "closest_object_m": 7.8
+    },
+    {
+      "run": 3,
+      "n_detections": 2,
+      "trajectory_risk": 0.259,
+      "min_ttc_sec": 0.76,
+      "closest_object_m": 18.4
+    },
+    {
+      "run": 4,
+      "n_detections": 3,
+      "trajectory_risk": 0.538,
+      "min_ttc_sec": 0.2,
+      "closest_object_m": 6.9
+    },
+    {
+      "run": 5,
+      "n_detections": 9,
+      "trajectory_risk": 0.682,
+      "min_ttc_sec": 0.36,
+      "closest_object_m": 8.3
+    },
+    {
+      "run": 6,
+      "n_detections": 14,
+      "trajectory_risk": 0.602,
+      "min_ttc_sec": 0.23,
+      "closest_object_m": 5.9
+    },
+    {
+      "run": 7,
+      "n_detections": 10,
+      "trajectory_risk": 0.393,
+      "min_ttc_sec": 0.62,
+      "closest_object_m": 9.1
+    },
+    {
+      "run": 8,
+      "n_detections": 7,
+      "trajectory_risk": 0.31,
+      "min_ttc_sec": 0.5,
+      "closest_object_m": 10.4
+    },
+    {
+      "run": 9,
+      "n_detections": 10,
+      "trajectory_risk": 0.355,
+      "min_ttc_sec": 0.15,
+      "closest_object_m": 5.5
+    },
+    {
+      "run": 10,
+      "n_detections": 14,
+      "trajectory_risk": 0.366,
+      "min_ttc_sec": 0.39,
+      "closest_object_m": 11.4
+    },
+    {
+      "run": 11,
+      "n_detections": 9,
+      "trajectory_risk": 0.531,
+      "min_ttc_sec": 0.76,
+      "closest_object_m": 8.6
+    },
+    {
+      "run": 12,
+      "n_detections": 6,
+      "trajectory_risk": 0.374,
+      "min_ttc_sec": 0.38,
+      "closest_object_m": 10.9
+    },
+    {
+      "run": 13,
+      "n_detections": 3,
+      "trajectory_risk": 1.0,
+      "min_ttc_sec": 0.14,
+      "closest_object_m": 5.9
+    },
+    {
+      "run": 14,
+      "n_detections": 8,
+      "trajectory_risk": 0.618,
+      "min_ttc_sec": 0.23,
+      "closest_object_m": 6.7
+    },
+    {
+      "run": 15,
+      "n_detections": 3,
+      "trajectory_risk": 0.187,
+      "min_ttc_sec": 0.79,
+      "closest_object_m": 24.0
+    },
+    {
+      "run": 16,
+      "n_detections": 13,
+      "trajectory_risk": 0.57,
+      "min_ttc_sec": 0.22,
+      "closest_object_m": 8.8
+    },
+    {
+      "run": 17,
+      "n_detections": 3,
+      "trajectory_risk": 0.0,
+      "min_ttc_sec": 2.6,
+      "closest_object_m": 51.9
+    },
+    {
+      "run": 18,
+      "n_detections": 6,
+      "trajectory_risk": 0.138,
+      "min_ttc_sec": 0.58,
+      "closest_object_m": 16.5
+    },
+    {
+      "run": 19,
+      "n_detections": 9,
+      "trajectory_risk": 0.475,
+      "min_ttc_sec": 0.36,
+      "closest_object_m": 9.0
+    }
+  ]
+}
