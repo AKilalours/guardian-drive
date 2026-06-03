@@ -28,7 +28,7 @@ def test_ear_range():
     for _ in range(20):
         lm = np.random.randn(6,2).astype(np.float32)
         e = ear_numpy(lm)
-        assert 0 <= e < 10
+        assert 0 <= e  # EAR unbounded above, just check non-negative
 
 if __name__ == "__main__":
     test_open_eye(); test_closed_eye()
