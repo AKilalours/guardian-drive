@@ -337,11 +337,17 @@ class AV2Loader:
             hist_idx = np.where(track.observed)[0][-10:]
             history_trail = (track.positions[hist_idx] - ego_pos).tolist()
 
-                # Future prediction (ego-normalized)
+                # Future prediction — constant velocity for 3s (30 steps)
             future_traj = []
-            if not track.observed.all():
-                fut_idx = np.where(~track.observed)[0][:20]
-                future_traj = (track.positions[fut_idx] - ego_pos).tolist()
+            obs_idx = np.where(track.observed)[0]
+            if len(obs_idx) >= 2:
+                last_pos = track.positions[obs_idx[-1]]
+                last_vel = track.velocities[obs_idx[-1]]
+                future_pts = np.array([
+                    last_pos + last_vel * (t+1) * 0.1
+                    for t in range(30)
+                ])
+                future_traj = (future_pts - ego_pos).tolist()
 
             agents.append({
                 "track_id":    track.track_id,
