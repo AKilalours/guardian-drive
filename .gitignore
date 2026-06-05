@@ -38,3 +38,15 @@ guardian_drive_tcn*
 data/nuscenes/
 data/ptbxl/
 data/wesad/
+# Large data files — too big for GitHub
+data/argoverse2/
+data/nuscenes/
+data/ptbxl/
+data/wesad/
+data/bags/
+runs/
+outputs/*.pt
+outputs/*.bin
+*.safetensors
+data/argoverse2/val/
+!data/argoverse2/av2_val_manifest.json
