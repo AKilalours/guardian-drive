@@ -29,6 +29,9 @@ class AV2Lane:
     left_boundary: np.ndarray
     right_boundary: np.ndarray
     is_intersection: bool
+    left_mark_type: str = "DASHED_WHITE"
+    right_mark_type: str = "DASHED_WHITE"
+    speed_limit_mph: int = 35
 
 
 @dataclass
@@ -363,11 +366,22 @@ class AV2Loader:
             # Filter to visible range
             visible = np.abs(pts).max(1) < range_m
             if visible.any():
+                # Left/right boundaries (ego-normalized)
+                lb = lane.left_boundary - ego_pos if hasattr(lane,'left_boundary') and lane.left_boundary is not None else pts
+                rb = lane.right_boundary - ego_pos if hasattr(lane,'right_boundary') and lane.right_boundary is not None else pts
+                lv = np.abs(lb).max(1) < range_m if len(lb) > 0 else np.array([True])
+                rv = np.abs(rb).max(1) < range_m if len(rb) > 0 else np.array([True])
+
                 lanes_bev.append({
-                    "lane_id":   lane.lane_id,
-                    "lane_type": lane.lane_type,
-                    "centerline": pts[visible].tolist(),
+                    "lane_id":         lane.lane_id,
+                    "lane_type":       lane.lane_type,
+                    "centerline":      pts[visible].tolist(),
+                    "left_boundary":   lb[lv].tolist() if lv.any() else [],
+                    "right_boundary":  rb[rv].tolist() if rv.any() else [],
                     "is_intersection": lane.is_intersection,
+                    "left_mark_type":  getattr(lane, 'left_mark_type', 'DASHED_WHITE'),
+                    "right_mark_type": getattr(lane, 'right_mark_type', 'DASHED_WHITE'),
+                    "speed_limit_mph": getattr(lane, 'speed_limit_mph', 35),
                 })
 
         # Crosswalks — ego-normalized
