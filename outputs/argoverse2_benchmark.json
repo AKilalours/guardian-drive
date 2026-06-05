@@ -1,0 +1,10 @@
+{
+  "dataset": "Argoverse 2 Motion Forecasting",
+  "split": "val",
+  "n_scenarios": 50,
+  "model": "Constant Velocity Baseline",
+  "minADE_6s": 0.0673,
+  "minFDE_6s": 0.1035,
+  "MissRate_2m": 0.0,
+  "note": "Baseline predictor. Replace with learned model for competitive results."
+}
