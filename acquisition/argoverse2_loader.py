@@ -43,6 +43,7 @@ class AV2HDMap:
     crosswalks: List[AV2Crosswalk]
     city: str
     origin: np.ndarray      # (2,) reference point
+    stop_lines: List[dict] = field(default_factory=list)
 
 
 @dataclass
@@ -265,6 +266,7 @@ class AV2Loader:
                 polygon=np.array(cw["polygon"], dtype=np.float32),
             ))
 
+        stop_lines = m.get("stop_lines", [])
         return AV2Scenario(
             scenario_id=d["scenario_id"],
             city_name=d.get("city_name", "PIT"),
@@ -275,6 +277,7 @@ class AV2Loader:
                 lanes=lanes, crosswalks=crosswalks,
                 city=d.get("city_name", "PIT"),
                 origin=np.array(m.get("origin", [0.0, 0.0])),
+                stop_lines=stop_lines,
             ),
         )
 
@@ -331,6 +334,12 @@ class AV2Loader:
             hist_idx = np.where(track.observed)[0][-10:]
             history_trail = (track.positions[hist_idx] - ego_pos).tolist()
 
+                # Future prediction (ego-normalized)
+            future_traj = []
+            if not track.observed.all():
+                fut_idx = np.where(~track.observed)[0][:20]
+                future_traj = (track.positions[fut_idx] - ego_pos).tolist()
+
             agents.append({
                 "track_id":    track.track_id,
                 "class_name":  track.object_type,
@@ -344,6 +353,7 @@ class AV2Loader:
                 "confidence":  0.95,
                 "color":       AV2Loader.OBJECT_COLORS.get(track.object_type, "#6b7280"),
                 "history_trail": history_trail,
+                "future_traj": future_traj,
             })
 
         # HD Map — ego-normalized lane polylines
@@ -370,6 +380,18 @@ class AV2Loader:
                     "polygon": pts.tolist(),
                 })
 
+        # Stop lines
+        stop_lines_bev = []
+        for sl in getattr(scenario.hd_map, 'stop_lines', []):
+            if isinstance(sl, dict):
+                start = np.array(sl.get('start', [0,0])) - ego_pos
+                end   = np.array(sl.get('end',   [0,0])) - ego_pos
+                stop_lines_bev.append({
+                    "id": sl.get("id","sl"),
+                    "start": start.tolist(),
+                    "end":   end.tolist(),
+                })
+
         return {
             "av2_scenario_id": scenario.scenario_id,
             "av2_city":        scenario.city_name,
@@ -379,6 +401,7 @@ class AV2Loader:
             "av2_agents":      agents,
             "av2_lanes":       lanes_bev,
             "av2_crosswalks":  crosswalks_bev,
+            "av2_stop_lines":  stop_lines_bev,
             "av2_active":      True,
         }
 
