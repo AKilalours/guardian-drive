@@ -1,42 +1,40 @@
 # Python
 __pycache__/
-*.py[cod]
-*.so
-
-# Envs
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
 .venv/
+.venv_gd/
 venv/
 env/
 
-# OS/editor
+# macOS
 .DS_Store
-.vscode/
-.idea/
+.Rhistory
 
-# Data / outputs
-data/
-datasets/
-artifacts/
-reports/
-replay/
-
-# ML/model artifacts
+# Models (too large for git)
 *.pt
-*.pth
-*.ckpt
 *.onnx
-*.h5
-*.pkl
+*.mlpackage
 *.joblib
-*.npy
-*.npz
+wesad_tcn*
+guardian_drive_tcn*
 
-# Logs
-*.log
-.venv_gd/
-.venv/
-datasets/
-*.dylib
-*.so
+# Environment
 .env
-.env
+.env.local
+
+# Test cache
+.pytest_cache/
+.hypothesis/
+
+# IDE
+.idea/
+.vscode/
+
+# Large data
+data/nuscenes/
+data/ptbxl/
+data/wesad/

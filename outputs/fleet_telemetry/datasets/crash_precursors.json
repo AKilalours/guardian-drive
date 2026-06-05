@@ -1,0 +1,162 @@
+[
+  {
+    "scene_token": "nuplan_0000",
+    "g_peak": 3.435,
+    "speed_kph": 86.3,
+    "collision_flag": false,
+    "source": "nuplan",
+    "timestamp_us": 0
+  },
+  {
+    "scene_token": "nuplan_0001",
+    "g_peak": 3.646,
+    "speed_kph": 101.8,
+    "collision_flag": false,
+    "source": "nuplan",
+    "timestamp_us": 1000000
+  },
+  {
+    "scene_token": "nuplan_0002",
+    "g_peak": 1.735,
+    "speed_kph": 118.5,
+    "collision_flag": false,
+    "source": "nuplan",
+    "timestamp_us": 2000000
+  },
+  {
+    "scene_token": "nuplan_0003",
+    "g_peak": 3.403,
+    "speed_kph": 107.2,
+    "collision_flag": false,
+    "source": "nuplan",
+    "timestamp_us": 3000000
+  },
+  {
+    "scene_token": "nuplan_0004",
+    "g_peak": 1.82,
+    "speed_kph": 87.0,
+    "collision_flag": false,
+    "source": "nuplan",
+    "timestamp_us": 4000000
+  },
+  {
+    "scene_token": "nuplan_0005",
+    "g_peak": 2.427,
+    "speed_kph": 115.6,
+    "collision_flag": false,
+    "source": "nuplan",
+    "timestamp_us": 5000000
+  },
+  {
+    "scene_token": "nuplan_0006",
+    "g_peak": 3.11,
+    "speed_kph": 109.4,
+    "collision_flag": false,
+    "source": "nuplan",
+    "timestamp_us": 6000000
+  },
+  {
+    "scene_token": "nuplan_0007",
+    "g_peak": 2.609,
+    "speed_kph": 73.6,
+    "collision_flag": false,
+    "source": "nuplan",
+    "timestamp_us": 7000000
+  },
+  {
+    "scene_token": "nuplan_0008",
+    "g_peak": 2.886,
+    "speed_kph": 63.8,
+    "collision_flag": false,
+    "source": "nuplan",
+    "timestamp_us": 8000000
+  },
+  {
+    "scene_token": "nuplan_0009",
+    "g_peak": 3.569,
+    "speed_kph": 97.9,
+    "collision_flag": false,
+    "source": "nuplan",
+    "timestamp_us": 9000000
+  },
+  {
+    "scene_token": "nuplan_0010",
+    "g_peak": 3.395,
+    "speed_kph": 81.3,
+    "collision_flag": false,
+    "source": "nuplan",
+    "timestamp_us": 10000000
+  },
+  {
+    "scene_token": "nuplan_0011",
+    "g_peak": 3.927,
+    "speed_kph": 113.6,
+    "collision_flag": false,
+    "source": "nuplan",
+    "timestamp_us": 11000000
+  },
+  {
+    "scene_token": "nuplan_0012",
+    "g_peak": 3.446,
+    "speed_kph": 71.7,
+    "collision_flag": false,
+    "source": "nuplan",
+    "timestamp_us": 12000000
+  },
+  {
+    "scene_token": "nuplan_0013",
+    "g_peak": 2.667,
+    "speed_kph": 62.6,
+    "collision_flag": false,
+    "source": "nuplan",
+    "timestamp_us": 13000000
+  },
+  {
+    "scene_token": "nuplan_0014",
+    "g_peak": 1.886,
+    "speed_kph": 101.0,
+    "collision_flag": false,
+    "source": "nuplan",
+    "timestamp_us": 14000000
+  },
+  {
+    "scene_token": "nuplan_0015",
+    "g_peak": 3.362,
+    "speed_kph": 118.1,
+    "collision_flag": false,
+    "source": "nuplan",
+    "timestamp_us": 15000000
+  },
+  {
+    "scene_token": "nuplan_0016",
+    "g_peak": 2.315,
+    "speed_kph": 82.2,
+    "collision_flag": false,
+    "source": "nuplan",
+    "timestamp_us": 16000000
+  },
+  {
+    "scene_token": "nuplan_0017",
+    "g_peak": 2.674,
+    "speed_kph": 71.4,
+    "collision_flag": false,
+    "source": "nuplan",
+    "timestamp_us": 17000000
+  },
+  {
+    "scene_token": "nuplan_0018",
+    "g_peak": 1.825,
+    "speed_kph": 88.5,
+    "collision_flag": false,
+    "source": "nuplan",
+    "timestamp_us": 18000000
+  },
+  {
+    "scene_token": "nuplan_0019",
+    "g_peak": 2.067,
+    "speed_kph": 100.2,
+    "collision_flag": false,
+    "source": "nuplan",
+    "timestamp_us": 19000000
+  }
+]

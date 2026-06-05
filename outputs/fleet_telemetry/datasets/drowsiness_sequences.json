@@ -1,0 +1,242 @@
+[
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.604,
+    "hrv_rmssd": 21.3,
+    "impairment_label": "DROWSY",
+    "source": "guardian_pi",
+    "timestamp_us": 0
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.931,
+    "hrv_rmssd": 22.3,
+    "impairment_label": "SLEEPY",
+    "source": "guardian_pi",
+    "timestamp_us": 1000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.648,
+    "hrv_rmssd": 15.7,
+    "impairment_label": "MICROSLEEP",
+    "source": "guardian_pi",
+    "timestamp_us": 2000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.577,
+    "hrv_rmssd": 22.2,
+    "impairment_label": "SLEEPY",
+    "source": "guardian_pi",
+    "timestamp_us": 3000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.901,
+    "hrv_rmssd": 14.9,
+    "impairment_label": "SLEEPY",
+    "source": "guardian_pi",
+    "timestamp_us": 4000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.524,
+    "hrv_rmssd": 15.4,
+    "impairment_label": "DROWSY",
+    "source": "guardian_pi",
+    "timestamp_us": 5000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.495,
+    "hrv_rmssd": 28.7,
+    "impairment_label": "MICROSLEEP",
+    "source": "guardian_pi",
+    "timestamp_us": 6000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.792,
+    "hrv_rmssd": 10.8,
+    "impairment_label": "SLEEPY",
+    "source": "guardian_pi",
+    "timestamp_us": 7000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.459,
+    "hrv_rmssd": 24.1,
+    "impairment_label": "DROWSY",
+    "source": "guardian_pi",
+    "timestamp_us": 8000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.873,
+    "hrv_rmssd": 18.7,
+    "impairment_label": "SLEEPY",
+    "source": "guardian_pi",
+    "timestamp_us": 9000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.686,
+    "hrv_rmssd": 21.7,
+    "impairment_label": "SLEEPY",
+    "source": "guardian_pi",
+    "timestamp_us": 10000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.709,
+    "hrv_rmssd": 20.2,
+    "impairment_label": "SLEEPY",
+    "source": "guardian_pi",
+    "timestamp_us": 11000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.386,
+    "hrv_rmssd": 11.4,
+    "impairment_label": "DROWSY",
+    "source": "guardian_pi",
+    "timestamp_us": 12000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.317,
+    "hrv_rmssd": 12.3,
+    "impairment_label": "DROWSY",
+    "source": "guardian_pi",
+    "timestamp_us": 13000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.446,
+    "hrv_rmssd": 21.9,
+    "impairment_label": "SLEEPY",
+    "source": "guardian_pi",
+    "timestamp_us": 14000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.794,
+    "hrv_rmssd": 29.3,
+    "impairment_label": "SLEEPY",
+    "source": "guardian_pi",
+    "timestamp_us": 15000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.482,
+    "hrv_rmssd": 14.7,
+    "impairment_label": "MICROSLEEP",
+    "source": "guardian_pi",
+    "timestamp_us": 16000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.651,
+    "hrv_rmssd": 25.4,
+    "impairment_label": "MICROSLEEP",
+    "source": "guardian_pi",
+    "timestamp_us": 17000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.682,
+    "hrv_rmssd": 15.6,
+    "impairment_label": "MICROSLEEP",
+    "source": "guardian_pi",
+    "timestamp_us": 18000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.651,
+    "hrv_rmssd": 24.4,
+    "impairment_label": "MICROSLEEP",
+    "source": "guardian_pi",
+    "timestamp_us": 19000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.721,
+    "hrv_rmssd": 25.4,
+    "impairment_label": "SLEEPY",
+    "source": "guardian_pi",
+    "timestamp_us": 20000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.537,
+    "hrv_rmssd": 10.8,
+    "impairment_label": "MICROSLEEP",
+    "source": "guardian_pi",
+    "timestamp_us": 21000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.589,
+    "hrv_rmssd": 27.9,
+    "impairment_label": "DROWSY",
+    "source": "guardian_pi",
+    "timestamp_us": 22000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.797,
+    "hrv_rmssd": 23.1,
+    "impairment_label": "DROWSY",
+    "source": "guardian_pi",
+    "timestamp_us": 23000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.744,
+    "hrv_rmssd": 14.4,
+    "impairment_label": "MICROSLEEP",
+    "source": "guardian_pi",
+    "timestamp_us": 24000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.437,
+    "hrv_rmssd": 22.5,
+    "impairment_label": "DROWSY",
+    "source": "guardian_pi",
+    "timestamp_us": 25000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.522,
+    "hrv_rmssd": 15.1,
+    "impairment_label": "SLEEPY",
+    "source": "guardian_pi",
+    "timestamp_us": 26000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.76,
+    "hrv_rmssd": 15.1,
+    "impairment_label": "SLEEPY",
+    "source": "guardian_pi",
+    "timestamp_us": 27000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.631,
+    "hrv_rmssd": 18.1,
+    "impairment_label": "DROWSY",
+    "source": "guardian_pi",
+    "timestamp_us": 28000000
+  },
+  {
+    "scene_token": "guardian_0001",
+    "perclos": 0.848,
+    "hrv_rmssd": 24.5,
+    "impairment_label": "MICROSLEEP",
+    "source": "guardian_pi",
+    "timestamp_us": 29000000
+  }
+]

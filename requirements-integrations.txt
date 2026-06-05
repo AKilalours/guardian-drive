@@ -1,4 +1,0 @@
-# Optional integrations
-requests
-pyserial
-twilio

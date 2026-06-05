@@ -1,0 +1,23 @@
+
+#  - MediaPipe 0.10.30+ removed `mp.solutions`, so you must use mediapipe < 0.10.30.
+#  - OpenCV 4.12+ pulls NumPy 2.x, which breaks many ML stacks; pin NumPy < 2.
+#  - This repo uses the *MediaPipe Solutions* API (mp.solutions.*).
+# IMPORTANT:
+# Install only if you want to train learned models.
+# Only needed if you run the optional CNN training/inference scripts:
+# Optional integrations
+# Optional ML training dependencies
+# Optional UI dependencies
+# Vision-only dependencies (webcam drowsiness)
+fastapi
+mediapipe>=0.10,<0.10.30
+numpy>=1.26,<2.0
+opencv-python>=4.9,<4.12
+pandas
+pyserial
+requests
+streamlit
+torch
+torchvision
+twilio
+uvicorn[standard]

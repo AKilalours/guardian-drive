@@ -1,0 +1,107 @@
+[
+  {
+    "scene_token": "guardian_0002",
+    "ecg_hr": 151,
+    "hrv_rmssd": 7.4,
+    "source": "guardian_pi",
+    "timestamp_us": 0
+  },
+  {
+    "scene_token": "guardian_0002",
+    "ecg_hr": 35,
+    "hrv_rmssd": 8.2,
+    "source": "guardian_pi",
+    "timestamp_us": 1000000
+  },
+  {
+    "scene_token": "guardian_0002",
+    "ecg_hr": 31,
+    "hrv_rmssd": 5.9,
+    "source": "guardian_pi",
+    "timestamp_us": 2000000
+  },
+  {
+    "scene_token": "guardian_0002",
+    "ecg_hr": 40,
+    "hrv_rmssd": 12.9,
+    "source": "guardian_pi",
+    "timestamp_us": 3000000
+  },
+  {
+    "scene_token": "guardian_0002",
+    "ecg_hr": 150,
+    "hrv_rmssd": 6.3,
+    "source": "guardian_pi",
+    "timestamp_us": 4000000
+  },
+  {
+    "scene_token": "guardian_0002",
+    "ecg_hr": 36,
+    "hrv_rmssd": 13.7,
+    "source": "guardian_pi",
+    "timestamp_us": 5000000
+  },
+  {
+    "scene_token": "guardian_0002",
+    "ecg_hr": 33,
+    "hrv_rmssd": 6.6,
+    "source": "guardian_pi",
+    "timestamp_us": 6000000
+  },
+  {
+    "scene_token": "guardian_0002",
+    "ecg_hr": 122,
+    "hrv_rmssd": 6.6,
+    "source": "guardian_pi",
+    "timestamp_us": 7000000
+  },
+  {
+    "scene_token": "guardian_0002",
+    "ecg_hr": 33,
+    "hrv_rmssd": 8.9,
+    "source": "guardian_pi",
+    "timestamp_us": 8000000
+  },
+  {
+    "scene_token": "guardian_0002",
+    "ecg_hr": 31,
+    "hrv_rmssd": 6.9,
+    "source": "guardian_pi",
+    "timestamp_us": 9000000
+  },
+  {
+    "scene_token": "guardian_0002",
+    "ecg_hr": 35,
+    "hrv_rmssd": 8.9,
+    "source": "guardian_pi",
+    "timestamp_us": 10000000
+  },
+  {
+    "scene_token": "guardian_0002",
+    "ecg_hr": 26,
+    "hrv_rmssd": 9.6,
+    "source": "guardian_pi",
+    "timestamp_us": 11000000
+  },
+  {
+    "scene_token": "guardian_0002",
+    "ecg_hr": 38,
+    "hrv_rmssd": 13.1,
+    "source": "guardian_pi",
+    "timestamp_us": 12000000
+  },
+  {
+    "scene_token": "guardian_0002",
+    "ecg_hr": 25,
+    "hrv_rmssd": 13.1,
+    "source": "guardian_pi",
+    "timestamp_us": 13000000
+  },
+  {
+    "scene_token": "guardian_0002",
+    "ecg_hr": 42,
+    "hrv_rmssd": 9.4,
+    "source": "guardian_pi",
+    "timestamp_us": 14000000
+  }
+]
