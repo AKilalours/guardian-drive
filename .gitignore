@@ -50,3 +50,8 @@ outputs/*.bin
 *.safetensors
 data/argoverse2/val/
 !data/argoverse2/av2_val_manifest.json
+data/
+!data/hospitals.csv
+!data/argoverse2/av2_val_manifest.json
+runs/
+outputs/*.pt
