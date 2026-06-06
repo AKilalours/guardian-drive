@@ -1,0 +1,20 @@
+{
+  "dataset": "nuScenes v1.0-mini",
+  "model": "OpenDriveFMV13 full backbone+occ_head",
+  "checkpoint": "checkpoints_v13_3class_v3/best_val_ade.ckpt",
+  "n_samples": 404,
+  "mean_iou": 0.0617,
+  "iou_per_class": {
+    "background": 0.0,
+    "vehicle": 0.1707,
+    "drivable": 0.0144
+  },
+  "latency_p50_ms": 9.2,
+  "fps": 98.5,
+  "classes": [
+    "background",
+    "vehicle",
+    "drivable"
+  ],
+  "note": "Full end-to-end: 6 camera images \u2192 MultiViewTemporalBackbone \u2192 BEVHead3Class \u2192 3-class semantic BEV map"
+}

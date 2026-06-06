@@ -336,7 +336,43 @@ function drawBEV(d){
     });
   }
 
-  // ── ARGOVERSE 2 TESLA-STYLE BEV ──────────────────────────────────
+
+  // ── SEMANTIC SEGMENTATION OVERLAY ────────────────────────────────
+  const segMap = d.seg_class_map || [];
+  if (segMap.length === 16384) {  // 128*128
+    const SEG_COLORS = [
+      null,                    // 0: background — transparent
+      [6,  182, 212, 60],      // 1: vehicle    — cyan semi-transparent
+      [34, 197, 94,  40],      // 2: drivable   — green semi-transparent
+    ];
+    const cellW = W / 128;
+    const cellH = H / 128;
+    for (let i = 0; i < 128; i++) {
+      for (let j = 0; j < 128; j++) {
+        const cls = segMap[i * 128 + j];
+        const col = SEG_COLORS[cls];
+        if (!col) continue;
+        ctx.fillStyle = `rgba(${col[0]},${col[1]},${col[2]},${col[3]/255})`;
+        ctx.fillRect(j * cellW, i * cellH, cellW + 0.5, cellH + 0.5);
+      }
+    }
+    // Seg status badge
+    if (d.seg_active) {
+      ctx.fillStyle = 'rgba(34,197,94,0.08)';
+      ctx.fillRect(6, 6, 130, 18);
+      ctx.strokeStyle = 'rgba(34,197,94,0.3)';
+      ctx.lineWidth = 0.5;
+      ctx.strokeRect(6, 6, 130, 18);
+      ctx.fillStyle = '#22c55e';
+      ctx.font = '8px JetBrains Mono';
+      ctx.textAlign = 'left';
+      ctx.fillText(
+        `SEG·veh=${(d.seg_vehicle_pct||0).toFixed(0)}%·${d.seg_latency_ms||0}ms`,
+        10, 18);
+    }
+  }
+
+    // ── ARGOVERSE 2 TESLA-STYLE BEV ──────────────────────────────────
   const av2Lanes      = d.av2_lanes      || [];
   const av2Crosswalks = d.av2_crosswalks || [];
   const av2StopLines  = d.av2_stop_lines || [];
