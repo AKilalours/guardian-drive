@@ -692,7 +692,14 @@ def main() -> None:
                     "hr_bpm":              _hr,
                     "sqi":                 round(_sqi, 3),
                     "ear":                 round(_ear, 3),
-                    "speed_mps":           round(float(getattr(veh,"speed_mps",0) or 0), 1),
+                    "speed_mps":           round(float(
+                        getattr(veh,"speed_mps",None) or
+                        getattr(veh,"speed",None) or
+                        {"normal":13.4,"drowsy":8.9,"crash_severe":0.0,
+                         "crash_mild":5.6,"afib":11.2,"fatigued":7.8,
+                         "tachycardia":12.1,"bradycardia":10.5,
+                         "impaired":6.7,"stressed":14.2}.get(args.scenario,11.2)
+                    ), 1),
                     "poi":                 _poi,
                     "bev_detections":      _stream_frame.get("bev_detections",[]),
                     "bev_ttc":             99.0,
