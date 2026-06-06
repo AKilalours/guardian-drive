@@ -1,0 +1,21 @@
+{
+  "dataset": "nuScenes v1.0-mini",
+  "model": "PointPillars (random weights \u2014 no training)",
+  "n_samples": 20,
+  "latency_p50_ms": 774.95,
+  "latency_p95_ms": 850.08,
+  "fps": 1.3,
+  "det_per_frame": 400.0,
+  "class_counts": {
+    "car": 1000,
+    "truck": 1000,
+    "bus": 1000,
+    "pedestrian": 1000,
+    "motorcycle": 1000,
+    "bicycle": 1000,
+    "traffic_cone": 1000,
+    "barrier": 1000
+  },
+  "device": "mps",
+  "note": "Random weights \u2014 detection pattern reflects architecture not trained model. Fine-tune on nuScenes train split for real AP."
+}
