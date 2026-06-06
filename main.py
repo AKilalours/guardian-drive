@@ -585,6 +585,13 @@ def main() -> None:
             render(fb, rs, action, i + 1, args.scenario,
                    time.monotonic() - t0, webcam_metrics=webcam_metrics)
             # ── DASHBOARD PUSH ─────────────────────────────────────────────────
+            # Load nuScenes stream (singleton)
+            try:
+                from bev_perception.nuscenes_stream import get_stream as _get_stream
+                _stream_frame = _get_stream().next_frame()
+            except Exception as _se:
+                _stream_frame = {"cam_images":[""]* 6,"cam_trust":[0.0]*6,
+                                 "bev_detections":[],"av2_agents":[],"av2_lanes":[]}
             try:
                 import requests as _req, json as _json2
 
@@ -659,6 +666,19 @@ def main() -> None:
 
                 _state_name = str(getattr(action.level,'name','nominal')).lower()
 
+                # Real EAR from webcam
+                _ear = 0.0
+                try:
+                    _ear = float(webcam_metrics.get("ear",0) or 0) if webcam_metrics else 0.0
+                except: pass
+
+                # Real HR from fb
+                if _hr == 0:
+                    try:
+                        _hr = int(getattr(fb.ecg,"hr_bpm",0) or
+                                  getattr(fb,"hr_bpm",0) or 0)
+                    except: pass
+
                 _dp = {
                     "state":               _state_name,
                     "scenario":            args.scenario,
@@ -671,19 +691,22 @@ def main() -> None:
                     "task_c":              _tc,
                     "hr_bpm":              _hr,
                     "sqi":                 round(_sqi, 3),
-                    "ear":                 0,
+                    "ear":                 round(_ear, 3),
                     "speed_mps":           round(float(getattr(veh,"speed_mps",0) or 0), 1),
                     "poi":                 _poi,
-                    "bev_detections":      [],
+                    "bev_detections":      _stream_frame.get("bev_detections",[]),
                     "bev_ttc":             99.0,
-                    "bev_n_occupied":      0,
-                    "av2_agents":          [],
-                    "av2_lanes":           [],
+                    "bev_n_occupied":      len(_stream_frame.get("bev_detections",[])),
+                    "av2_agents":          _stream_frame.get("av2_agents",[]),
+                    "av2_lanes":           _stream_frame.get("av2_lanes",[]),
                     "av2_crosswalks":      [],
                     "av2_ego_future":      [],
-                    "av2_city":            "NYC",
-                    "av2_ego_speed":       15.0,
-                    "av2_n_agents":        0,
+                    "av2_city":            _stream_frame.get("av2_city","NYC"),
+                    "av2_ego_speed":       round(float(getattr(veh,"speed_mps",15) or 15),1),
+                    "av2_n_agents":        _stream_frame.get("av2_n_agents",0),
+                    "cam_images":          _stream_frame.get("cam_images",[]),
+                    "cam_trust":           _stream_frame.get("cam_trust",[]),
+                    "sample_token":        _stream_frame.get("sample_token",""),
                     "seg_active":          False,
                     "lidar_active":        False,
                 }
