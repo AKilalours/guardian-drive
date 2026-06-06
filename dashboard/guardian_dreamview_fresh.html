@@ -475,6 +475,68 @@ function drawBEV(d){
     ctx.fillText(det.confidence?.toFixed(2)||'',sx,sy+hh+10);
   });
 
+
+  // ── LIDAR POINTPILLARS 3D DETECTIONS ──────────────────────────────
+  const lidarDets = d.lidar_detections || [];
+  const LIDAR_COLORS = {
+    car:'#00ffff', truck:'#ff9900', bus:'#ffff00',
+    pedestrian:'#ff00ff', motorcycle:'#aa00ff',
+    bicycle:'#00ff88', traffic_cone:'#ff4444', barrier:'#888888'
+  };
+  lidarDets.forEach(det => {
+    const col = LIDAR_COLORS[det.class_name] || '#ffffff';
+    const sx = CX + det.x * PPM;
+    const sy = CY - det.y * PPM;
+    const hw = Math.max((det.l||3.9)*PPM*0.5, 4);
+    const hh = Math.max((det.w||1.6)*PPM*0.5, 3);
+
+    // Dashed box (LiDAR style — different from camera solid box)
+    ctx.save();
+    ctx.translate(sx, sy);
+    ctx.rotate(-det.heading);
+    ctx.strokeStyle = col;
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 2]);
+    ctx.strokeRect(-hw, -hh, hw*2, hh*2);
+    ctx.setLineDash([]);
+
+    // Corner markers (LiDAR box style)
+    const cs = 4;
+    ctx.strokeStyle = col;
+    ctx.lineWidth = 2;
+    [[-hw,-hh],[-hw,hh],[hw,-hh],[hw,hh]].forEach(([cx2,cy2]) => {
+      ctx.beginPath();
+      ctx.moveTo(cx2, cy2);
+      ctx.lineTo(cx2 + (cx2>0?-cs:cs), cy2);
+      ctx.moveTo(cx2, cy2);
+      ctx.lineTo(cx2, cy2 + (cy2>0?-cs:cs));
+      ctx.stroke();
+    });
+    ctx.restore();
+
+    // Source label
+    ctx.fillStyle = col + 'aa';
+    ctx.font = `7px JetBrains Mono`;
+    ctx.textAlign = 'center';
+    ctx.fillText('L·' + det.class_name.slice(0,3).toUpperCase(), sx, sy - hh - 4);
+    ctx.fillText(det.confidence?.toFixed(2)||'', sx, sy + hh + 10);
+  });
+
+  // LiDAR status badge
+  if (d.lidar_active) {
+    ctx.fillStyle = 'rgba(0,255,255,0.08)';
+    ctx.fillRect(W-110, 6, 104, 18);
+    ctx.strokeStyle = 'rgba(0,255,255,0.3)';
+    ctx.lineWidth = 0.5;
+    ctx.strokeRect(W-110, 6, 104, 18);
+    ctx.fillStyle = '#00ffff';
+    ctx.font = '8px JetBrains Mono';
+    ctx.textAlign = 'right';
+    ctx.fillText(
+      `LiDAR·${d.lidar_n_detections||0}det·${d.lidar_latency_ms||0}ms`,
+      W-8, 18);
+  }
+
   // Ego vehicle
   ctx.save(); ctx.translate(CX,CY);
   ctx.fillStyle='rgba(251,191,36,0.15)'; ctx.fillRect(-8,-5,16,10);

@@ -627,6 +627,34 @@ python post_drive_report.py
 
 ---
 
+
+## LiDAR — PointPillars (Architecture Demo)
+
+Guardian Drive is a **camera-only** system at inference.
+LiDAR is used offline to generate GT BEV labels during
+OpenDriveFM training only.
+
+We implement PointPillars from scratch to demonstrate
+the LiDAR pipeline as future sensor fusion work:
+
+| Component | Status |
+|-----------|--------|
+| Architecture (PFN + Backbone + CenterHead) | ✓ Built |
+| Real nuScenes .bin files (34,752 pts/frame) | ✓ Reads |
+| Voxelization (2,794 pillars/frame) | ✓ Real |
+| Inference on Apple MPS | ✓ Running |
+| Trained weights | ✗ Future work |
+| Wired into live pipeline | ✗ Future work |
+| Real AP on nuScenes val | ✗ Needs A100 |
+
+**Parameters:** 2.13M
+**Latency:** 362ms p50 (MPS, untrained)
+**Reference:** Lang et al. PointPillars CVPR 2019
+
+```bash
+python bev_perception/pointpillars.py
+```
+
 ## Honest Gaps — Future Work
 
 These 4 items are not built. All require hardware or institutional access not available during development.
