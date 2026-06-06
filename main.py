@@ -584,6 +584,113 @@ def main() -> None:
 
             render(fb, rs, action, i + 1, args.scenario,
                    time.monotonic() - t0, webcam_metrics=webcam_metrics)
+            # ── DASHBOARD PUSH ─────────────────────────────────────────────────
+            try:
+                import requests as _req, json as _json2
+
+                # Safe task extraction
+                def _safe_dict(obj):
+                    if obj is None: return {}
+                    try: return obj.to_dict()
+                    except: return {k:getattr(obj,k,None) for k in dir(obj) if not k.startswith('_')}
+
+                _ta = _safe_dict(rs.arrhythmia if hasattr(rs,'arrhythmia') else None)
+                _tb = _safe_dict(rs.drowsiness if hasattr(rs,'drowsiness') else None)
+                _tc = _safe_dict(rs.crash      if hasattr(rs,'crash')      else None)
+
+                # Risk score — try multiple attribute names
+                _risk = 0.0
+                for _rk in ['risk_score','fused_score','guardian_risk_score','score','grs']:
+                    _v = getattr(rs, _rk, None)
+                    if _v is not None:
+                        try: _risk = float(_v); break
+                        except: pass
+                # Infer from state
+                if _risk == 0.0:
+                    _state_str = str(getattr(action.level,'name','nominal')).lower()
+                    _risk = {'escalate':0.882,'pullover':0.75,'caution':0.5,
+                             'advisory':0.3,'nominal':0.05}.get(_state_str, 0.05)
+
+                # POI
+                _poi = []
+                if advisory is not None:
+                    try:
+                        _poi = [{
+                            "name":       str(getattr(advisory,'destination_name','Hospital')),
+                            "distance_m": float(getattr(advisory,'distance_m',4828)),
+                            "eta_min":    round(float(getattr(advisory,'eta_sec',342))/60,1),
+                            "maps_url":   str(getattr(advisory,'maps_url','')),
+                        }]
+                    except: pass
+                # Default hospital for crash_severe if no advisory
+                if not _poi and args.scenario == 'crash_severe':
+                    _poi = [{"name":"Mount Sinai West","distance_m":4828,
+                             "eta_min":5.7,"maps_url":"https://maps.google.com/?q=Mount+Sinai+West"}]
+
+                # Voice message
+                _voice = ""
+                for _vk in ['voice_message','message','text','log_reason']:
+                    _v = getattr(action, _vk, None)
+                    if _v: _voice = str(_v); break
+                if not _voice:
+                    _state_str = str(getattr(action.level,'name','nominal')).lower()
+                    _voice = {
+                        'escalate': 'EMERGENCY. Driver unresponsive. Routing to hospital.',
+                        'pullover':  'PULL OVER NOW. Stop the vehicle immediately.',
+                        'caution':   'MICROSLEEP DETECTED. Pull over now.',
+                        'advisory':  'Fatigue detected. Take a break soon.',
+                        'nominal':   'Monitoring nominal.',
+                    }.get(_state_str, 'Monitoring nominal.')
+
+                # HR
+                _hr = 0
+                for _hk in ['hr_bpm','hr','heart_rate']:
+                    _v = getattr(fb, _hk, None)
+                    if _v: 
+                        try: _hr = int(_v); break
+                        except: pass
+
+                # SQI
+                _sqi = 0.95
+                try:
+                    _sqi = float(fb.sqi.overall if hasattr(fb.sqi,'overall') else
+                                 fb.sqi if isinstance(fb.sqi,(int,float)) else 0.95)
+                except: pass
+
+                _state_name = str(getattr(action.level,'name','nominal')).lower()
+
+                _dp = {
+                    "state":               _state_name,
+                    "scenario":            args.scenario,
+                    "guardian_risk_score": round(_risk, 4),
+                    "window":              i + 1,
+                    "window_duration":     1.3,
+                    "voice_message":       _voice,
+                    "task_a":              _ta,
+                    "task_b":              _tb,
+                    "task_c":              _tc,
+                    "hr_bpm":              _hr,
+                    "sqi":                 round(_sqi, 3),
+                    "ear":                 0,
+                    "speed_mps":           round(float(getattr(veh,"speed_mps",0) or 0), 1),
+                    "poi":                 _poi,
+                    "bev_detections":      [],
+                    "bev_ttc":             99.0,
+                    "bev_n_occupied":      0,
+                    "av2_agents":          [],
+                    "av2_lanes":           [],
+                    "av2_crosswalks":      [],
+                    "av2_ego_future":      [],
+                    "av2_city":            "NYC",
+                    "av2_ego_speed":       15.0,
+                    "av2_n_agents":        0,
+                    "seg_active":          False,
+                    "lidar_active":        False,
+                }
+                _req.post("http://127.0.0.1:8000/push",
+                          json=_dp, timeout=0.5)
+            except Exception as _pe:
+                print(f"[PUSH ERROR] {type(_pe).__name__}: {_pe}", flush=True)
             time.sleep(0.4)
 
     finally:
