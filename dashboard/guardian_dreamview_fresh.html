@@ -383,10 +383,12 @@ function draw3DVehicle(ctx, wx, wy, ww, wl, heading, color, label, conf, W, H){
   const p = project(wx, wy, W, H);
   if(!p) return;
   const {sx, sy, sw, t} = p;
+  if(sw < 0.06) return;
 
-  const alpha = 0.7 + t*0.3;
-  const boxW  = Math.max(4, ww * sw * 4);
-  const boxH  = Math.max(6, wl * sw * 2.5);
+  const alpha = Math.min(1, 0.5 + t*0.5);
+  const sc    = Math.min(sw, 0.9);
+  const boxW  = Math.max(4, Math.min(28, ww * sc * 2.8));
+  const boxH  = Math.max(5, Math.min(40, wl * sc * 1.6));
   const bodyH = boxH * 0.55;
 
   ctx.save();
@@ -394,41 +396,52 @@ function draw3DVehicle(ctx, wx, wy, ww, wl, heading, color, label, conf, W, H){
 
   // Shadow
   ctx.beginPath();
-  ctx.ellipse(0, 2, boxW*0.9, 4, 0, 0, Math.PI*2);
-  ctx.fillStyle=`rgba(0,0,0,${alpha*0.4})`;
+  ctx.ellipse(0, 2, boxW*0.8, 3, 0, 0, Math.PI*2);
+  ctx.fillStyle=`rgba(0,0,0,${alpha*0.3})`;
   ctx.fill();
 
-  // Car body — top face
+  // Body
   ctx.beginPath();
-  ctx.roundRect(-boxW/2, -bodyH, boxW, bodyH, 3*sw);
-  ctx.fillStyle=color+Math.round(alpha*200).toString(16).padStart(2,'0');
+  ctx.roundRect(-boxW/2, -bodyH, boxW, bodyH, Math.max(1,2*sc));
+  ctx.fillStyle=color+Math.round(alpha*180).toString(16).padStart(2,'0');
   ctx.fill();
   ctx.strokeStyle=color;
-  ctx.lineWidth=1.5;
+  ctx.lineWidth=1;
   ctx.stroke();
 
-  // Car roof highlight
+  // Roof
   ctx.beginPath();
-  ctx.roundRect(-boxW/2+2, -bodyH+2, boxW-4, bodyH*0.4, 2*sw);
-  ctx.fillStyle=`rgba(255,255,255,${alpha*0.15})`;
+  ctx.roundRect(-boxW/2+1, -bodyH+1, boxW-2, bodyH*0.35, 1);
+  ctx.fillStyle=`rgba(255,255,255,${alpha*0.12})`;
   ctx.fill();
 
-  // Front indicator dot
+  // Direction arrow
   ctx.beginPath();
-  ctx.rect(-3, -bodyH, 6, 3);
+  ctx.moveTo(0, -bodyH-1);
+  ctx.lineTo(-2, -bodyH+3);
+  ctx.lineTo(2, -bodyH+3);
+  ctx.closePath();
   ctx.fillStyle=color;
   ctx.fill();
 
   ctx.restore();
 
-  // Label
-  ctx.fillStyle=color;
-  ctx.font=`bold ${Math.max(8,10*sw)}px JetBrains Mono`;
-  ctx.textAlign='center';
-  ctx.fillText(label, sx, sy-bodyH-6);
-  ctx.fillStyle=color+'99';
-  ctx.font=`${Math.max(7,8*sw)}px JetBrains Mono`;
-  ctx.fillText(conf?.toFixed(2)||'', sx, sy-bodyH-14);
+  // Label — max 3 chars, small font, only when close
+  if(sc > 0.28) {
+    const lbl  = (label||'').length > 3
+                 ? (label||'').slice(0,3).toUpperCase()
+                 : (label||'').toUpperCase();
+    const fsize = Math.max(7, Math.min(9, 8*sc));
+    ctx.textAlign = 'center';
+    ctx.font = `bold ${fsize}px JetBrains Mono`;
+    ctx.fillStyle = color + 'bb';
+    ctx.fillText(lbl, sx, sy - bodyH - 3);
+    if(conf && sc > 0.55) {
+      ctx.font = `${Math.max(6, fsize-1)}px JetBrains Mono`;
+      ctx.fillStyle = color + '55';
+      ctx.fillText(conf.toFixed(2), sx, sy - bodyH - 12);
+    }
+  }
 }
 
 // Draw road surface in 3D perspective
@@ -561,11 +574,11 @@ function drawEgo(ctx, W, H){
 
 // Agent colors
 const AGENT_COLORS = {
-  vehicle:'#d1d5db', pedestrian:'#ec4899',
-  motorcyclist:'#8b5cf6', cyclist:'#22c55e',
-  bus:'#f59e0b', car:'#d1d5db',
-  PED:'#ec4899', CAR:'#d1d5db', MOT:'#8b5cf6',
-  BUS:'#f59e0b', TRU:'#f97316', unknown:'#6b7280'
+  vehicle:'#e2e8f0', pedestrian:'#f472b6',
+  motorcyclist:'#a78bfa', cyclist:'#4ade80',
+  bus:'#fbbf24', car:'#e2e8f0',
+  PED:'#f472b6', CAR:'#e2e8f0', MOT:'#a78bfa',
+  BUS:'#fbbf24', TRU:'#fb923c', unknown:'#94a3b8'
 };
 
 function drawBEV3D(d){
