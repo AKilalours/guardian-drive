@@ -411,11 +411,23 @@ class PointPillarsInference:
 
         for cls_idx, cls_name in enumerate(cfg.classes):
             h = hmap[cls_idx]  # (H, W)
-            peaks = (h > score_thresh)
+
+            # Apply local max suppression (NMS via max pooling)
+            h_pad = F.max_pool2d(
+                h.unsqueeze(0).unsqueeze(0),
+                kernel_size=3, stride=1, padding=1
+            ).squeeze()
+            # Only keep local maxima
+            peaks = (h == h_pad) & (h > score_thresh)
             ys, xs = torch.where(peaks)
             scores = h[ys, xs]
 
-            for i in range(min(len(ys), 50)):
+            # Sort by score, keep top 20 per class
+            if len(scores) > 20:
+                top_idx = torch.argsort(scores, descending=True)[:20]
+                ys, xs, scores = ys[top_idx], xs[top_idx], scores[top_idx]
+
+            for i in range(len(ys)):
                 yi, xi = ys[i].item(), xs[i].item()
                 score  = scores[i].item()
                 dx, dy = offs[0,yi,xi].item(), offs[1,yi,xi].item()
@@ -429,14 +441,20 @@ class PointPillarsInference:
                 x = cfg.x_range[0] + (xi+0.5)*scale_x + dx*scale_x
                 y = cfg.y_range[0] + (yi+0.5)*scale_y + dy*scale_y
                 z = -1.0
-                w = abs(cfg.anchor_sizes.get(cls_name,[1.6,3.9,1.56])[0]) * np.exp(dw)
-                l = abs(cfg.anchor_sizes.get(cls_name,[1.6,3.9,1.56])[1]) * np.exp(dl)
-                h_ = abs(cfg.anchor_sizes.get(cls_name,[1.6,3.9,1.56])[2]) * np.exp(dh)
-                heading = np.arctan2(sin_t, cos_t)
+                # Clamp size regression to avoid exploding boxes
+                dw = float(np.clip(dw, -2, 2))
+                dl = float(np.clip(dl, -2, 2))
+                dh = float(np.clip(dh, -2, 2))
+                anc = cfg.anchor_sizes.get(cls_name, [1.6, 3.9, 1.56])
+                w = float(anc[0]) * float(np.exp(dw))
+                l = float(anc[1]) * float(np.exp(dl))
+                h_ = float(anc[2]) * float(np.exp(dh))
+                heading = float(np.arctan2(sin_t, cos_t))
 
                 detections.append(Detection3D(
                     x=round(x,2), y=round(y,2), z=round(z,2),
-                    w=round(w,2), l=round(l,2), h=round(h_,2),
+                    w=round(min(w,20),2), l=round(min(l,30),2),
+                    h=round(min(h_,6),2),
                     heading=round(heading,3),
                     class_name=cls_name,
                     confidence=round(score,3),
