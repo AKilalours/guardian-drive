@@ -584,6 +584,22 @@ def main() -> None:
 
             render(fb, rs, action, i + 1, args.scenario,
                    time.monotonic() - t0, webcam_metrics=webcam_metrics)
+            # ── EMERGENCY DISPATCH CHAIN ─────────────────────────────────────
+            try:
+                from integrations.emergency_dispatch import get_dispatch_chain as _get_chain
+                _chain = _get_chain()
+                _dispatch_action = _chain.update(
+                    risk_score = _risk,
+                    location   = {"lat": 40.7589, "lon": -73.9851},
+                    hr_bpm     = _hr,
+                    scenario   = args.scenario,
+                    er_name    = "Mount Sinai West",
+                )
+                if _dispatch_action:
+                    print(f"[DISPATCH] {_dispatch_action}")
+            except Exception as _de:
+                _dispatch_action = None
+
             # ── PREDICTIVE PRE-CRASH BIO-FUSION ──────────────────────────────
             try:
                 import time as _time
@@ -759,6 +775,8 @@ def main() -> None:
                     "alert_level":         _pf_alert.alert_level if _pf_alert else "monitor",
                     "predictive_trajectory": _pf_alert.trajectory if _pf_alert else [],
                     "intervention":        _pf_alert.intervention if _pf_alert else "",
+                    "dispatch_action":     _dispatch_action or "",
+                    "dispatch_stage":      getattr(_chain,"_stage",0) if "_chain" in dir() else 0,
                     "lidar_active":        False,
                 }
                 _req.post("http://127.0.0.1:8000/push",

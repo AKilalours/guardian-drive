@@ -857,6 +857,36 @@ function apply(d){
   // Voice
   document.getElementById('voice-txt').textContent=d.voice_message||'Monitoring nominal.';
 
+  // Emergency Dispatch
+  const dispatchAction = d.dispatch_action || '';
+  const dispatchStage  = d.dispatch_stage  || 0;
+  const dispatchDot    = document.getElementById('dispatch-dot');
+  const dispatchStatus = document.getElementById('dispatch-status');
+  const dispatchActionEl = document.getElementById('dispatch-action');
+
+  if(dispatchDot && dispatchStatus) {
+    const stageColors = ['#6b7280','#f59e0b','#f97316','#ef4444','#dc2626'];
+    const stageLabels = ['STANDBY','MONITORING','SMS SENT','URGENT','911 ACTIVE'];
+    const stageColor  = stageColors[Math.min(dispatchStage, 4)];
+    const stageLabel  = stageLabels[Math.min(dispatchStage, 4)];
+
+    dispatchDot.style.background   = stageColor;
+    dispatchStatus.textContent      = stageLabel;
+    dispatchStatus.style.color      = stageColor;
+    if(dispatchActionEl) dispatchActionEl.textContent = dispatchAction;
+
+    // Stage progress bars
+    document.querySelectorAll('.d-stage').forEach(el => {
+      const s = parseInt(el.dataset.stage);
+      el.style.background = s <= dispatchStage ? stageColor : '#374151';
+    });
+
+    // Pulse on active dispatch
+    if(dispatchStage >= 3) {
+      dispatchDot.style.boxShadow = `0 0 6px ${stageColor}`;
+    }
+  }
+
   // Predictive Pre-Crash Fusion
   const pf = d.predictive || {};
   const pfProb = (d.pre_crash_prob || 0) * 100;
