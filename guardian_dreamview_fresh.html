@@ -1034,5 +1034,28 @@ connect();
 drawBEV3D({});
 drawGauge(0,'#22c55e');
 </script>
+
+<script>
+// Dispatch panel injected
+document.addEventListener("DOMContentLoaded", function(){
+  const rp = document.querySelector(".right-panel, #right-panel, [class*=right]");
+  if(rp) {
+    const dp = document.createElement("div");
+    dp.innerHTML = `<div style="margin-top:6px;font-family:monospace;font-size:9px;color:#ef4444;">● EMERGENCY DISPATCH</div>
+    <div style="background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.2);border-radius:4px;padding:8px;margin-top:3px;">
+    <div style="display:flex;gap:6px;align-items:center;">
+    <div id="dispatch-dot" style="width:7px;height:7px;border-radius:50%;background:#6b7280;"></div>
+    <div id="dispatch-status" style="font-size:10px;color:#6b7280;font-weight:700;">STANDBY</div>
+    </div>
+    <div style="display:flex;gap:3px;margin-top:5px;">
+    <div class="d-stage" data-stage="1" style="flex:1;height:4px;background:#374151;border-radius:2px;"></div>
+    <div class="d-stage" data-stage="2" style="flex:1;height:4px;background:#374151;border-radius:2px;"></div>
+    <div class="d-stage" data-stage="3" style="flex:1;height:4px;background:#374151;border-radius:2px;"></div>
+    <div class="d-stage" data-stage="4" style="flex:1;height:4px;background:#374151;border-radius:2px;"></div>
+    </div></div>`;
+    rp.appendChild(dp);
+  }
+});
+</script>
 </body>
 </html>
