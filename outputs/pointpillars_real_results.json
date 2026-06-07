@@ -1,0 +1,9 @@
+{
+  "model": "PointPillars Guardian Drive (trained RTX 4090)",
+  "n_samples": 404,
+  "latency_p50_ms": 0.9,
+  "fps": 735.5,
+  "avg_detections": 53568.0,
+  "training_loss": 2e-05,
+  "gpu": "NVIDIA GeForce RTX 4090"
+}
