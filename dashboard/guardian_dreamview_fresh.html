@@ -857,6 +857,20 @@ function apply(d){
   // Voice
   document.getElementById('voice-txt').textContent=d.voice_message||'Monitoring nominal.';
 
+  // Dynamic Hospital Routing
+  const bh = d.best_hospital || d.poi || {};
+  const hospitals = d.hospitals || [];
+  if(bh && bh.name) {
+    const pn=document.getElementById('poi-name');
+    const pd=document.getElementById('poi-dist');
+    const pe=document.getElementById('poi-eta');
+    const pl=document.getElementById('poi-link');
+    if(pn) pn.textContent=bh.name;
+    if(pd) pd.textContent=(bh.distance_mi||0).toFixed(1)+' mi · ETA '+(bh.eta_min||0).toFixed(1)+' min';
+    if(pe) pe.textContent='ER wait: '+(bh.wait_min||0)+' min';
+    if(pl){ pl.href=bh.nav_url||'#'; pl.textContent='Navigate →'; }
+  }
+
   // Emergency Dispatch
   const dispatchAction = d.dispatch_action || '';
   const dispatchStage  = d.dispatch_stage  || 0;

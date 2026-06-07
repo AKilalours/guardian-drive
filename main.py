@@ -584,6 +584,21 @@ def main() -> None:
 
             render(fb, rs, action, i + 1, args.scenario,
                    time.monotonic() - t0, webcam_metrics=webcam_metrics)
+            # ── DYNAMIC HOSPITAL ROUTING ─────────────────────────────────────
+            try:
+                from integrations.hospital_routing import get_router as _get_router
+                _lat = 40.6782  # Brooklyn default (replace with real GPS)
+                _lon = -73.9442
+                _emergency_type = args.scenario
+                _hospitals = _get_router().find_best_er(
+                    lat=_lat, lon=_lon,
+                    emergency=_emergency_type,
+                    max_results=3
+                )
+                _best_hospital = _hospitals[0] if _hospitals else None
+            except Exception as _he:
+                _hospitals = []; _best_hospital = None
+
             # ── EMERGENCY DISPATCH CHAIN ─────────────────────────────────────
             try:
                 from integrations.emergency_dispatch import get_dispatch_chain as _get_chain
@@ -776,6 +791,14 @@ def main() -> None:
                     "predictive_trajectory": _pf_alert.trajectory if _pf_alert else [],
                     "intervention":        _pf_alert.intervention if _pf_alert else "",
                     "dispatch_action":     _dispatch_action or "",
+                    "hospitals":           _hospitals[:3] if _hospitals else [],
+                    "best_hospital":       _best_hospital or {},
+                    "er_name":             _best_hospital['name'] if _best_hospital else "Mount Sinai West",
+                    "er_distance":         _best_hospital['distance_mi'] if _best_hospital else 0.8,
+                    "er_eta":              _best_hospital['eta_min'] if _best_hospital else 5.7,
+                    "er_wait":             _best_hospital['wait_min'] if _best_hospital else 12,
+                    "er_total":            _best_hospital['total_min'] if _best_hospital else 17,
+                    "er_nav_url":          _best_hospital['nav_url'] if _best_hospital else "",
                     "dispatch_stage":      getattr(_chain,"_stage",0) if "_chain" in dir() else 0,
                     "lidar_active":        False,
                 }
