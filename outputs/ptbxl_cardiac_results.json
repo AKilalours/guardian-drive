@@ -1,0 +1,8 @@
+{
+  "dataset": "PTB-XL real 12-lead ECG",
+  "best_auc": 0.8545,
+  "best_f1": 0.5714,
+  "n_samples": 800,
+  "n_train": 640,
+  "gpu": "NVIDIA GeForce RTX 4090"
+}
