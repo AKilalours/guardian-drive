@@ -69,17 +69,15 @@ class NuScenesStream:
 
     def _encode_image(self, path: Path,
                       max_kb: int = 60) -> Optional[str]:
-        """Encode image to base64, downsample if too large."""
+        """Encode image to base64, optimized for dashboard streaming."""
         try:
             from PIL import Image
             import io
             img = Image.open(path).convert('RGB')
-            # Resize to fit bandwidth
-            w, h = img.size
-            if w > 640:
-                img = img.resize((640, int(h*640/w)), Image.LANCZOS)
+            # Target: 320x180 for fast streaming
+            img = img.resize((320, 180), Image.LANCZOS)
             buf = io.BytesIO()
-            img.save(buf, format='JPEG', quality=70)
+            img.save(buf, format='JPEG', quality=65)
             return base64.b64encode(buf.getvalue()).decode()
         except Exception as e:
             return None
@@ -183,12 +181,14 @@ class NuScenesStream:
         """
         Get next frame payload for dashboard.
         Returns cam_images, agents, lanes, trust scores.
+        Advances sample every call — real nuScenes frames.
         """
         if not self._rows:
             return self._fallback_frame()
 
-        row = self._rows[self._idx % self._n]
-        self._idx += 1
+        # Advance index — always move forward
+        self._idx = (self._idx + 1) % self._n
+        row = self._rows[self._idx]
 
         t0 = time.perf_counter()
 
