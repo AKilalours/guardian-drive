@@ -194,6 +194,22 @@ body{background:var(--bg);color:var(--text);
   </div>
 
   <div id="task-list"></div>
+
+  <!-- Predictive Pre-Crash Fusion -->
+  <div class="sec-label" style="color:#f97316;margin-top:4px;">Pre-Crash Prediction</div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:8px 10px;">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+      <div id="pf-prob" style="font-size:22px;font-weight:700;color:#22c55e;font-family:'Rajdhani',sans-serif;">0.0%</div>
+      <div>
+        <div id="pf-level" style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:.1em;">MONITOR</div>
+        <div id="pf-cause" style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text3);">nominal</div>
+      </div>
+      <div id="pf-tte" style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text2);">—</div>
+    </div>
+    <!-- Trajectory sparkline -->
+    <canvas id="pf-chart" height="36" style="width:100%;border-radius:2px;"></canvas>
+    <div id="pf-intervention" style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text3);margin-top:4px;line-height:1.4;"></div>
+  </div>
 </div>
 
 <!-- CENTER: 3D TESLA BEV -->
@@ -840,6 +856,97 @@ function apply(d){
 
   // Voice
   document.getElementById('voice-txt').textContent=d.voice_message||'Monitoring nominal.';
+
+  // Predictive Pre-Crash Fusion
+  const pf = d.predictive || {};
+  const pfProb = (d.pre_crash_prob || 0) * 100;
+  const pfLevel = (d.alert_level || 'monitor').toUpperCase();
+  const pfCause = d.dominant_cause || 'nominal';
+  const pfTTE   = d.time_to_event || -1;
+  const pfTraj  = d.predictive_trajectory || [];
+
+  const pfProbEl = document.getElementById('pf-prob');
+  const pfLevelEl = document.getElementById('pf-level');
+  const pfCauseEl = document.getElementById('pf-cause');
+  const pfTTEEl   = document.getElementById('pf-tte');
+  const pfIntEl   = document.getElementById('pf-intervention');
+
+  if(pfProbEl) {
+    const pfColor = pfLevel==='INTERVENE'?'#ef4444':pfLevel==='WARN'?'#f59e0b':'#22c55e';
+    pfProbEl.textContent = pfProb.toFixed(1) + '%';
+    pfProbEl.style.color = pfColor;
+    pfLevelEl.textContent = pfLevel;
+    pfLevelEl.style.color  = pfColor;
+    pfCauseEl.textContent  = pfCause.toUpperCase();
+    pfTTEEl.textContent    = pfTTE > 0 ? pfTTE.toFixed(1)+'s' : '—';
+    pfTTEEl.style.color    = pfTTE > 0 && pfTTE < 5 ? '#ef4444' : 'var(--text2)';
+    if(pfIntEl) pfIntEl.textContent = pf.intervention || '';
+
+    // Draw sparkline
+    const canvas = document.getElementById('pf-chart');
+    if(canvas && pfTraj.length > 1) {
+      canvas.width = canvas.offsetWidth || 220;
+      const ctx2 = canvas.getContext('2d');
+      const W2=canvas.width, H2=36;
+      ctx2.clearRect(0,0,W2,H2);
+
+      // Background
+      ctx2.fillStyle='rgba(255,255,255,0.03)';
+      ctx2.fillRect(0,0,W2,H2);
+
+      // Warning threshold line
+      ctx2.strokeStyle='rgba(245,158,11,0.3)';
+      ctx2.lineWidth=0.5;
+      ctx2.setLineDash([3,3]);
+      ctx2.beginPath();
+      ctx2.moveTo(0, H2*(1-0.45));
+      ctx2.lineTo(W2, H2*(1-0.45));
+      ctx2.stroke();
+
+      // Intervene threshold line
+      ctx2.strokeStyle='rgba(239,68,68,0.3)';
+      ctx2.beginPath();
+      ctx2.moveTo(0, H2*(1-0.70));
+      ctx2.lineTo(W2, H2*(1-0.70));
+      ctx2.stroke();
+      ctx2.setLineDash([]);
+
+      // Trajectory gradient fill
+      const grad = ctx2.createLinearGradient(0,0,0,H2);
+      grad.addColorStop(0, pfColor+'88');
+      grad.addColorStop(1, 'transparent');
+      ctx2.fillStyle = grad;
+      ctx2.beginPath();
+      pfTraj.forEach((v,i)=>{
+        const x = (i/(pfTraj.length-1))*W2;
+        const y = H2*(1-v);
+        i===0?ctx2.moveTo(x,y):ctx2.lineTo(x,y);
+      });
+      ctx2.lineTo(W2,H2); ctx2.lineTo(0,H2); ctx2.closePath();
+      ctx2.fill();
+
+      // Trajectory line
+      ctx2.strokeStyle = pfColor;
+      ctx2.lineWidth = 1.5;
+      ctx2.beginPath();
+      pfTraj.forEach((v,i)=>{
+        const x=(i/(pfTraj.length-1))*W2;
+        const y=H2*(1-v);
+        i===0?ctx2.moveTo(x,y):ctx2.lineTo(x,y);
+      });
+      ctx2.stroke();
+
+      // Current value dot
+      const lastX=W2, lastY=H2*(1-(pfTraj[pfTraj.length-1]||0));
+      ctx2.beginPath();
+      ctx2.arc(lastX-2, lastY, 3, 0, Math.PI*2);
+      ctx2.fillStyle=pfColor;
+      ctx2.shadowColor=pfColor;
+      ctx2.shadowBlur=6;
+      ctx2.fill();
+      ctx2.shadowBlur=0;
+    }
+  }
 
   // BEV stats
   document.getElementById('s-ttc').textContent=
