@@ -1,0 +1,15 @@
+{
+  "model": "PointPillars real+synthetic fusion",
+  "n_real": 404,
+  "n_synthetic": 2000,
+  "total": 2404,
+  "best_loss": 0.000269,
+  "epochs": 30,
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "training_progression": {
+    "epoch_1": 0.045639,
+    "epoch_10": 0.001049,
+    "epoch_20": 0.000369,
+    "epoch_30": 0.000269
+  }
+}

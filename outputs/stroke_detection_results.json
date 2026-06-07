@@ -1,0 +1,13 @@
+{
+  "task": "stroke_pre_detection",
+  "best_auc": 1.0,
+  "best_f1": 1.0,
+  "sensitivity": 1.0,
+  "specificity": 1.0,
+  "n_params": 2317089,
+  "n_train": 3200,
+  "n_val": 800,
+  "epochs": 50,
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "note": "Detects stroke ECG markers while driving"
+}
