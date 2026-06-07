@@ -1,0 +1,76 @@
+{
+  "carla_version": "0.9.15",
+  "api": "CARLA VehicleControl + Transform + Location + Vector3D",
+  "n_scenarios": 7,
+  "towns": [
+    "Town01_Normal",
+    "Town02_Cardiac",
+    "Town03_Drowsy",
+    "Town04_Crash",
+    "Town05_Mixed",
+    "Town06_Tachycardia",
+    "Town07_Impaired"
+  ],
+  "guardian_collisions": 2,
+  "baseline_collisions": 320,
+  "collision_reduction_pct": 99.4,
+  "total_interventions": 1256,
+  "scenarios": {
+    "Town01_Normal": {
+      "gd_cols": 0,
+      "bl_cols": 47,
+      "reduction": 100,
+      "gd_speed": 23.3,
+      "gd_dist": 129.7,
+      "interventions": 0
+    },
+    "Town02_Cardiac": {
+      "gd_cols": 0,
+      "bl_cols": 46,
+      "reduction": 100,
+      "gd_speed": 24.0,
+      "gd_dist": 133.1,
+      "interventions": 142
+    },
+    "Town03_Drowsy": {
+      "gd_cols": 1,
+      "bl_cols": 45,
+      "reduction": 97.8,
+      "gd_speed": 21.0,
+      "gd_dist": 116.7,
+      "interventions": 107
+    },
+    "Town04_Crash": {
+      "gd_cols": 0,
+      "bl_cols": 47,
+      "reduction": 100,
+      "gd_speed": 8.3,
+      "gd_dist": 46.1,
+      "interventions": 350
+    },
+    "Town05_Mixed": {
+      "gd_cols": 1,
+      "bl_cols": 46,
+      "reduction": 97.8,
+      "gd_speed": 11.0,
+      "gd_dist": 61.1,
+      "interventions": 252
+    },
+    "Town06_Tachycardia": {
+      "gd_cols": 0,
+      "bl_cols": 43,
+      "reduction": 100,
+      "gd_speed": 27.2,
+      "gd_dist": 151.2,
+      "interventions": 65
+    },
+    "Town07_Impaired": {
+      "gd_cols": 0,
+      "bl_cols": 46,
+      "reduction": 100,
+      "gd_speed": 8.9,
+      "gd_dist": 49.6,
+      "interventions": 340
+    }
+  }
+}
