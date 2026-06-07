@@ -1,0 +1,9 @@
+{
+  "model": "PointPillars GT + augmentation",
+  "best_loss": 0.003456,
+  "n_frames": 404,
+  "n_augmentations": 8,
+  "effective_frames": 3232,
+  "epochs": 30,
+  "gpu": "NVIDIA GeForce RTX 4090"
+}
