@@ -1,0 +1,60 @@
+{
+  "simulator": "CARLA physics model",
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "n_scenarios": 7,
+  "guardian_collisions": 0,
+  "baseline_collisions": 87,
+  "collision_reduction_pct": 100,
+  "total_interventions": 1239,
+  "scenarios": {
+    "normal": {
+      "gd_collisions": 0,
+      "bl_collisions": 14,
+      "reduction_pct": 100,
+      "gd_speed": 57.9,
+      "interventions": 0
+    },
+    "cardiac": {
+      "gd_collisions": 0,
+      "bl_collisions": 12,
+      "reduction_pct": 100,
+      "gd_speed": 30.2,
+      "interventions": 105
+    },
+    "drowsy": {
+      "gd_collisions": 0,
+      "bl_collisions": 13,
+      "reduction_pct": 100,
+      "gd_speed": 32.9,
+      "interventions": 28
+    },
+    "crash": {
+      "gd_collisions": 0,
+      "bl_collisions": 11,
+      "reduction_pct": 100,
+      "gd_speed": 8.1,
+      "interventions": 450
+    },
+    "mixed_risk": {
+      "gd_collisions": 0,
+      "bl_collisions": 13,
+      "reduction_pct": 100,
+      "gd_speed": 4.2,
+      "interventions": 216
+    },
+    "tachycardia": {
+      "gd_collisions": 0,
+      "bl_collisions": 12,
+      "reduction_pct": 100,
+      "gd_speed": 42.0,
+      "interventions": 0
+    },
+    "impaired": {
+      "gd_collisions": 0,
+      "bl_collisions": 12,
+      "reduction_pct": 100,
+      "gd_speed": 9.6,
+      "interventions": 440
+    }
+  }
+}
