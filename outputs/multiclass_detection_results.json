@@ -1,0 +1,58 @@
+{
+  "n_frames": 50,
+  "per_class": [
+    {
+      "class": "car",
+      "avg_dets_per_frame": 0.0,
+      "avg_confidence": 0.0
+    },
+    {
+      "class": "truck",
+      "avg_dets_per_frame": 5547.2,
+      "avg_confidence": 0.616
+    },
+    {
+      "class": "bus",
+      "avg_dets_per_frame": 0.0,
+      "avg_confidence": 0.0
+    },
+    {
+      "class": "motorcycle",
+      "avg_dets_per_frame": 0.1,
+      "avg_confidence": 0.607
+    },
+    {
+      "class": "pedestrian",
+      "avg_dets_per_frame": 0.0,
+      "avg_confidence": 0.0
+    },
+    {
+      "class": "bicycle",
+      "avg_dets_per_frame": 4072.8,
+      "avg_confidence": 0.712
+    },
+    {
+      "class": "barrier",
+      "avg_dets_per_frame": 10826.4,
+      "avg_confidence": 0.625
+    },
+    {
+      "class": "trafficcone",
+      "avg_dets_per_frame": 0.1,
+      "avg_confidence": 0.611
+    },
+    {
+      "class": "trailer",
+      "avg_dets_per_frame": 5316.6,
+      "avg_confidence": 0.607
+    },
+    {
+      "class": "construction",
+      "avg_dets_per_frame": 1.2,
+      "avg_confidence": 0.616
+    }
+  ],
+  "latency_p50_ms": 1.13,
+  "fps": 266.0,
+  "gpu": "NVIDIA GeForce RTX 4090"
+}

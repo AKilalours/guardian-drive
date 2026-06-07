@@ -1,0 +1,60 @@
+{
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "checkpoints": [
+    {
+      "p50": 4.13,
+      "p95": 4.19,
+      "p99": 5.56,
+      "fps_mean": 184.7,
+      "fps_p50": 242.0,
+      "n_runs": 100,
+      "loss": 2e-05,
+      "name": "Stage1_SelfSupervised",
+      "checkpoint": "pointpillars_guardian_best.pth"
+    },
+    {
+      "p50": 4.11,
+      "p95": 4.17,
+      "p99": 4.18,
+      "fps_mean": 242.6,
+      "fps_p50": 243.1,
+      "n_runs": 100,
+      "loss": 0.003913,
+      "name": "Stage2_GT_Finetuned",
+      "checkpoint": "pointpillars_finetuned_best.pth"
+    },
+    {
+      "p50": 4.12,
+      "p95": 4.18,
+      "p99": 4.19,
+      "fps_mean": 242.2,
+      "fps_p50": 243.0,
+      "n_runs": 100,
+      "loss": 0.003456,
+      "name": "Stage3_GT_Augmented",
+      "checkpoint": "pointpillars_augmented_best.pth"
+    },
+    {
+      "p50": 4.12,
+      "p95": 4.18,
+      "p99": 4.18,
+      "fps_mean": 242.3,
+      "fps_p50": 242.7,
+      "n_runs": 100,
+      "loss": 0.000182,
+      "name": "Stage4_Federated",
+      "checkpoint": "pointpillars_federated_best.pth"
+    },
+    {
+      "p50": 4.12,
+      "p95": 4.18,
+      "p99": 4.19,
+      "fps_mean": 242.4,
+      "fps_p50": 243.0,
+      "n_runs": 100,
+      "loss": 0.000269,
+      "name": "Stage5_RealSynthetic",
+      "checkpoint": "pointpillars_combined_best.pth"
+    }
+  ]
+}
