@@ -584,6 +584,25 @@ def main() -> None:
 
             render(fb, rs, action, i + 1, args.scenario,
                    time.monotonic() - t0, webcam_metrics=webcam_metrics)
+            # ── PREDICTIVE PRE-CRASH BIO-FUSION ──────────────────────────────
+            try:
+                import time as _time
+                from models.predictive_fusion import (
+                    get_engine as _get_pf_engine, BioSnapshot as _BioSnap)
+                _pf_snap = _BioSnap(
+                    t             = _time.monotonic(),
+                    rr_irr        = float(getattr(fb.ecg,"rr_irregularity",0.0) or 0.0),
+                    ear           = float((webcam_metrics or {}).get("ear",0.0) or 0.0),
+                    sqi           = float(fb.sqi.overall if hasattr(fb.sqi,"overall") else 0.95),
+                    crash_score   = float(getattr(getattr(rs,"crash",None),"score",0.0) or 0.0),
+                    speed_mps     = float(getattr(veh,"speed_mps",11.0) or 11.0),
+                    hr_bpm        = float(getattr(fb.ecg,"hr_bpm",75.0) or 75.0),
+                    cardiac_class = str(getattr(getattr(rs,"arrhythmia",None),"class_name","NORMAL") or "NORMAL"),
+                )
+                _pf_alert = _get_pf_engine().update(_pf_snap)
+            except Exception as _pfe:
+                _pf_alert = None
+
             # ── DASHBOARD PUSH ─────────────────────────────────────────────────
             # Load nuScenes stream (singleton)
             try:
@@ -715,6 +734,13 @@ def main() -> None:
                     "cam_trust":           _stream_frame.get("cam_trust",[]),
                     "sample_token":        _stream_frame.get("sample_token",""),
                     "seg_active":          False,
+                    "predictive":          _pf_alert.to_dict() if _pf_alert else {},
+                    "pre_crash_prob":      _pf_alert.pre_crash_prob if _pf_alert else 0.0,
+                    "time_to_event":       _pf_alert.time_to_event_est if _pf_alert else -1.0,
+                    "dominant_cause":      _pf_alert.dominant_cause if _pf_alert else "nominal",
+                    "alert_level":         _pf_alert.alert_level if _pf_alert else "monitor",
+                    "predictive_trajectory": _pf_alert.trajectory if _pf_alert else [],
+                    "intervention":        _pf_alert.intervention if _pf_alert else "",
                     "lidar_active":        False,
                 }
                 _req.post("http://127.0.0.1:8000/push",
