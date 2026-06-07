@@ -885,7 +885,11 @@ function apply(d){
     // Draw sparkline
     const canvas = document.getElementById('pf-chart');
     if(canvas && pfTraj.length > 1) {
-      canvas.width = canvas.offsetWidth || 220;
+      // Force width from parent
+      const panelW = canvas.parentElement
+                    ? canvas.parentElement.offsetWidth - 20
+                    : 220;
+      canvas.width  = Math.max(100, panelW);
       const ctx2 = canvas.getContext('2d');
       const W2=canvas.width, H2=36;
       ctx2.clearRect(0,0,W2,H2);

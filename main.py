@@ -589,15 +589,27 @@ def main() -> None:
                 import time as _time
                 from models.predictive_fusion import (
                     get_engine as _get_pf_engine, BioSnapshot as _BioSnap)
+                # Extract crash score from g_peak (normalized 0-1)
+                _crash_obj = getattr(rs,"crash",None)
+                _g_peak = float(getattr(_crash_obj,"g_peak",0.0) or 0.0)
+                _crash_conf = float(getattr(_crash_obj,"confidence",0.0) or 0.0)
+                _crash_score = min(1.0, _g_peak / 10.0) * _crash_conf
+
+                # Extract cardiac class
+                _arrh_obj = getattr(rs,"arrhythmia",None)
+                _cardiac_class = str(getattr(_arrh_obj,"class_name","NORMAL") or "NORMAL")
+                _rr_irr = float(getattr(fb.ecg,"rr_irregularity",
+                                 getattr(fb.ecg,"rr_rmssd",0.0) or 0.0) or 0.0)
+
                 _pf_snap = _BioSnap(
                     t             = _time.monotonic(),
-                    rr_irr        = float(getattr(fb.ecg,"rr_irregularity",0.0) or 0.0),
+                    rr_irr        = _rr_irr,
                     ear           = float((webcam_metrics or {}).get("ear",0.0) or 0.0),
                     sqi           = float(fb.sqi.overall if hasattr(fb.sqi,"overall") else 0.95),
-                    crash_score   = float(getattr(getattr(rs,"crash",None),"score",0.0) or 0.0),
+                    crash_score   = _crash_score,
                     speed_mps     = float(getattr(veh,"speed_mps",11.0) or 11.0),
                     hr_bpm        = float(getattr(fb.ecg,"hr_bpm",75.0) or 75.0),
-                    cardiac_class = str(getattr(getattr(rs,"arrhythmia",None),"class_name","NORMAL") or "NORMAL"),
+                    cardiac_class = _cardiac_class,
                 )
                 _pf_alert = _get_pf_engine().update(_pf_snap)
             except Exception as _pfe:
@@ -705,7 +717,13 @@ def main() -> None:
                     "window":              i + 1,
                     "window_duration":     1.3,
                     "voice_message":       _voice,
-                    "task_a":              _ta,
+                    "task_a":              {
+                        **_ta,
+                        "hr_bpm": float(getattr(fb.ecg,"hr_bpm",0.0) or 0.0),
+                        "rr_irregularity": _rr_irr,
+                        "score": float(getattr(_arrh_obj,"confidence",0.0) or 0.0),
+                        "class_name": _cardiac_class,
+                    },
                     "task_b":              _tb,
                     "task_c":              _tc,
                     "hr_bpm":              _hr,

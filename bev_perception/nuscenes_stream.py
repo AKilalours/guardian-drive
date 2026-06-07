@@ -94,29 +94,35 @@ class NuScenesStream:
         types  = ['car','car','car','car','pedestrian',
                   'car','bus','motorcyclist']
 
+        LANES = [-7.0, -3.5, 0.0, 3.5, 7.0]  # lane centers in meters
         for i in range(n_agents):
-            cls  = types[i % len(types)]
-            # Realistic positions: ahead, behind, sides
-            angle = rng.uniform(0, 2*np.pi)
-            dist  = rng.uniform(8, 50)
-            x     = np.sin(angle) * dist
-            y     = np.cos(angle) * dist
-            speed = rng.uniform(0, 15) if cls != 'pedestrian' else rng.uniform(0,2)
-            conf  = rng.uniform(0.72, 0.98)
+            cls   = types[i % len(types)]
+            # Road-constrained: agents in lanes ahead/behind ego
+            lane  = LANES[i % len(LANES)]
+            x     = lane + rng.uniform(-0.8, 0.8)
+            # 80% ahead, 20% behind
+            if i < int(n_agents * 0.8):
+                y = rng.uniform(10, 50)   # ahead
+            else:
+                y = rng.uniform(-20, -8)  # behind
+            angle = rng.uniform(-0.2, 0.2)  # near-forward heading
+            dist  = float(np.sqrt(x**2 + y**2))
+            speed = rng.uniform(5, 15) if cls != 'pedestrian' else rng.uniform(0,2)
+            conf  = rng.uniform(0.78, 0.98)
 
-            # History trail — 5 past positions
+            # History trail — along lane
             trail = []
             for t in range(5):
-                px = x - np.sin(angle)*speed*0.5*(5-t)
-                py = y - np.cos(angle)*speed*0.5*(5-t)
-                trail.append([float(px), float(py)])
+                py = y - speed*0.4*(5-t)
+                trail.append([float(x + rng.uniform(-0.3,0.3)),
+                               float(py)])
 
-            # Future trajectory — 6 future positions
+            # Future trajectory — straight along lane
             future = []
             for t in range(1,7):
-                fx = x + np.sin(angle)*speed*0.5*t
-                fy = y + np.cos(angle)*speed*0.5*t
-                future.append([float(fx), float(fy)])
+                fy = y + speed*0.4*t
+                future.append([float(x + rng.uniform(-0.2,0.2)),
+                                float(fy)])
 
             agents.append({
                 "id":           f"agent_{i}",
