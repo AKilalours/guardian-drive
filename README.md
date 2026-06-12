@@ -839,3 +839,16 @@ Every metric, benchmark, and result in this README is reproducible by running th
 ---
 
 *Guardian Drive™ · Akila Lourdes Miriyala Francis & Akilan Manivannan · LIU Brooklyn MS Artificial Intelligence · 2026*
+
+## HD Map & Vectorized Mapping
+
+Guardian Drive implements a full **vectorized HD mapping pipeline**:
+
+- **Vectorized HD mapping**: lane centerlines, boundaries, crosswalks as polylines
+- **Lane topology graph**: predecessor/successor/adjacent lane relationships  
+- **Road geometry**: curvature, width, elevation per segment
+- **Road layout encoding**: spatial map-level representation for BEV
+- **Map-level representation**: global scene structure for transformer input
+- **Dataset creation**: AV2/nuScenes → vectorized HD map pipeline
+- **TensorRT deployment**: 7.52x speedup on Tesla T4 (see docs/CUDA_KERNELS.md)
+- **Multi-view geometry**: Structure from Motion on nuScenes cameras
