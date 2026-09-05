@@ -7,7 +7,7 @@
 
 ## One-Line Summary
 
-Real-time physiological monitoring across 8 tasks — cardiac arrhythmia, drowsiness, crash detection, stroke screening, pre-crash prediction, cuffless blood pressure, hypoglycemia, and seizure — fused with BEV perception from 404 real nuScenes Singapore frames via a Kalman filter and 6-state safety machine, routing to real OSM hospitals, motels, and cafes with Twilio SMS and Discord emergency dispatch, running as one unified pipeline every 1.2 seconds on a MacBook M4.
+Real-time physiological monitoring across 8 tasks — cardiac arrhythmia, drowsiness, crash detection, stroke screening, pre-crash prediction, cuffless blood pressure, hypoglycemia, and seizure — fused with BEV perception from 404 real nuScenes Singapore frames via inverse-variance weighted fusion and a 6-state safety machine, routing to real OSM hospitals, motels, and cafes with Twilio SMS and Discord emergency dispatch, running as one unified pipeline every 1.2 seconds on a MacBook M4.
 
 ---
 
@@ -17,13 +17,13 @@ Real-time physiological monitoring across 8 tasks — cardiac arrhythmia, drowsi
 |--------|-------|--------|
 | Cardiac AUC (PTB-XL, 18,869 records) | **0.961** | Task A, 1D-CNN |
 | Drowsiness AUC (WESAD, n=15 LOSO) | **0.951** | Task B, TCN |
-| Guardian Risk Score — crash severe | **0.882** | Kalman fusion |
-| BEV inference throughput | **317 FPS** | OpenDriveFM, M4 |
+| Guardian Risk Score, escalate state | 0.882 | **Constant, not a measurement.** Fallback lookup in `main.py:690` used when no live score is present |
+| BEV inference throughput | **71.2 FPS** | OpenDriveFM, C++ at 4 threads. The earlier 317 FPS figure was retracted upstream |
 | nuScenes ADE (val) | **3.159 m** | nuscenes_eval.py |
 | CARLA collision reduction | **99.9%** | Drowsy GD ON vs OFF |
 | Routing evaluation | **10/11 = 91%** | 11-scenario eval |
 | BC policy safety accuracy | **99.3%** | 20-episode eval |
-| TensorRT FP32 latency | **0.157 ms** | 7.52× speedup, T4 |
+| TensorRT FP32 latency | *withdrawn* | No TensorRT, ONNX or torch2trt code exists in this repository |
 | C++ SPSC risk decision | **0.0004 µs/call** | bench_runtime, Mac M4 |
 | GPT-2 + LoRA fine-tuning | loss **7.40 → 0.42** | 300 steps, rank-8 |
 | DDPM diffusion trajectory | **1.23 M params** | BEV-conditioned |
@@ -56,7 +56,7 @@ Real-time physiological monitoring across 8 tasks — cardiac arrhythmia, drowsi
                                 │
                                 ▼
 ┌──────────────────────────────────────────────────────────────────────┐
-│         KALMAN FUSION — Guardian Risk Score                          │
+│        WEIGHTED FUSION — Guardian Risk Score                          │
 │  Inverse-variance weighted fusion of all 8 task scores               │
 │  Medical override: AFib + drowsy → hospital (bypasses thresholds)    │
 │  6-state machine: NOMINAL → ADVISORY → CAUTION → PULLOVER → ESCALATE│
@@ -737,7 +737,7 @@ guardian-drive/
 │   └── tests/bench_runtime.cpp        # Latency benchmarks
 │
 ├── policy/
-│   └── fusion.py                       # Kalman fusion + GRS + state machine
+│   └── fusion.py                       # weighted fusion + GRS + state machine
 │
 ├── integrations/
 │   ├── opendrivefm_bridge.py           # OpenDriveFM → BEV inference
