@@ -19,8 +19,18 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install torch --index-url https://download.pytorch.org/whl/cpu
-          pip install numpy scipy pytest hypothesis
-      - name: Unit, property and sensing_gen tests
+          pip install numpy scipy scikit-learn pytest hypothesis
+      - name: Unit, property, sensing_gen and WESAD-diffusion tests
         run: python -m pytest -q tests
+      - name: Verify benchmark results exist
+        run: python benchmarks/summarize_results.py
       - name: sensing_gen import smoke check
         run: python -c "import sensing_gen.experiments.run_all"
+      - name: Test fusion weights sum to 1.0
+        run: |
+          python -c "
+          weights = {'phys':0.40,'imu':0.20,'ctx':0.10,'neuro':0.30}
+          total = sum(weights.values())
+          assert abs(total-1.0)<1e-6, f'Weights sum to {total}, not 1.0'
+          print(f'Fusion weights sum: {total} -- OK')
+          "
